@@ -1,87 +1,70 @@
 <style lang="less">
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
+    @import "./styles/base";
+    @import "./styles/icon";
+    @import "./styles/style";
+
 </style>
-
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+    import wepy from 'wepy'
+    import 'wepy-async-function'
+    export default class extends wepy.app {
+      config = {
+        pages: [
+          'pages/authorize',
+          'pages/repair',
+          'pages/maintain',
+          'pages/debug',
+          'pages/discover'
+        ],
+        window: {
+          backgroundTextStyle: 'dark',
+          navigationBarBackgroundColor: '#FFFFFF',
+          navigationBarTitleText: 'WeChat',
+          navigationBarTextStyle: 'black',
+          enablePullDownRefresh: false,
+          backgroundColor: '#EFEFEF'
 
-import { setStore } from 'wepy-redux'
-import configStore from './store'
-
-const store = configStore()
-setStore(store)
-
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/index'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    }
-  }
-
-  globalData = {
-    userInfo: null
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch() {
-    this.testAsync()
-  }
-
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.login({
-      success: res => {
-              // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
-      // 获取用户信息
-    wepy.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-                  // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wepy.getUserInfo({
-            success (res) {
-              that.globalData.userInfo = res.userInfo
-              cb && cb(res.userInfo)
-            }
-          })
+        },
+        'tabBar': {
+          'color': '#999999',
+          'selectedColor': '#ff6a3c',
+          'backgroundColor': '#ffffff',
+          'borderStyle': 'black',
+          'list': [{
+            'pagePath': 'pages/repair',
+            'text': '维修',
+            'iconPath': 'images/icon_repair.png',
+            'selectedIconPath': 'images/icon_repair_active.png'
+          }, {
+            'pagePath': 'pages/maintain',
+            'text': '保养',
+            'iconPath': 'images/icon_maintain.png',
+            'selectedIconPath': 'images/icon_maintain_active.png'
+          }, {
+            'pagePath': 'pages/debug',
+            'text': '安装调试',
+            'iconPath': 'images/icon_debug.png',
+            'selectedIconPath': 'images/icon_debug_active.png'
+          }, {
+            'pagePath': 'pages/discover',
+            'text': '知识库',
+            'iconPath': 'images/icon_discover.png',
+            'selectedIconPath': 'images/icon_discover_active.png'
+          }]
         }
       }
-    })
-  }
-}
+
+      globalData = {}
+
+      constructor() {
+        super()
+        this.use('requestfix')
+        this.use('promisify')
+      }
+
+      onLaunch() {
+        console.log('进入小程序')
+      }
+    }
+
 </script>

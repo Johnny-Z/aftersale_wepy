@@ -1,0 +1,37 @@
+<!--积分规则-->
+<template>
+  <view class="jf_rule">
+    <view class="title">素洁服装厂积分规则</view>
+  </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class Repair extends wepy.page {
+      data = {
+      }
+
+      events = {
+      }
+
+      methods = {
+      }
+
+      onLoad() {
+        console.log('start repair onLoad')
+      }
+    }
+
+</script>
+<style lang="less">
+  .jf_rule {
+    border-top: 1px solid #efefef;
+    background: #fff;
+    padding: 33px 20rpx;
+    margin-top: 10rpx;
+    .title {
+      font-size: 36rpx;
+    }
+  }
+
+</style>

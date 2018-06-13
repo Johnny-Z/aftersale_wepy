@@ -1,0 +1,102 @@
+<template>
+  <view class="authorize-contianer">
+    <image class="authorize-icon" src="../images/authorize.png"></image>
+    <view class="auth-item">维修员登录获取权限</view>
+    <view class="btn-authorize">
+      <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+import {
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO,
+  USER_INFO
+} from '@/utils/constant'
+export default class Authorize extends wepy.page {
+  config = {
+    navigationBarTitleText: '授权登录'
+  }
+  async onLoad() {
+    let res = await wepy.getSetting()
+    if ((res.authSetting)['scope.userInfo']) {
+      wepy.switchTab({
+        url: '/pages/repair'
+      })
+    }
+  }
+  async onGotUserInfo(e) {
+    if (e.detail.errMsg === 'getUserInfo:ok') {
+      let res = await wepy.login()
+      console.log(res.code)
+      if (res.code) {
+        console.log(e.detail.userInfo)
+        wepy.setStorageSync(USER_INFO, e.detail.userInfo)
+        let systemInfo = wepy.getSystemInfoSync()
+        wepy.setStorageSync(SYSTEM_INFO, systemInfo)
+        let rlt = await api.wxJsCode2Session({
+          query: {
+            jsCode: res.code,
+            nickName: e.detail.userInfo.nickName
+          }
+        })
+        console.log('get session resoult: ' + rlt.data.result)
+        if (rlt.data.result) {
+          let data = rlt.data
+          if (data.data.openid) {
+            wepy.setStorageSync(USER_SPECICAL_INFO, data.data)
+            wepy.switchTab({
+              url: '/pages/repair'
+            })
+          }
+        } else {
+          let res = await wepy.showModal({
+            title: 'appid有误',
+            content: '授权失败'
+          })
+          if (res.confirm) {
+            wepy.switchTab({
+              url: '/pages/repair'
+            })
+          }
+        }
+      }
+    }
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+}
+
+</script>
+<style lang="less">
+page {
+  height: 100%;
+}
+
+.authorize-contianer {
+  height: 100%;
+  background: #fff;
+  text-align: center;
+  padding-top: 100rpx;
+  .authorize-icon {
+    width: 128rpx;
+    height: 128rpx;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 10rpx;
+  }
+  .auth-item {
+    padding: 5rpx 0;
+  }
+  .btn-authorize {
+    margin: 100rpx 50rpx;
+  }
+}
+
+</style>
