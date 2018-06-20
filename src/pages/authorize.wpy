@@ -1,9 +1,14 @@
 <template>
   <view class="authorize-contianer">
     <image class="authorize-icon" src="../images/authorize.png"></image>
-    <view class="auth-item">维修员登录获取权限</view>
+    <view class="list_item">
+      <view class="title">账号:</view>
+      <view class="input">
+        <input type="number" focus="true" placeholder="输入你的账号" value="{{editInfo.receiverName}}" />
+      </view>
+    </view>
     <view class="btn-authorize">
-      <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+      <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权登录</button>
     </view>
   </view>
 </template>
@@ -82,18 +87,33 @@ page {
 .authorize-contianer {
   height: 100%;
   background: #fff;
-  text-align: center;
   padding-top: 100rpx;
   .authorize-icon {
     width: 128rpx;
     height: 128rpx;
+    text-align: center;
     display: block;
     margin: 0 auto;
     padding-bottom: 10rpx;
   }
-  .auth-item {
-    padding: 5rpx 0;
+  .list_item {
+    display: flex;
+    align-items: center;
+    margin: 100rpx 180rpx;
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    padding: 20rpx 20rpx;
+    .title {
+      margin-right: 20rpx;
+    }
+    .input {
+      flex: 1;
+      input {
+        color: #333;
+      }
+    }
   }
+
   .btn-authorize {
     margin: 100rpx 50rpx;
   }

@@ -21,6 +21,9 @@
     import wepy from 'wepy'
 
     export default class Debug extends wepy.page {
+      config = {
+        navigationBarTitleText: '调试安装'
+      }
       data = {
 
       }

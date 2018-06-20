@@ -21,6 +21,9 @@
     import wepy from 'wepy'
 
     export default class Discover extends wepy.page {
+      config = {
+        navigationBarTitleText: '知识库'
+      }
       data = {
 
       }

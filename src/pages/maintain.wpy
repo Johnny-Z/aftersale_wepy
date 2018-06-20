@@ -21,6 +21,9 @@
     import wepy from 'wepy'
 
     export default class Maintain extends wepy.page {
+      config = {
+        navigationBarTitleText: '保养'
+      }
       data = {
 
       }

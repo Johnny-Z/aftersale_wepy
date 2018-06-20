@@ -8,6 +8,9 @@
     import wepy from 'wepy'
 
     export default class Repair extends wepy.page {
+      config = {
+        navigationBarTitleText: '维修'
+      }
       data = {
       }
 
