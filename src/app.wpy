@@ -12,9 +12,11 @@
         pages: [
           'pages/authorize',
           'pages/repair',
+          'pages/repair_detail',
           'pages/maintain',
           'pages/debug',
-          'pages/discover'
+          'pages/discover',
+          'pages/index'
         ],
         window: {
           backgroundTextStyle: 'dark',

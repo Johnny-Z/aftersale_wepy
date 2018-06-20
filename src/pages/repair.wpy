@@ -1,7 +1,9 @@
 <!--积分规则-->
 <template>
   <view class="jf_rule">
-    <view class="title">素洁服装厂积分规则</view>
+    <navigator open-type="navigate" url="/pages/repair_detail">
+      <view class="title">素洁服装厂积分规则</view>
+    </navigator>
   </view>
 </template>
 <script>
