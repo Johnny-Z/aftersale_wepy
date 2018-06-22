@@ -1,10 +1,16 @@
 <template>
   <view class="authorize-contianer">
     <image class="authorize-icon" src="../images/authorize.png"></image>
-    <view class="list_item">
-      <view class="title">账号:</view>
-      <view class="input">
+    <view class="item_userid">
+      <view class="userid">账号:</view>
+      <view class="input_id">
         <input type="number" focus="true" placeholder="输入你的账号" value="{{editInfo.receiverName}}" />
+      </view>
+    </view>
+    <view class="item_password">
+      <view class="user_password">密码:</view>
+      <view class="input_pw">
+          <input type="number" password="true" placeholder="输入你的密码" value="{{editInfo.receiverName}}" />
       </view>
     </view>
     <view class="btn-authorize">
@@ -85,37 +91,53 @@ page {
 }
 
 .authorize-contianer {
-  height: 100%;
-  background: #fff;
-  padding-top: 100rpx;
-  .authorize-icon {
-    width: 128rpx;
-    height: 128rpx;
-    text-align: center;
-    display: block;
-    margin: 0 auto;
-    padding-bottom: 10rpx;
-  }
-  .list_item {
-    display: flex;
-    align-items: center;
-    margin: 100rpx 180rpx;
-    border-top: 1px solid #efefef;
-    border-bottom: 1px solid #efefef;
-    padding: 20rpx 20rpx;
-    .title {
-      margin-right: 20rpx;
+    height: 100%;
+    background: #fff;
+    padding-top: 100rpx;
+    .authorize-icon {
+        width: 128rpx;
+        height: 128rpx;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        padding-bottom: 10rpx;
     }
-    .input {
-      flex: 1;
-      input {
-        color: #333;
-      }
+    .item_userid {
+        display: flex;
+        align-items: center;
+        margin: 1rpx 180rpx;
+        border-top: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+        padding: 20rpx 20rpx;
+        .userid {
+          margin-right: 20rpx;
+        }
+        .input_id {
+          flex: 1;
+          input {
+            color: #333;
+          }
+        }
     }
-  }
+    .item_password {
+        display: flex;
+        align-items: center;
+        margin: 1rpx 180rpx;
+        border-bottom: 1px solid #efefef;
+        padding: 20rpx 20rpx;
+        .user_password {
+            margin-right: 20rpx;
+        }
+        .input_pw {
+          flex: 1;
+          input {
+            color: #333;
+          }
+        }
+        }
 
   .btn-authorize {
-    margin: 100rpx 50rpx;
+    margin: 100rpx 100rpx;
   }
 }
 

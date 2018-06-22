@@ -1,12 +1,22 @@
 <template>
-    
+    <view class="machine_detail">机器详情</view>
 </template>
-
+<style lang="less">
+    .machine_detail {
+        padding: 10rpx;
+        font-size: large;
+        font-weight: bold;
+        background: #EBEBEB;
+        color: #000000;
+    }
+</style>
 <script>
     import wepy from 'wepy'
 
     export default class repairDetail extends wepy.page {
-      config = {};
+      config = {
+        navigationBarTitleText: '维修详情'
+      }
       components = {};
 
       data = {};
@@ -20,6 +30,3 @@
         // Other properties
     }
 </script>
-<style lang="less">
-
-</style>
