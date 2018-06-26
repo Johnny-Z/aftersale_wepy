@@ -1,0 +1,147 @@
+<template>
+    <view class="tui-accordion-content">
+        <view class="tui-menu-list {{isShowFrom1 ? 'tui-shangjiantou' : 'tui-xiajiantou'}}">
+            <view @tap="showFrom" data-param="1">表单</view>
+            <view class="tui-accordion-from {{isShowFrom1 ? '' : 'tui-hide'}}">
+                <view class="tui-menu-list tui-clear">
+                    <text class="tui-input-name">input</text>
+                    <input placeholder="普通输入框"></input>
+                </view>
+                <view class="tui-menu-list tui-clear">
+                    <text class="tui-input-name">input</text>
+                    <input placeholder="普通输入框"></input>
+                </view>
+                <view class="tui-menu-list tui-clear">
+                    <text class="tui-input-name">input</text>
+                    <input placeholder="普通输入框"></input>
+                </view>
+            </view>
+        </view>
+        <view class="tui-menu-list {{isShowFrom3 ? 'tui-shangjiantou' : 'tui-xiajiantou'}}">
+            <view @tap="showFrom" data-param="3"><text>文字排版</text></view>
+            <view class="{{isShowFrom3 ? '' : 'tui-hide'}}">
+                <view class="tui-h1"><text>H1 标签内文字大小及加粗样式</text></view>
+                <view class="tui-h2"><text>H2 标签内文字大小及加粗样式</text></view>
+                <view class="tui-h3"><text>H3 标签内文字大小及加粗样式</text></view>
+                <view class="tui-h4"><text>H4 标签内文字大小及加粗样式</text></view>
+                <view class="tui-h5"><text>H5 标签内文字大小及加粗样式</text></view>
+                <view class="tui-h6"><text>H6 标签内文字大小及加粗样式</text></view>
+                <view class="tui-p"><text>P 标签内文字大小及加粗样式</text></view>
+            </view>
+        </view>
+    </view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class debugDetail extends wepy.page {
+      config = {};
+      components = {};
+
+      data = {
+        isShowFrom1: false,
+        isShowFrom3: false,
+        indicatorDots: true,
+        vertical: false,
+        autoplay: true,
+        interval: 3000,
+        duration: 800
+      };
+      methods = {
+        showFrom(e) {
+          console.log('11111111')
+          let param = e.target.dataset.param
+          console.log(param)
+          if (param === '1') {
+            this.isShowFrom1 = !this.data.isShowFrom1
+          } else if (param === '3') {
+            this.isShowFrom3 = !this.data.isShowFrom3
+          } else {
+            this.isShowFrom1 = false
+            this.isShowFrom3 = false
+          }
+        }
+      };
+
+      events = {};
+
+      onLoad() {
+        console.log('onLoad,lalallalalallalalla')
+  };
+
+        // Other properties
+    }
+</script>
+<style lang="less">
+    .tui-accordion-content{
+        margin: 10px;
+        border: 1px solid #c8c7cc;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .tui-menu-list{
+        line-height: 80rpx;
+        color: #555;
+        font-size: 35rpx;
+        padding: 0 0rpx 0 10px;
+        position: relative;
+    }
+    .tui-menu-list:before{
+        content: '';
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: #c8c7cc;
+        position: absolute;
+        bottom: 0;
+        left: 10px;
+    }
+    .tui-menu-list:last-child:before{
+        height: 0;
+    }
+    .tui-accordion-from{padding-left: 0;}
+    .tui-accordion-from input{
+        height: 80rpx;
+        line-height: 80rpx;
+    }
+
+    .tui-input-name{
+        height: 80rpx;
+        float: left;
+        width: 200rpx;
+    }
+    .tui-hide{display: none;}
+    .tui-clear:after{
+        content:".";
+        display:block;
+        height:0;
+        clear:both;
+        visibility:hidden;
+    }
+    .tui-shangjiantou:after{
+        font-family:"iconfont" !important;
+        content: '\e734';
+        font-size: 40rpx;
+        position: absolute;
+        top: 35rpx;
+        display: inline-block;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        text-decoration: none;
+        right: 10rpx;
+    }
+    .tui-xiajiantou:after{
+        font-family:"iconfont" !important;
+        content: '\e733';
+        font-size: 40rpx;
+        position: absolute;
+        top: 35rpx;
+        display: inline-block;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        text-decoration: none;
+        right: 10rpx;
+    }
+</style>

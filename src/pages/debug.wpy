@@ -1,7 +1,9 @@
 <!--积分规则-->
 <template>
   <view class="jf_rule">
-    <view class="title tc">素洁服装厂积分规则</view>
+      <navigator open-type="navigate" url="/pages/debug_detail">
+          <view class="title tc">素洁服装厂积分规则</view>
+      </navigator>
     <!--<view class="jf_jz_title tc">积分价值</view>-->
     <view class="jf_content">
       <view class="sec_title">1.签到积分规则 </view>

@@ -14,7 +14,9 @@
           'pages/repair',
           'pages/repair_detail',
           'pages/maintain',
+          'pages/maintain_detail',
           'pages/debug',
+          'pages/debug_detail',
           'pages/discover',
           'pages/index'
         ],

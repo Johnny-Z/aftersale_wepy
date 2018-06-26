@@ -1,0 +1,46 @@
+<template>
+    <view class="tui-btn-group">
+        <view class="tui-btn-content">
+            <button @tap="setDisabled" disabled="{{disabled}}">点击设置按钮disabled属性true</button>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class maintainDetail extends wepy.page {
+      config = {};
+      components = {};
+
+      data = {
+        disabled: false
+      };
+      methods = {
+        setDisabled: function (e) {
+          this.setData({
+            disabled: !this.data.disabled
+          })
+        }
+      };
+
+      events = {};
+
+      onLoad() {
+      };
+
+        // Other properties
+    }
+</script>
+<style lang="less">
+    .tui-btn-group{
+        padding: 10px;
+    }
+    .tui-btn-content{
+        height: 60px;
+        line-height: 60px;
+    }
+    .other-button-hover {
+        background-color: blue;
+    }
+</style>
