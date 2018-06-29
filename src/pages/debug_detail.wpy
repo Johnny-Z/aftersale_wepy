@@ -37,8 +37,11 @@
     import wepy from 'wepy'
 
     export default class debugDetail extends wepy.page {
-      config = {};
-      components = {};
+      config = {
+        navigationBarTitleText: '调试安装详情'
+      };
+      components = {
+      };
 
       data = {
         isShowFrom1: false,
