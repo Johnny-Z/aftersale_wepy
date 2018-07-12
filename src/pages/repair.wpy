@@ -9,13 +9,18 @@
       </view>
     </navigator>
   </view>
+  <machinedetails></machinedetails>
 </template>
 <script>
     import wepy from 'wepy'
+    import MachineDetails from '../components/machine_details'
 
     export default class Repair extends wepy.page {
       config = {
         navigationBarTitleText: '维修'
+      }
+      components = {
+        machinedetails: MachineDetails
       }
       data = {
         list: [

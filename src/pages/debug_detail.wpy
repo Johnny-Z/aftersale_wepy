@@ -1,15 +1,15 @@
 <template>
-    <view class="tui-accordion-content">
-        <view class="tui-menu-list {{isShowFrom1 ? 'tui-shangjiantou' : 'tui-xiajiantou'}}">
-            <view @tap="showFrom" data-param="1">表单</view>
-            <view class="tui-accordion-from {{isShowFrom1 ? '' : 'tui-hide'}}">
+    <view class="debug_install_content">
+        <view class="tui-menu-list {{isShowFrom1 ? 'shangjiantou' : 'xiajiantou'}}">
+            <view @tap="showFrom" data-param="1">机器详情</view>
+            <view class="tui-accordion-from {{isShowFrom1 ? 'tui-hide' : ''}}">
                 <view class="tui-menu-list tui-clear">
-                    <text class="tui-input-name">input</text>
-                    <input placeholder="普通输入框"></input>
+                    <text class="tui-input-name">订单号：</text>
+                    <text class="tui-input-name">暂无</text>
                 </view>
                 <view class="tui-menu-list tui-clear">
-                    <text class="tui-input-name">input</text>
-                    <input placeholder="普通输入框"></input>
+                    <text class="tui-input-name">机器编号：</text>
+                    <text class="tui-input-name">暂无</text>
                 </view>
                 <view class="tui-menu-list tui-clear">
                     <text class="tui-input-name">input</text>
@@ -17,7 +17,7 @@
                 </view>
             </view>
         </view>
-        <view class="tui-menu-list {{isShowFrom3 ? 'tui-shangjiantou' : 'tui-xiajiantou'}}">
+        <view class="tui-menu-list {{isShowFrom3 ? 'shangjiantou' : 'xiajiantou'}}">
             <view @tap="showFrom" data-param="3"><text>文字排版</text></view>
             <view class="{{isShowFrom3 ? '' : 'tui-hide'}}">
                 <view class="tui-h1"><text>H1 标签内文字大小及加粗样式</text></view>
@@ -78,7 +78,7 @@
     }
 </script>
 <style lang="less">
-    .tui-accordion-content{
+    .debug_install_content{
         margin: 10px;
         border: 1px solid #c8c7cc;
         border-radius: 5px;
@@ -123,7 +123,7 @@
         clear:both;
         visibility:hidden;
     }
-    .tui-shangjiantou:after{
+    .shangjiantou:after{
         font-family:"iconfont" !important;
         content: '\e734';
         font-size: 40rpx;
@@ -135,7 +135,7 @@
         text-decoration: none;
         right: 10rpx;
     }
-    .tui-xiajiantou:after{
+    .xiajiantou:after{
         font-family:"iconfont" !important;
         content: '\e733';
         font-size: 40rpx;
