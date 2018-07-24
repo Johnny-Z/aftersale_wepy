@@ -32,6 +32,7 @@ export default class Authorize extends wepy.page {
   }
   async onLoad() {
     let res = await wepy.getSetting()
+    console.log(res)
     if ((res.authSetting)['scope.userInfo']) {
       wepy.switchTab({
         url: '/pages/repair'

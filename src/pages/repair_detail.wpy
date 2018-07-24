@@ -1,5 +1,11 @@
 <template>
     <view class="machine_detail">机器详情</view>
+    <view>
+        <button @tap="previewImage" type="primary">图片上传预览</button>
+        <view class="tui-content">
+            <image class="tui-preview-img" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+        </view>
+    </view>
 </template>
 <style lang="less">
     .machine_detail {
@@ -9,18 +15,42 @@
         background: #EBEBEB;
         color: #000000;
     }
+    .tui-preview-img {
+        width: 30%;
+        height: 200rpx;
+    }
 </style>
 <script>
     import wepy from 'wepy'
 
-    export default class repairDetail extends wepy.page {
+    export default class RepairDetail extends wepy.page {
       config = {
         navigationBarTitleText: '维修详情'
       }
       components = {};
 
-      data = {};
-      methods = {};
+      data = {
+        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg']
+      };
+      methods = {
+        async previewImage() {
+          let res = await wepy.chooseImage({count: 8})
+          if (res.errMsg === 'chooseImage:ok') {
+            let tempFilePaths = res.tempFilePaths
+            this.previewImageArr = tempFilePaths
+            console.log('srcssssssssssssssssssssssssss')
+            console.log(tempFilePaths)
+            this.$apply()
+          }
+        },
+        changePreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.previewImageArr
+          })
+        }
+      };
 
       events = {};
 
