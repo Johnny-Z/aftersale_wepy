@@ -19,3 +19,14 @@ export const SYSTEM_INFO = 'systemInfo'
 export const ADDRESS_ID = 'addressId'
 
 export const SEL_CLASS_CODE = 'selClassCode'
+
+/**
+ * JWT
+ * @type {String}
+ */
+export const AUTHORIZATION = 'Authorization'
+/**
+ * 用户名
+ * @type {String}
+ */
+export const ACCOUNT = 'account'
