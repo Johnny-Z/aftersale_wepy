@@ -1,30 +1,57 @@
 <style type="less">
 .mathine_details {
+  .title_vw {
+    padding: 15rpx;
+    font-size: large;
+    font-weight: bold;
+    background: #EBEBEB;
+    color: #000000;
+  }
+  .line_vw {
+    margin: 20rpx;
+    display: flex;
+    .line_half_vw {
+      width: 50%;
+    }
+  }
 }
 </style>
 <template>
   <view class="mathine_details">
-    <view>
+    <view class="title_vw">机器详情</view>
+    <view class="line_vw">
       <text>机器编号：</text>
-      <text class="nameplate_tx">lalala{{machine.nameplate}}</text>
+      <text class="nameplate_tx">{{machine.nameplate.empty? '暂无':machine.nameplate}}</text>
     </view>
-    <view>
-      <text>机型：</text>
-      <text class="machine_type_tx">lalala{{machine.machine_type}}</text>
-      <text>针数：</text>
-      <text class="needle_num_tx">lalala{{machine.needle_num}}</text>
+    <view class="line_vw" >
+      <view class="line_half_vw">
+        <text>机型：</text>
+        <text class="machine_type_tx">{{machine.machineType.empty? '暂无':machine.machineType}}</text>
+      </view>
+      <view class="line_half_vw">
+        <text>针数：</text>
+        <text class="needle_num_tx">{{machine.needleNum.empty? '暂无':machine.needleNum}}</text>
+      </view>
     </view>
-    <view>
-      <text>头数：</text>
-      <text class="head_num_tx">lalala{{machine.head_num}}</text>
-      <text>头距：</text>
-      <text class="head_distance_tx">lalala{{machine.head_distance}}</text>
+    <view class="line_vw">
+      <view class="line_half_vw">
+        <text>头数：</text>
+        <text class="head_num_tx">{{machine.headNum.empty? '暂无':machine.headNum}}</text>
+      </view>
+      <view class="line_half_vw">
+        <text>头距：</text>
+        <text class="head_distance_tx">{{machine.headDistance.empty? '暂无':machine.headDistance}}</text>
+      </view>
     </view>
-    <view>
-      <text>x行距：</text>
-      <text class="x_distance_tx">lalala{{machine.x_distance}}</text>
-      <text>y行距：</text>
-      <text class="y_distance_tx">lalala{{machine.y_distance}}</text>
+    <view class="line_vw" >
+      <view class="line_half_vw">
+        <text>x行距：</text>
+        <text class="x_distance_tx">{{machine.xDistance.empty? '暂无':machine.xDistance}}</text>
+      </view>
+      <view class="line_half_vw">
+        <text>y行距：</text>
+        <text class="y_distance_tx">{{machine.yDistance.empty? '暂无':machine.yDistance}}</text>
+      </view>
     </view>
   </view>
 </template>
@@ -33,6 +60,7 @@
 
   export default class MachineDetails extends wepy.component {
     props = {
+      machine: {}
     }
     data = {
     }
