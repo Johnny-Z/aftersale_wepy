@@ -1,6 +1,6 @@
 <!--积分规则-->
 <style lang="less">
-  .maintain_list {
+  .install_list {
     background: #fff;
     padding: 15rpx;
     display: flex;
@@ -30,7 +30,7 @@
   }
 </style>
 <template>
-  <view class="maintain_list" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
+  <view class="install_list" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
     <image class="machine_img" src="{{logo}}"></image>
     <view class="info">
       <view class="nameplate_tx">{{item.nameplate}}: </view>
@@ -47,15 +47,15 @@
     ACCOUNT
   } from '@/utils/constant'
 
-  export default class Maintain extends wepy.page {
+  export default class Install extends wepy.page {
     config = {
-      navigationBarTitleText: '保养'
+      navigationBarTitleText: '调试安装'
     }
     components = {
     }
     data = {
-      maintainList: [],
-      logo: '/images/icon_maintain.png'
+      installList: [],
+      logo: '/images/icon_install.png'
     }
 
     events = {
@@ -67,27 +67,27 @@
         console.log(e)
         let machines = JSON.stringify(e)
         wepy.navigateTo({
-          url: '/pages/maintain_detail?machineDetail=' + machines
+          url: '/pages/install_detail?machineDetail=' + machines
         })
       }
     }
 
     onLoad() {
-      console.log('start maintain onLoad')
-      this.getMaintainMachineList()
+      console.log('start install onLoad')
+      this.getInstallMachineList()
     }
-    async getMaintainMachineList() {
+    async getInstallMachineList() {
       let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
       let userAccount = wepy.getStorageSync(ACCOUNT)
 
-      const maintainMachineListJson = await api.getMaintainList({
+      const installMachineListJson = await api.getInstallList({
         query: {userName: userAccount},
         header: {Authorization: jwtAuthorization}
       })
-      console.log('maintainMachineListJson:')
-      console.log(maintainMachineListJson)
-      console.log(maintainMachineListJson.data.data.list)
-      this.maintainList = maintainMachineListJson.data.data.list
+      console.log('installMachineListJson:')
+      console.log(installMachineListJson)
+      console.log(installMachineListJson.data.data.list)
+      this.installList = installMachineListJson.data.data.list
 
       this.$apply()
     }
