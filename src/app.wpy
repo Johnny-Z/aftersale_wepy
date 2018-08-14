@@ -14,8 +14,8 @@
           'pages/repair_detail',
           'pages/maintain',
           'pages/maintain_detail',
-          'pages/debug',
-          'pages/debug_detail',
+          'pages/install',
+          'pages/install_detail',
           'pages/discover',
           'pages/index'
         ],
@@ -44,10 +44,10 @@
             'iconPath': 'images/icon_maintain.png',
             'selectedIconPath': 'images/icon_maintain_active.png'
           }, {
-            'pagePath': 'pages/debug',
+            'pagePath': 'pages/install',
             'text': '安装调试',
-            'iconPath': 'images/icon_debug.png',
-            'selectedIconPath': 'images/icon_debug_active.png'
+            'iconPath': 'images/icon_install.png',
+            'selectedIconPath': 'images/icon_install_active.png'
           }, {
             'pagePath': 'pages/discover',
             'text': '知识库',
