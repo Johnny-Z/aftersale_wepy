@@ -1,65 +1,11 @@
 <!--积分规则-->
-<template>
-  <view class="repair_list">
-    <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/repair_detail?code={{item.code}}" >
-      <image class="repair_img" src="{{item.logo}}"></image>
-      <view class="info">
-        <view>{{item.name}}：</view>
-        <view>{{item.id}} </view>
-      </view>
-    </navigator>
-  </view>
-  <machinedetails></machinedetails>
-</template>
-<script>
-    import wepy from 'wepy'
-    import MachineDetails from '../components/machine_details'
-
-    export default class Repair extends wepy.page {
-      config = {
-        navigationBarTitleText: '维修'
-      }
-      components = {
-        machinedetails: MachineDetails
-      }
-      data = {
-        list: [
-          {
-            id: 1,
-            code: 1,
-            name: '点击改变1',
-            logo: '/images/icon_repair.png'
-          },
-          {
-            id: 2,
-            code: 2,
-            name: '点击改变2',
-            logo: '/images/icon_debug.png'
-          },
-          {
-            id: 3,
-            code: 3,
-            name: '点击改变3',
-            logo: '/images/icon_discover.png'
-          }
-        ]
-      }
-
-      events = {
-      }
-
-      methods = {
-      }
-
-      onLoad() {
-        console.log('start repair onLoad')
-      }
-    }
-
-</script>
 <style lang="less">
   .repair_list {
-    .repair_img {
+    background: #fff;
+    padding: 15rpx;
+    display: flex;
+    margin-top: 15rpx;
+    .machine_img {
       width: 10%;
       height: 70rpx;
     }
@@ -70,6 +16,10 @@
       line-height: 35rpx;
       display: flex;
       align-items: center;
+      .nameplate_tx {
+        font-weight: bold;
+        font-size: 36rpx;
+      }
     }
     .item {
       background: #fff;
@@ -79,3 +29,68 @@
     }
   }
 </style>
+<template>
+  <view class="repair_list" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
+    <image class="machine_img" src="{{logo}}"></image>
+    <view class="info">
+      <view class="nameplate_tx">{{item.nameplate}}: </view>
+      <view>{{item.machineType}}: {{item.status}} : </view>
+      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+    </view>
+  </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import api from '@/api/api'
+    import {
+      AUTHORIZATION,
+      ACCOUNT
+    } from '@/utils/constant'
+
+    export default class Repair extends wepy.page {
+      config = {
+        navigationBarTitleText: '维修'
+      }
+      components = {
+      }
+      data = {
+        repairList: [],
+        logo: '/images/icon_repair.png'
+      }
+
+      events = {
+      }
+
+      methods = {
+        listItemClick(e) {
+          console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+          console.log(e)
+          let machines = JSON.stringify(e)
+          wepy.navigateTo({
+            url: '/pages/repair_detail?machineDetail=' + machines
+          })
+        }
+      }
+
+      onLoad() {
+        console.log('start repair onLoad')
+        this.getRepairMachineList()
+      }
+      async getRepairMachineList() {
+        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+        let userAccount = wepy.getStorageSync(ACCOUNT)
+
+        const repairMachineListJson = await api.getRepairList({
+          query: {userName: userAccount},
+          header: {Authorization: jwtAuthorization}
+        })
+        console.log('repairMachineListJson:')
+        console.log(repairMachineListJson)
+        console.log(repairMachineListJson.data.data.list)
+        this.repairList = repairMachineListJson.data.data.list
+
+        this.$apply()
+      }
+    }
+
+</script>

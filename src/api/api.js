@@ -15,6 +15,10 @@ const apiMall = 'http://192.168.0.103:8080'
 const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2')
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
+const getRepairList = (params) => wxRequest(params, apiMall + '/repair/record/selectRepairTaskMachine')
+const getMaintainList = (params) => wxRequest(params, apiMall + '/maintain/record/selectMaintainTaskMachine')
+const getInstallList = (params) => wxRequest(params, apiMall + '/install/record/selectInstallTaskMachine')
+
 const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
 const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
 const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
@@ -121,6 +125,9 @@ const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list')
 export default {
   getMachineList,
   getMachineListByCustomer,
+  getRepairList,
+  getMaintainList,
+  getInstallList,
   getInstallRecordList,
   getMaintainRecordList,
   getRepairRecordList,
