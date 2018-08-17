@@ -5,7 +5,7 @@ import {
 let env = '-test' // -dev 或者 -test
 // const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'http://localhost:8080/'
-const apiMall = 'http://192.168.0.103:8080'
+const apiMall = 'http://192.168.43.223:8080'
 
 /**
  * 获取发现好商品接口

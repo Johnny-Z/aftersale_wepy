@@ -1,5 +1,26 @@
 <template>
     <machinedetails :machine.sync="machineDetail"></machinedetails>
+    <view class="title_vw">客户信息</view>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>客户：</text>
+            <text>{{machineDetail.repairChargePersonName}}</text>
+        </view>
+        <view class="line_half_vw">
+            <text>地址：</text>
+            <text>{{machineDetail.repairChargePersonPhone}}</text>
+        </view>
+    </view>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>联系人：</text>
+            <text>{{machineDetail.repairChargePersonName}}</text>
+        </view>
+        <view class="line_half_vw">
+            <text>电话：</text>
+            <text>{{machineDetail.repairChargePersonPhone}}</text>
+        </view>
+    </view>
     <view class="title_vw">报修信息</view>
     <view class="line_vw">
         <text>标题：</text>
@@ -12,34 +33,42 @@
     <view class="line_vw">
         <text>照片：</text>
     </view>
-    <image class="pre_repair_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="title_vw">维修详情</view>
+    <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+        <view class="line_vw">
+            维修结果：
+            <view class="line_picker">{{resultMark[resultIndex]}}</view>
+        </view>
+    </picker>
+    <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
+        <view class="line_vw">
+            故障部位：
+            <view class="line_picker">{{partMark[partIndex]}}</view>
+        </view>
+    </picker>
     <view class="line_vw">
-        <text>故障部位：{{machineDetail.maintainInfo}}</text>
+        <text>问题描述：</text>
     </view>
+    <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
     <view class="line_vw">
-        <text>问题描述：{{machineDetail.repairActualIssueDescription}}</text>
+        <text>处理方法：</text>
     </view>
-    <view class="line_vw">
-        <text>处理方法：{{machineDetail.repairActualMethod}}</text>
-    </view>
+    <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
     <view class="line_vw">
         <text>照片：</text>
+        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
     </view>
-    <image class="repair_image" mode="aspectFill" wx:for="{{previewImageArr}}" @tap="changePreview" data-src="{{item}}" src="{{item}}"></image>
+    <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>维修人：</text>
             <text>{{machineDetail.repairChargePersonName}}</text>
         </view>
         <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{machineDetail.repairChargePersonPhone}}</text>
+            <text>维修日期：</text>
+            <text>{{machineDetail.repairEndTime}}</text>
         </view>
-    </view>
-    <view class="line_vw">
-        <text>维修日期：</text>
-        <text>{{machineDetail.repairEndTime}}</text>
     </view>
     <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
     <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
@@ -105,25 +134,120 @@
 
       data = {
         machineDetail: {},
-        previewImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg']
+        isSpeaking: false,
+        preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        resultMark: ['没修好', '已修好'],
+        resultIndex: 0,
+        partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
+        partIndex: 0,
+        issueDescriptionInput: '',
+        repairMethodInput: '',
+        repairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg']
       };
       methods = {
+        voicePlay() {
+          console.log('eventing_repair_info:手指按下了...')
+          this.isSpeaking = true
+          const innerAudioContext = wepy.createInnerAudioContext()
+          innerAudioContext.autoplay = true
+          innerAudioContext.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E061FF02C31F716658E5C81F5594D561F2E88B854E81CAAB7806D5E4F103E55D33C16F3FAC506D1AB172DE8600B37E43FAD&fromtag=46'
+          innerAudioContext.onPlay(() => {
+            console.log('开始播放')
+          })
+          innerAudioContext.onPause(() => {
+            console.log('pause了')
+            this.isSpeaking = false
+            this.$apply()
+          })
+          innerAudioContext.onStop(() => {
+            console.log('stop了')
+            this.isSpeaking = false
+            this.$apply()
+          })
+          innerAudioContext.onError((res) => {
+            console.log(res.errMsg)
+            console.log(res.errCode)
+            this.isSpeaking = false
+            this.$apply()
+          })
+          innerAudioContext.onEnded(() => {
+            console.log('bo完了')
+            this.isSpeaking = false
+            this.$apply()
+          })
+        },
         async previewImage() {
-          let res = await wepy.chooseImage({count: 8})
+          let res = await wepy.chooseImage({count: 3})
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
-            this.previewImageArr = tempFilePaths
-            console.log('srcssssssssssssssssssssssssss')
+            this.preRepairImageArr = tempFilePaths
+            console.log('srcssssssssssssssssssssssss')
             console.log(tempFilePaths)
             this.$apply()
           }
         },
-        changePreview(e) {
+        changePreRepairImagePreview(e) {
           var self = this
           wepy.previewImage({
             current: e.currentTarget.dataset.src,
-            urls: self.data.previewImageArr
+            urls: self.data.preRepairImageArr
           })
+        },
+        changeRepairImagePreview(e) {
+          var self = this
+          wepy.previewImage({
+            current: e.currentTarget.dataset.src,
+            urls: self.data.repairImageArr
+          })
+        },
+        bindResultPickerChange(e) {
+          console.log('结果picker发送选择改变，携带值为', e.detail.value)
+          this.resultIndex = e.detail.value
+        },
+        bindPartPickerChange(e) {
+          console.log('部位picker发送选择改变，携带值为', e.detail.value)
+          this.partIndex = e.detail.value
+        },
+        bindIssueDescriptionInput(e) {
+          console.log(e.detail.value)
+          this.issueDescriptionInput = e.detail.value
+        },
+        bindRepairMethodInput(e) {
+          console.log(e.detail.value)
+          this.repairMethodInput = e.detail.value
+        },
+        async bindUploadFeedback() {
+          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+          this.repairCustomerFeedback.customerMark = this.index
+          this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
+          let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
+          const repairFeedbackJson = await api.uploadRepairFeedback({
+            query: {
+              repairCustomerFeedback: repairCustomerFeedbackJson,
+              repairRecordId: this.machineDetail.id
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log('repairFeedbackJson:')
+          console.log(repairFeedbackJson)
+          console.log(repairFeedbackJson.data.code)
+          if (repairFeedbackJson.data.code === 200) {
+            wepy.showToast({
+              title: '上传成功',
+              icon: 'success',
+              duration: 2000
+            })
+            wepy.navigateBack()
+          } else {
+            wepy.showToast({
+              title: '上传失败',
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        },
+        bindNavigateBack() {
+          wepy.navigateBack()
         }
       };
 

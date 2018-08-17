@@ -1,150 +1,144 @@
 <template>
-    <view class="debug_install_content">
-        <view class="tui-menu-list {{isShowFrom1 ? 'shangjiantou' : 'xiajiantou'}}">
-            <view @tap="showFrom" data-param="1">机器详情</view>
-            <view class="tui-accordion-from {{isShowFrom1 ? 'tui-hide' : ''}}">
-                <view class="tui-menu-list tui-clear">
-                    <text class="tui-input-name">订单号：</text>
-                    <text class="tui-input-name">暂无</text>
-                </view>
-                <view class="tui-menu-list tui-clear">
-                    <text class="tui-input-name">机器编号：</text>
-                    <text class="tui-input-name">暂无</text>
-                </view>
-                <view class="tui-menu-list tui-clear">
-                    <text class="tui-input-name">input</text>
-                    <input placeholder="普通输入框"></input>
-                </view>
-            </view>
+    <machinedetails :machine.sync="machineDetail"></machinedetails>
+    <view class="line_vw">
+        <text>订单编号：</text>
+        <text class="nameplate_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
+    </view>
+    <view class="title_vw">客户信息</view>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>客户：</text>
+            <text>{{machineDetail.repairChargePersonName}}</text>
         </view>
-        <view class="tui-menu-list {{isShowFrom3 ? 'shangjiantou' : 'xiajiantou'}}">
-            <view @tap="showFrom" data-param="3"><text>文字排版</text></view>
-            <view class="{{isShowFrom3 ? '' : 'tui-hide'}}">
-                <view class="tui-h1"><text>H1 标签内文字大小及加粗样式</text></view>
-                <view class="tui-h2"><text>H2 标签内文字大小及加粗样式</text></view>
-                <view class="tui-h3"><text>H3 标签内文字大小及加粗样式</text></view>
-                <view class="tui-h4"><text>H4 标签内文字大小及加粗样式</text></view>
-                <view class="tui-h5"><text>H5 标签内文字大小及加粗样式</text></view>
-                <view class="tui-h6"><text>H6 标签内文字大小及加粗样式</text></view>
-                <view class="tui-p"><text>P 标签内文字大小及加粗样式</text></view>
-            </view>
+        <view class="line_half_vw">
+            <text>地址：</text>
+            <text>{{machineDetail.repairChargePersonPhone}}</text>
+        </view>
+    </view>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>联系人：</text>
+            <text>{{machineDetail.repairChargePersonName}}</text>
+        </view>
+        <view class="line_half_vw">
+            <text>电话：</text>
+            <text>{{machineDetail.repairChargePersonPhone}}</text>
+        </view>
+    </view>
+    <view class="title_vw">调试详情</view>
+    <view>{{machineDetail.installInfo}}</view>
+    <view>调试项2：</view>
+    <view class="line_vw">
+        <text>调试结果：</text>
+    </view>
+    <textarea @input="bindInstallResultInput" class="textarea" style="height: 3em" placeholder="输入调试结果"></textarea>
+    <view class="line_vw">
+        <view class="line_half_vw">
+            <text>调试安装人：</text>
+            <text>{{machineDetail.installChargePersonName}}</text>
+        </view>
+        <view class="line_half_vw">
+            <text>调试安装日期：</text>
+            <text>{{machineDetail.installActualTime}}</text>
         </view>
     </view>
 
+    <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+    <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
 </template>
-
+<style lang="less">
+    .line_vw {
+        margin: 20rpx;
+        display: flex;
+        .line_half_vw {
+            width: 50%;
+        }
+    }
+    .textarea {
+        width: 100%;
+        padding: 20rpx;
+        background-color: #fff;
+    }
+    .title_vw {
+        padding: 15rpx;
+        font-size: large;
+        font-weight: bold;
+        background: #EBEBEB;
+        color: #000000;
+    }
+    .double_btn {
+        margin: 25rpx;
+    }
+</style>
 <script>
     import wepy from 'wepy'
+    import MachineDetails from '../components/machine_details'
+    import api from '@/api/api'
+    import {
+        AUTHORIZATION
+    } from '@/utils/constant'
 
     export default class InstallDetail extends wepy.page {
       config = {
         navigationBarTitleText: '调试安装详情'
-      };
+      }
       components = {
-      };
-
+        machinedetails: MachineDetails
+      }
       data = {
-        isShowFrom1: false,
-        isShowFrom3: false,
-        indicatorDots: true,
-        vertical: false,
-        autoplay: true,
-        interval: 3000,
-        duration: 800
+        machineDetail: {},
+        installCustomerFeedback: {
+          customerMark: '',
+          customerSuggestion: ''
+        },
+        installResult: ''
       };
       methods = {
-        showFrom(e) {
-          console.log('11111111')
-          let param = e.target.dataset.param
-          console.log(param)
-          if (param === '1') {
-            this.isShowFrom1 = !this.data.isShowFrom1
-          } else if (param === '3') {
-            this.isShowFrom3 = !this.data.isShowFrom3
+        bindInstallResultInput(e) {
+          console.log(e.detail.value)
+          this.installResult = e.detail.value
+        },
+        async bindUploadFeedback() {
+          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
+          this.installCustomerFeedback.customerMark = this.index
+          this.installCustomerFeedback.customerSuggestion = this.customerSuggestion
+          let installCustomerFeedbackJson = JSON.stringify(this.installCustomerFeedback)
+          const installFeedbackJson = await api.uploadInstallFeedback({
+            query: {
+              installCustomerFeedback1: installCustomerFeedbackJson,
+              installRecordId: this.machineDetail.id
+            },
+            header: {Authorization: jwtAuthorization}
+          })
+          console.log('uploadInstallFeedbackJson:')
+          console.log(installFeedbackJson)
+          console.log(installFeedbackJson.data.code)
+          if (installFeedbackJson.data.code === 200) {
+            wepy.showToast({
+              title: '上传成功',
+              icon: 'success',
+              duration: 2000
+            })
+            wepy.navigateBack()
           } else {
-            this.isShowFrom1 = false
-            this.isShowFrom3 = false
+            wepy.showToast({
+              title: '上传失败',
+              icon: 'none',
+              duration: 3000
+            })
           }
+        },
+        bindNavigateBack() {
+          wepy.navigateBack()
         }
       };
 
       events = {};
 
-      onLoad() {
-        console.log('onLoad,lalallalalallalalla')
-  };
-
-        // Other properties
+      onLoad(options) {
+        console.log(options)
+        this.machineDetail = JSON.parse(options.machineDetail)
+        console.log(this.machineDetail)
+      };
     }
 </script>
-<style lang="less">
-    .debug_install_content{
-        margin: 10px;
-        border: 1px solid #c8c7cc;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    .tui-menu-list{
-        line-height: 80rpx;
-        color: #555;
-        font-size: 35rpx;
-        padding: 0 0rpx 0 10px;
-        position: relative;
-    }
-    .tui-menu-list:before{
-        content: '';
-        display: block;
-        height: 1px;
-        width: 100%;
-        background-color: #c8c7cc;
-        position: absolute;
-        bottom: 0;
-        left: 10px;
-    }
-    .tui-menu-list:last-child:before{
-        height: 0;
-    }
-    .tui-accordion-from{padding-left: 0;}
-    .tui-accordion-from input{
-        height: 80rpx;
-        line-height: 80rpx;
-    }
-
-    .tui-input-name{
-        height: 80rpx;
-        float: left;
-        width: 200rpx;
-    }
-    .tui-hide{display: none;}
-    .tui-clear:after{
-        content:".";
-        display:block;
-        height:0;
-        clear:both;
-        visibility:hidden;
-    }
-    .shangjiantou:after{
-        font-family:"iconfont" !important;
-        content: '\e734';
-        font-size: 40rpx;
-        position: absolute;
-        top: 35rpx;
-        display: inline-block;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        text-decoration: none;
-        right: 10rpx;
-    }
-    .xiajiantou:after{
-        font-family:"iconfont" !important;
-        content: '\e733';
-        font-size: 40rpx;
-        position: absolute;
-        top: 35rpx;
-        display: inline-block;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        text-decoration: none;
-        right: 10rpx;
-    }
-</style>

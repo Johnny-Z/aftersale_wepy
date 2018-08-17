@@ -22,7 +22,23 @@ const wxRequest = async(params = {}, url) => {
   tip.loaded()
   return res
 }
+const wxUploadFile = async(params = {}, url) => {
+  tip.loading()
+  let data = params.query || {}
+  data.sign = SIGN
+  data.time = TIMESTAMP
+  let res = await wepy.uploadFile({
+    url: url,
+    filePath: data.filePath,
+    name: data.name,
+    formData: data.data,
+    header: { 'Authorization': params.header.Authorization }
+  })
+  tip.loaded()
+  return res
+}
 
 module.exports = {
-  wxRequest
+  wxRequest,
+  wxUploadFile
 }
