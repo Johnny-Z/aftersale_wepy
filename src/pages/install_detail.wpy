@@ -74,9 +74,6 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
-    import {
-        AUTHORIZATION
-    } from '@/utils/constant'
 
     export default class InstallDetail extends wepy.page {
       config = {
@@ -99,7 +96,6 @@
           this.installResult = e.detail.value
         },
         async bindUploadFeedback() {
-          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
           this.installCustomerFeedback.customerMark = this.index
           this.installCustomerFeedback.customerSuggestion = this.customerSuggestion
           let installCustomerFeedbackJson = JSON.stringify(this.installCustomerFeedback)
@@ -107,8 +103,7 @@
             query: {
               installCustomerFeedback1: installCustomerFeedbackJson,
               installRecordId: this.machineDetail.id
-            },
-            header: {Authorization: jwtAuthorization}
+            }
           })
           console.log('uploadInstallFeedbackJson:')
           console.log(installFeedbackJson)

@@ -43,7 +43,6 @@
   import wepy from 'wepy'
   import api from '@/api/api'
   import {
-    AUTHORIZATION,
     ACCOUNT
   } from '@/utils/constant'
 
@@ -77,12 +76,10 @@
       this.getMaintainMachineList()
     }
     async getMaintainMachineList() {
-      let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
       let userAccount = wepy.getStorageSync(ACCOUNT)
 
       const maintainMachineListJson = await api.getMaintainList({
-        query: {userName: userAccount},
-        header: {Authorization: jwtAuthorization}
+        query: {userName: userAccount}
       })
       console.log('maintainMachineListJson:')
       console.log(maintainMachineListJson)

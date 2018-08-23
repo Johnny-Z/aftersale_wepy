@@ -33,7 +33,7 @@
   <view class="repair_list" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
     <image class="machine_img" src="{{logo}}"></image>
     <view class="info">
-      <view class="nameplate_tx">{{item.nameplate}}: </view>
+      <view class="nameplate_tx">{{item.machineNameplate}}: </view>
       <view>{{item.machineType}}: {{item.status}} : </view>
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>
@@ -43,7 +43,6 @@
     import wepy from 'wepy'
     import api from '@/api/api'
     import {
-      AUTHORIZATION,
       ACCOUNT
     } from '@/utils/constant'
 
@@ -77,12 +76,10 @@
         this.getRepairMachineList()
       }
       async getRepairMachineList() {
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let userAccount = wepy.getStorageSync(ACCOUNT)
 
         const repairMachineListJson = await api.getRepairList({
-          query: {userName: userAccount},
-          header: {Authorization: jwtAuthorization}
+          query: {userName: userAccount}
         })
         console.log('repairMachineListJson:')
         console.log(repairMachineListJson)

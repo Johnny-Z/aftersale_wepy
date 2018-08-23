@@ -43,7 +43,6 @@
   import wepy from 'wepy'
   import api from '@/api/api'
   import {
-    AUTHORIZATION,
     ACCOUNT
   } from '@/utils/constant'
 
@@ -77,12 +76,10 @@
       this.getInstallMachineList()
     }
     async getInstallMachineList() {
-      let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
       let userAccount = wepy.getStorageSync(ACCOUNT)
 
       const installMachineListJson = await api.getInstallList({
-        query: {userName: userAccount},
-        header: {Authorization: jwtAuthorization}
+        query: {userName: userAccount}
       })
       console.log('installMachineListJson:')
       console.log(installMachineListJson)

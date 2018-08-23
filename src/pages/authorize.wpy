@@ -92,7 +92,7 @@ export default class Authorize extends wepy.page {
   async onLoad() {
     let jwtAuthorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhZGRyZXNzXCI6XCLlrqLmiLflnLDlnYBhZG1pbjExMVwiLFwiYWdlbnRcIjowLFwiYXV0aG9yaXRpZXNcIjpbXSxcImNyZWF0ZVRpbWVcIjoxNTMxMjc0NjIzMDAwLFwiY3JlZGVudGlhbHNOb25FeHBpcmVkXCI6dHJ1ZSxcImN1c3RvbWVyQ29tcGFueVwiOjAsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6MSxcIm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwic2luc2ltXCIsXCJwaG9uZVwiOlwiMTM1NjY2Njc3NzdcIixcInJvbGVJZFwiOjEsXCJ1c2VybmFtZVwiOlwiYWRtaW5cIixcInZhbGlkXCI6XCIxXCIsXCJ3ZWNoYXRVbmlvbklkXCI6XCJ3ZWNoYXQyMjJcIn0iLCJleHAiOjE1MzcwODA3NDB9.FmU391_rnn1_qRwU5bUGNUw7GvI0zUVjXd1g0jq3RiddsweJQLYpnTDscNisuXYuSZblQrQxAVd3j9hpmfkZ4g'
     wepy.setStorageSync(AUTHORIZATION, jwtAuthorization)
-    wepy.setStorageSync(ACCOUNT, 'repairPerson_zhansan')
+    wepy.setStorageSync(ACCOUNT, 'repairPerson_lisi')
     let res = await wepy.getSetting()
     console.log(res)
     if ((res.authSetting)['scope.userInfo']) {

@@ -21,7 +21,7 @@
     <view class="title_vw">机器详情</view>
     <view class="line_vw">
       <text>机器编号：</text>
-      <text class="nameplate_tx">{{machine.nameplate.empty? '暂无':machine.nameplate}}</text>
+      <text class="nameplate_tx">{{machine.machineNameplate.empty? '暂无':machine.machineNameplate}}</text>
     </view>
     <view class="line_vw" >
       <view class="line_half_vw">

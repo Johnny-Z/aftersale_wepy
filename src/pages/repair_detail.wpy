@@ -120,7 +120,6 @@
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
     import {
-        AUTHORIZATION,
         ACCOUNT
     } from '@/utils/constant'
 
@@ -217,7 +216,6 @@
           this.repairMethodInput = e.detail.value
         },
         async bindUploadFeedback() {
-          let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
           this.repairCustomerFeedback.customerMark = this.index
           this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
           let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
@@ -225,8 +223,7 @@
             query: {
               repairCustomerFeedback: repairCustomerFeedbackJson,
               repairRecordId: this.machineDetail.id
-            },
-            header: {Authorization: jwtAuthorization}
+            }
           })
           console.log('repairFeedbackJson:')
           console.log(repairFeedbackJson)
@@ -257,18 +254,16 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        let jwtAuthorization = wepy.getStorageSync(AUTHORIZATION)
         let customerName = wepy.getStorageSync(ACCOUNT)
-        this.getRepairRecord(customerName, 3, jwtAuthorization)
+        this.getRepairRecord(customerName, this.machineDetail.machineNameplate)
       };
 
-      async getRepairRecord(customerName, nameplate, jwtAuthorization) {
+      async getRepairRecord(customerName, nameplate) {
         const repairRecordJson = await api.getRepairRecordList({
           query: {
             nameplate: nameplate,
-            repairRecordCustomerName: customerName
-          },
-          header: {Authorization: jwtAuthorization}
+            repairChargePersonName: customerName
+          }
         })
         console.log('repairRecordJson: ')
         console.log(repairRecordJson)
