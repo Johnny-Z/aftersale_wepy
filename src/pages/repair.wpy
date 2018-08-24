@@ -73,6 +73,8 @@
 
       onLoad() {
         console.log('start repair onLoad')
+      }
+      onShow() {
         this.getRepairMachineList()
       }
       async getRepairMachineList() {

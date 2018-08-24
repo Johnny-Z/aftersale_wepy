@@ -4,30 +4,30 @@
     <view class="line_vw">
         <view class="line_half_vw">
             <text>客户：</text>
-            <text>{{machineDetail.repairChargePersonName}}</text>
+            <text>{{repairRecordDetail.machineCustomerName}}</text>
         </view>
         <view class="line_half_vw">
             <text>地址：</text>
-            <text>{{machineDetail.repairChargePersonPhone}}</text>
+            <text>{{repairRecordDetail.machineCustomerName}}</text>
         </view>
     </view>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>联系人：</text>
-            <text>{{machineDetail.repairChargePersonName}}</text>
+            <text>{{repairRecordDetail.machineCustomerName}}</text>
         </view>
         <view class="line_half_vw">
             <text>电话：</text>
-            <text>{{machineDetail.repairChargePersonPhone}}</text>
+            <text>{{repairRecordDetail.machineCustomerPhone}}</text>
         </view>
     </view>
     <view class="title_vw">报修信息</view>
     <view class="line_vw">
         <text>标题：</text>
-        <text>{{machineDetail.repairRequestTitle}}</text>
+        <text>{{repairRecordDetail.repairRequestTitle}}</text>
     </view>
     <view class="line_vw">
-        <text>描述：{{machineDetail.repairRequestContent}}</text>
+        <text>描述：{{repairRecordDetail.repairRequestContent}}</text>
     </view>
     <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
     <view class="line_vw">
@@ -116,12 +116,11 @@
     }
 </style>
 <script>
+    /* eslint-disable no-undef */
+
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
-    import {
-        ACCOUNT
-    } from '@/utils/constant'
 
     export default class RepairDetail extends wepy.page {
       config = {
@@ -133,6 +132,7 @@
 
       data = {
         machineDetail: {},
+        repairRecordDetail: {},
         isSpeaking: false,
         preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         resultMark: ['没修好', '已修好'],
@@ -254,21 +254,31 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        let customerName = wepy.getStorageSync(ACCOUNT)
-        this.getRepairRecord(customerName, this.machineDetail.machineNameplate)
+        this.getRepairRecord(this.machineDetail.id)
       };
 
-      async getRepairRecord(customerName, nameplate) {
+      async getRepairRecord(repairRecordId) {
         const repairRecordJson = await api.getRepairRecordList({
           query: {
-            nameplate: nameplate,
-            repairChargePersonName: customerName
+            repairRecordId: repairRecordId
           }
         })
-        console.log('repairRecordJson: ')
+        console.log('repairRecordJson:')
         console.log(repairRecordJson)
         console.log(repairRecordJson.data.data.list)
-
+        if (repairRecordJson.data.data.list.length < 0) {
+          this.repairRecordDetail = repairRecordJson.data.data.list[0]
+        } else {
+          wx.showModal({
+            title: '获取机器信息出错！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+              wepy.navigateBack()
+            }
+          })
+        }
         this.$apply()
       };
 

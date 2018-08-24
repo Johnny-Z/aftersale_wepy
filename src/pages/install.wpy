@@ -73,6 +73,9 @@
 
     onLoad() {
       console.log('start install onLoad')
+    }
+
+    onShow() {
       this.getInstallMachineList()
     }
     async getInstallMachineList() {

@@ -73,6 +73,9 @@
 
     onLoad() {
       console.log('start maintain onLoad')
+    }
+
+    onShow() {
       this.getMaintainMachineList()
     }
     async getMaintainMachineList() {
