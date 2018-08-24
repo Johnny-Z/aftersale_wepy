@@ -8,17 +8,17 @@
         </view>
         <view class="line_half_vw">
             <text>地址：</text>
-            <text>{{repairRecordDetail.machineCustomerName}}</text>
+            <text>{{repairRecordDetail.customerAddressInRepairRecord}}</text>
         </view>
     </view>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>联系人：</text>
-            <text>{{repairRecordDetail.machineCustomerName}}</text>
+            <text>{{repairRecordDetail.customerNameInRepairRecord}}</text>
         </view>
         <view class="line_half_vw">
             <text>电话：</text>
-            <text>{{repairRecordDetail.machineCustomerPhone}}</text>
+            <text>{{repairRecordDetail.customerPhoneInRepairRecord}}</text>
         </view>
     </view>
     <view class="title_vw">报修信息</view>
@@ -149,7 +149,7 @@
           this.isSpeaking = true
           const innerAudioContext = wepy.createInnerAudioContext()
           innerAudioContext.autoplay = true
-          innerAudioContext.src = 'http://ws.stream.qqmusic.qq.com/M500001VfvsJ21xFqb.mp3?guid=ffffffff82def4af4b12b3cd9337d5e7&uin=346897220&vkey=6292F51E1E384E061FF02C31F716658E5C81F5594D561F2E88B854E81CAAB7806D5E4F103E55D33C16F3FAC506D1AB172DE8600B37E43FAD&fromtag=46'
+          innerAudioContext.src = this.repairRecordDetail.repairRequestVoice
           innerAudioContext.onPlay(() => {
             console.log('开始播放')
           })
@@ -263,11 +263,12 @@
             repairRecordId: repairRecordId
           }
         })
-        console.log('repairRecordJson:')
+        console.log('repairRecordJson :')
         console.log(repairRecordJson)
         console.log(repairRecordJson.data.data.list)
-        if (repairRecordJson.data.data.list.length < 0) {
+        if (repairRecordJson.data.data.list.length > 0) {
           this.repairRecordDetail = repairRecordJson.data.data.list[0]
+          this.preRepairImageArr = this.repairRecordDetail.repairRequestPictures.split(',')
         } else {
           wx.showModal({
             title: '获取机器信息出错！',
