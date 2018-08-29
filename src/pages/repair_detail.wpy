@@ -34,44 +34,49 @@
         <text>照片：</text>
     </view>
     <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-    <view class="title_vw">维修详情</view>
-    <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+    <view class="button_view" wx:if="{{isReady}}">
+      <button class="single_btn" @tap="previewImage" size="mini" type="primary">确认接单</button>
+    </view>
+    <view wx:else >
+        <view class="title_vw">维修详情</view>
+        <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+            <view class="line_vw">
+                维修结果：
+                <view class="line_picker">{{resultMark[resultIndex]}}</view>
+            </view>
+        </picker>
+        <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
+            <view class="line_vw">
+                故障部位：
+                <view class="line_picker">{{partMark[partIndex]}}</view>
+            </view>
+        </picker>
         <view class="line_vw">
-            维修结果：
-            <view class="line_picker">{{resultMark[resultIndex]}}</view>
+            <text>问题描述：</text>
         </view>
-    </picker>
-    <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
+        <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
         <view class="line_vw">
-            故障部位：
-            <view class="line_picker">{{partMark[partIndex]}}</view>
+            <text>处理方法：</text>
         </view>
-    </picker>
-    <view class="line_vw">
-        <text>问题描述：</text>
-    </view>
-    <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
-    <view class="line_vw">
-        <text>处理方法：</text>
-    </view>
-    <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
-    <view class="line_vw">
-        <text>照片：</text>
-        <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
-    </view>
-    <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>维修人：</text>
-            <text>{{machineDetail.repairChargePersonName}}</text>
+        <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
+        <view class="line_vw">
+            <text>照片：</text>
+            <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
         </view>
-        <view class="line_half_vw">
-            <text>维修日期：</text>
-            <text>{{machineDetail.repairEndTime}}</text>
+        <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+        <view class="line_vw">
+            <view class="line_half_vw">
+                <text>维修人：</text>
+                <text>{{machineDetail.repairChargePersonName}}</text>
+            </view>
+            <view class="line_half_vw">
+                <text>维修日期：</text>
+                <text>{{machineDetail.repairEndTime}}</text>
+            </view>
         </view>
+        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
     </view>
-    <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-    <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
 </template>
 <style lang="less">
     .title_vw {
@@ -135,6 +140,7 @@
         repairRecordDetail: {},
         isSpeaking: false,
         preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        isReady: true,
         resultMark: ['没修好', '已修好'],
         resultIndex: 0,
         partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
@@ -254,7 +260,13 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
+        if (this.machineDetail.status === '2') {
+          this.isReady = true
+        } else {
+          this.isReady = false
+        }
         this.getRepairRecord(this.machineDetail.id)
+        this.$apply()
       };
 
       async getRepairRecord(repairRecordId) {
