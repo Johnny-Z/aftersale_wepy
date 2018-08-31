@@ -35,44 +35,40 @@
     </view>
     <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
     <view class="button_view" wx:if="{{isReady}}">
-      <button class="single_btn" @tap="previewImage" size="mini" type="primary">确认接单</button>
+      <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
     </view>
     <view wx:else >
         <view class="title_vw">维修详情</view>
         <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
             <view class="line_vw">
-                维修结果：
+                请选择本次维修结果：
                 <view class="line_picker">{{resultMark[resultIndex]}}</view>
             </view>
         </picker>
-        <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
+        <view wx:if="{{isResolved}}">
+            <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
+                <view class="line_vw">
+                    故障部位：
+                    <view class="line_picker">{{partMark[partIndex]}}</view>
+                </view>
+            </picker>
             <view class="line_vw">
-                故障部位：
-                <view class="line_picker">{{partMark[partIndex]}}</view>
+                <text>问题描述：</text>
             </view>
-        </picker>
-        <view class="line_vw">
-            <text>问题描述：</text>
-        </view>
-        <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
-        <view class="line_vw">
-            <text>处理方法：</text>
-        </view>
-        <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
-        <view class="line_vw">
-            <text>照片：</text>
-            <button class="single_btn" @tap="previewImage" size="mini" type="primary">点击拍照/选图</button>
-        </view>
-        <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-        <view class="line_vw">
-            <view class="line_half_vw">
-                <text>维修人：</text>
-                <text>{{machineDetail.repairChargePersonName}}</text>
+            <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
+            <view class="line_vw">
+                <text>处理方法：</text>
             </view>
-            <view class="line_half_vw">
-                <text>维修日期：</text>
-                <text>{{machineDetail.repairEndTime}}</text>
+            <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
+            <view class="line_vw">
+                <text>照片：</text>
+                <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
             </view>
+            <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+        </view>
+        <view class="line_vw">
+            <text>维修人：</text>
+            <text>{{machineDetail.repairChargePersonName}}</text>
         </view>
         <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
         <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
@@ -126,7 +122,10 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
-
+    import {
+        REPAIR_STATUS_SIGNED_TO_REPAIRER,
+        REPAIR_STATUS_REPAIRER_ACCEPTED
+    } from '@/utils/constant'
     export default class RepairDetail extends wepy.page {
       config = {
         navigationBarTitleText: '维修详情'
@@ -141,13 +140,14 @@
         isSpeaking: false,
         preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         isReady: true,
-        resultMark: ['没修好', '已修好'],
+        resultMark: ['没解决', '部分解决', '已解决'],
         resultIndex: 0,
+        isResolved: false,
         partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
         partIndex: 0,
         issueDescriptionInput: '',
         repairMethodInput: '',
-        repairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg']
+        repairImageArr: []
       };
       methods = {
         voicePlay() {
@@ -181,22 +181,46 @@
             this.$apply()
           })
         },
-        async previewImage() {
-          let res = await wepy.chooseImage({count: 3})
-          if (res.errMsg === 'chooseImage:ok') {
-            let tempFilePaths = res.tempFilePaths
-            this.preRepairImageArr = tempFilePaths
-            console.log('srcssssssssssssssssssssssss')
-            console.log(tempFilePaths)
-            this.$apply()
-          }
-        },
         changePreRepairImagePreview(e) {
           var self = this
           wepy.previewImage({
             current: e.currentTarget.dataset.src,
             urls: self.data.preRepairImageArr
           })
+        },
+        async bindAcceptOrder() {
+          this.repairRecordDetail.status = REPAIR_STATUS_REPAIRER_ACCEPTED
+          let acceptOrderJson = await api.updateRepairRecord({
+            query: this.repairRecordDetail
+          })
+          console.log(acceptOrderJson)
+          if (acceptOrderJson.data.code !== 200) {
+            wx.showModal({
+              title: '接单失败！',
+              content: '网络错误',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+              }
+            })
+          } else {
+            wepy.showToast({
+              title: '接单成功',
+              icon: 'success',
+              duration: 2000
+            })
+            wepy.navigateBack()
+          }
+        },
+        async bindPreviewImage() {
+          let res = await wepy.chooseImage({count: 3})
+          if (res.errMsg === 'chooseImage:ok') {
+            let tempFilePaths = res.tempFilePaths
+            this.repairImageArr = tempFilePaths
+            console.log('srcssssssssssssssssssssssss')
+            console.log(tempFilePaths)
+            this.$apply()
+          }
         },
         changeRepairImagePreview(e) {
           var self = this
@@ -208,6 +232,12 @@
         bindResultPickerChange(e) {
           console.log('结果picker发送选择改变，携带值为', e.detail.value)
           this.resultIndex = e.detail.value
+          if (e.detail.value == 2 || e.detail.value == 1) {
+            this.isResolved = true
+          } else {
+            this.isResolved = false
+          }
+          this.$apply()
         },
         bindPartPickerChange(e) {
           console.log('部位picker发送选择改变，携带值为', e.detail.value)
@@ -260,7 +290,8 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        if (this.machineDetail.status === '2') {
+        this.preRepairImageArr = this.machineDetail.repairRequestPictures.split(',')
+        if (this.machineDetail.status === REPAIR_STATUS_SIGNED_TO_REPAIRER) {
           this.isReady = true
         } else {
           this.isReady = false
@@ -275,7 +306,7 @@
             repairRecordId: repairRecordId
           }
         })
-        console.log('repairRecordJson :')
+        console.log('repairRecordJson 获取 :')
         console.log(repairRecordJson)
         console.log(repairRecordJson.data.data.list)
         if (repairRecordJson.data.data.list.length > 0) {

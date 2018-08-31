@@ -1,5 +1,6 @@
 import {
-  wxRequest
+  wxRequest,
+  wxRequestRaw
 } from '@/utils/wxRequest'
 
 let env = '-test' // -dev 或者 -test
@@ -22,9 +23,9 @@ const getInstallList = (params) => wxRequest(params, apiMall + '/install/record/
 const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
 const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
 const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
-const updateInstallRecord = (params) => wxRequest(params, apiMall + '/install/record/update')
-const updateMaintainRecord = (params) => wxRequest(params, apiMall + '/maintain/record/update')
-const updateRepairRecord = (params) => wxRequest(params, apiMall + '/repair/record/update')
+const updateInstallRecord = (params) => wxRequestRaw(params, apiMall + '/install/record/update')
+const updateMaintainRecord = (params) => wxRequestRaw(params, apiMall + '/maintain/record/update')
+const updateRepairRecord = (params) => wxRequestRaw(params, apiMall + '/repair/record/update')
 const uploadInstallFeedback = (params) => wxRequest(params, apiMall + '/install/customer/feedback/add')
 const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintain/customer/feedback/add')
 const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/customer/feedback/add')

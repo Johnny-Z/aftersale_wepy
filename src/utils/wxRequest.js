@@ -26,6 +26,21 @@ const wxRequest = async(params = {}, url) => {
   tip.loaded()
   return res
 }
+const wxRequestRaw = async(params = {}, url) => {
+  tip.loading()
+  let data = params.query || {}
+  data.sign = SIGN
+  data.time = TIMESTAMP
+  let res = await wepy.request({
+    url: url,
+    method: params.method || 'POST',
+    data: data,
+    header: { 'Content-Type': 'application/json',
+      'Authorization': TOKEN_AUTHORIZATION }
+  })
+  tip.loaded()
+  return res
+}
 const wxUploadFile = async(params = {}, url) => {
   tip.loading()
   let data = params.query || {}
@@ -44,5 +59,6 @@ const wxUploadFile = async(params = {}, url) => {
 
 module.exports = {
   wxRequest,
+  wxRequestRaw,
   wxUploadFile
 }
