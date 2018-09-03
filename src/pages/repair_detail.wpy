@@ -98,6 +98,9 @@
         padding: 20rpx;
         background-color: #fff;
     }
+    .button_view {
+      margin: 50rpx 10rpx;
+    }
     .single_btn {
         margin-left: 25rpx;
         width: 50%;
@@ -117,7 +120,7 @@
     }
 </style>
 <script>
-    /* eslint-disable no-undef */
+  /* eslint-disable no-undef,eqeqeq */
 
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
@@ -232,7 +235,7 @@
         bindResultPickerChange(e) {
           console.log('结果picker发送选择改变，携带值为', e.detail.value)
           this.resultIndex = e.detail.value
-          if (e.detail.value === 2 || e.detail.value === 1) {
+          if (e.detail.value == 2 || e.detail.value == 1) {
             this.isResolved = true
           } else {
             this.isResolved = false

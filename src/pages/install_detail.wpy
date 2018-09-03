@@ -8,21 +8,21 @@
     <view class="line_vw">
         <view class="line_half_vw">
             <text>客户：</text>
-            <text>{{machineDetail.repairChargePersonName}}</text>
+            <text>{{machineDetail.machineCustomerName}}</text>
         </view>
         <view class="line_half_vw">
             <text>地址：</text>
-            <text>{{machineDetail.repairChargePersonPhone}}</text>
+            <text>{{machineDetail.customerAddressInRepairRecord}}</text>
         </view>
     </view>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>联系人：</text>
-            <text>{{machineDetail.repairChargePersonName}}</text>
+            <text>{{machineDetail.customerNameInRepairRecord}}</text>
         </view>
         <view class="line_half_vw">
             <text>电话：</text>
-            <text>{{machineDetail.repairChargePersonPhone}}</text>
+            <text>{{machineDetail.customerPhoneInRepairRecord}}</text>
         </view>
     </view>
     <view class="button_view" wx:if="{{isReady}}">
@@ -70,6 +70,9 @@
         font-weight: bold;
         background: #EBEBEB;
         color: #000000;
+    }
+    .button_view {
+      margin: 50rpx 10rpx;
     }
     .single_btn {
         margin-left: 25rpx;
@@ -179,6 +182,7 @@
         } else {
           this.isReady = false
         }
+        this.$apply()
       };
     }
 </script>
