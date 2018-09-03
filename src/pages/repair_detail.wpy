@@ -232,7 +232,7 @@
         bindResultPickerChange(e) {
           console.log('结果picker发送选择改变，携带值为', e.detail.value)
           this.resultIndex = e.detail.value
-          if (e.detail.value == 2 || e.detail.value == 1) {
+          if (e.detail.value === 2 || e.detail.value === 1) {
             this.isResolved = true
           } else {
             this.isResolved = false

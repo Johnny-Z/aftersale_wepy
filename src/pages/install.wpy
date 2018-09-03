@@ -33,7 +33,7 @@
   <view class="install_list" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
     <image class="machine_img" src="{{logo}}"></image>
     <view class="info">
-      <view class="nameplate_tx">{{item.nameplate}}: </view>
+      <view class="nameplate_tx">{{item.machineNameplate}}: </view>
       <view>{{item.machineType}}: {{item.status}} : </view>
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>

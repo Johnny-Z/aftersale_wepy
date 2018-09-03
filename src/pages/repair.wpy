@@ -21,12 +21,6 @@
         font-size: 36rpx;
       }
     }
-    .item {
-      background: #fff;
-      padding: 15rpx;
-      display: flex;
-      margin-top: 15rpx;
-    }
   }
 </style>
 <template>

@@ -17,8 +17,8 @@ const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cat
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
 const getRepairList = (params) => wxRequest(params, apiMall + '/repair/record/selectRepairTaskByUser')
-const getMaintainList = (params) => wxRequest(params, apiMall + '/maintain/record/selectMaintainTaskMachine')
-const getInstallList = (params) => wxRequest(params, apiMall + '/install/record/selectInstallTaskMachine')
+const getMaintainList = (params) => wxRequest(params, apiMall + '/maintain/record/selectMaintainTaskByUser')
+const getInstallList = (params) => wxRequest(params, apiMall + '/install/record/selectInstallTaskByUser')
 
 const getInstallRecordList = (params) => wxRequest(params, apiMall + '/install/record/getInstallRecordInfoList')
 const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain/record/getMaintainRecordInfoList')
