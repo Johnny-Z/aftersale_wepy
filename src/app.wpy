@@ -14,6 +14,7 @@
           'pages/repair_detail',
           'pages/maintain',
           'pages/maintain_detail',
+          'pages/maintain_abnormal',
           'pages/install',
           'pages/install_detail',
           'pages/discover',

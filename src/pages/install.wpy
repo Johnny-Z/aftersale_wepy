@@ -34,7 +34,7 @@
     <image class="machine_img" src="{{logo}}"></image>
     <view class="info">
       <view class="nameplate_tx">{{item.machineNameplate}}: </view>
-      <view>{{item.machineType}}: {{item.status}} : </view>
+      <view>{{item.machineType}}: {{item.installStatus}} : </view>
       <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
     </view>
   </view>

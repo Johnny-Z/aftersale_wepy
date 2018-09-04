@@ -8,47 +8,40 @@
     <view class="line_vw">
         <view class="line_half_vw">
             <text>客户：</text>
-            <text>{{machineDetail.machineCustomerName}}</text>
+            <text>{{installRecordDetail.machineCustomerName}}</text>
         </view>
         <view class="line_half_vw">
             <text>地址：</text>
-            <text>{{machineDetail.customerAddressInRepairRecord}}</text>
+            <text>{{installRecordDetail.customerAddressInInstallRecord}}</text>
         </view>
     </view>
     <view class="line_vw">
         <view class="line_half_vw">
             <text>联系人：</text>
-            <text>{{machineDetail.customerNameInRepairRecord}}</text>
+            <text>{{installRecordDetail.customerInInstallRecord}}</text>
         </view>
         <view class="line_half_vw">
             <text>电话：</text>
-            <text>{{machineDetail.customerPhoneInRepairRecord}}</text>
+            <text>{{installRecordDetail.customerPhoneInInstallRecord}}</text>
         </view>
     </view>
-    <view class="button_view" wx:if="{{isReady}}">
-        <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
-    </view>
-    <view wx:else >
-        <view class="title_vw">调试详情</view>
-        <view>{{machineDetail.installInfo}}</view>
-        <view>调试项2：</view>
-        <view class="line_vw">
-            <text>调试结果：</text>
+    <view wx:if="{{isChargePerson}}">
+        <view class="button_view" wx:if="{{isReady}}">
+            <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
         </view>
-        <textarea @input="bindInstallResultInput" class="textarea" style="height: 3em" placeholder="输入调试结果"></textarea>
-        <view class="line_vw">
-            <view class="line_half_vw">
-                <text>调试安装人：</text>
-                <text>{{machineDetail.installChargePersonName}}</text>
+        <view wx:else >
+            <view class="title_vw">调试详情</view>
+            <view>{{installRecordDetail.installInfo}}</view>
+            <view>调试项2：</view>
+            <view class="line_vw">
+                <text>调试结果：</text>
             </view>
-            <view class="line_half_vw">
-                <text>调试安装日期：</text>
-                <text>{{machineDetail.installActualTime}}</text>
+            <textarea @input="bindInstallResultInput" class="textarea" style="height: 3em" placeholder="输入调试结果"></textarea>
+            <view class="button_view">
+                <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+                <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
             </view>
         </view>
-
-        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
     </view>
 </template>
 <style lang="less">
@@ -83,14 +76,16 @@
     }
 </style>
 <script>
-    /* eslint-disable no-undef */
+    /* eslint-disable no-undef,eqeqeq */
 
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
     import {
+        USER_ID,
         INSTALL_STATUS_TASK_DOING,
-        INSTALL_STATUS_ASSIGNED
+        INSTALL_STATUS_ASSIGNED,
+        INSTALL_STATUS_FINISHED
     } from '@/utils/constant'
 
     export default class InstallDetail extends wepy.page {
@@ -101,8 +96,10 @@
         machinedetails: MachineDetails
       }
       data = {
-        isReady: false,
+        isReady: true,
         machineDetail: {},
+        installRecordDetail: {},
+        isChargePerson: false,
         installCustomerFeedback: {
           customerMark: '',
           customerSuggestion: ''
@@ -111,9 +108,9 @@
       };
       methods = {
         async bindAcceptOrder() {
-          this.machineDetail.status = INSTALL_STATUS_TASK_DOING
+          this.installRecordDetail.installStatus = INSTALL_STATUS_TASK_DOING
           let acceptOrderJson = await api.updateInstallRecord({
-            query: this.machineDetail
+            query: this.installRecordDetail
           })
           console.log(acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
@@ -126,12 +123,15 @@
               }
             })
           } else {
-            wepy.showToast({
-              title: '接单成功',
-              icon: 'success',
-              duration: 2000
+            wx.showModal({
+              title: '接单成功！',
+              content: '接单成功',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+                wepy.navigateBack()
+              }
             })
-            wepy.navigateBack()
           }
         },
         bindInstallResultInput(e) {
@@ -139,30 +139,34 @@
           this.installResult = e.detail.value
         },
         async bindUploadFeedback() {
-          this.installCustomerFeedback.customerMark = this.index
-          this.installCustomerFeedback.customerSuggestion = this.customerSuggestion
-          let installCustomerFeedbackJson = JSON.stringify(this.installCustomerFeedback)
-          const installFeedbackJson = await api.uploadInstallFeedback({
-            query: {
-              installCustomerFeedback1: installCustomerFeedbackJson,
-              installRecordId: this.machineDetail.id
-            }
+          this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
+          this.installRecordDetail.installResult = this.installResult
+          let installFeedbackJson = await api.updateInstallRecord({
+            query: this.installRecordDetail
           })
           console.log('uploadInstallFeedbackJson:')
           console.log(installFeedbackJson)
           console.log(installFeedbackJson.data.code)
           if (installFeedbackJson.data.code === 200) {
-            wepy.showToast({
-              title: '上传成功',
-              icon: 'success',
-              duration: 2000
+            wx.showModal({
+              title: '提交成功！',
+              content: '成功',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+                wepy.navigateBack()
+              }
             })
-            wepy.navigateBack()
           } else {
-            wepy.showToast({
-              title: '上传失败',
-              icon: 'none',
-              duration: 3000
+            // 提交失败，状态回滚
+            this.installRecordDetail.installStatus = INSTALL_STATUS_TASK_DOING
+            wx.showModal({
+              title: '提交失败！',
+              content: '网络错误',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+              }
             })
           }
         },
@@ -177,10 +181,41 @@
         console.log(options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
-        if (this.machineDetail.status === INSTALL_STATUS_ASSIGNED) {
+        if (this.machineDetail.installStatus == INSTALL_STATUS_ASSIGNED) {
           this.isReady = true
         } else {
           this.isReady = false
+        }
+        this.getInstallRecord(this.machineDetail.id)
+        this.$apply()
+      };
+
+      async getInstallRecord(installRecordId) {
+        let installRecordJson = await api.getInstallRecordList({
+          query: {
+            installRecordId: installRecordId
+          }
+        })
+        console.log('installRecordJson 获取 :')
+        console.log(installRecordJson)
+        console.log(installRecordJson.data.data.list)
+        if (installRecordJson.data.data.list.length > 0) {
+          this.installRecordDetail = installRecordJson.data.data.list[0]
+          if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
+            this.isChargePerson = true
+          } else {
+            this.isChargePerson = false
+          }
+        } else {
+          wx.showModal({
+            title: '获取机器信息出错！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+              wepy.navigateBack()
+            }
+          })
         }
         this.$apply()
       };

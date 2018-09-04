@@ -1,43 +1,16 @@
 <template>
-    <machinedetails :machine.sync="machineDetail"></machinedetails>
-    <view class="title_vw">客户信息</view>
+    <view class="title_vw">{{abnormalInfo}}</view>
     <view class="line_vw">
-        <view class="line_half_vw">
-            <text>客户：</text>
-            <text>{{maintainRecordDetail.machineCustomerName}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>地址：</text>
-            <text>{{maintainRecordDetail.customerAddressInMaintainRecord}}</text>
-        </view>
+        <text>问题描述：</text>
     </view>
+    <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入问题详情"></textarea>
     <view class="line_vw">
-        <view class="line_half_vw">
-            <text>联系人：</text>
-            <text>{{maintainRecordDetail.customerNameInMaintainRecord}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{maintainRecordDetail.customerPhoneInMaintainRecord}}</text>
-        </view>
+        <text>解决方法：</text>
     </view>
-    <view wx:if="{{isChargePerson}}">
-        <view class="button_view" wx:if="{{isReady}}">
-            <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
-        </view>
-        <view wx:else >
-            <view class="title_vw">保养详情</view>
-            <view>{{maintainRecordDetail.installInfo}}</view>
-            <view>保养项项：</view>
-            <view class="line_vw">
-                <text>保养建议：</text>
-            </view>
-            <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入保养建议"></textarea>
-            <view class="button_view">
-                <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-                <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
-            </view>
-        </view>
+    <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入解决办法"></textarea>
+    <view class="button_view">
+        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
+        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
     </view>
 </template>
 <style lang="less">
@@ -79,14 +52,13 @@
     import api from '@/api/api'
     import {
         USER_ID,
-        MAINTAIN_STATUS_TASK_DOING,
         MAINTAIN_STATUS_ASSIGNED,
         MAINTAIN_STATUS_FINISHED
     } from '@/utils/constant'
 
-    export default class MaintainDetail extends wepy.page {
+    export default class MaintainAbnormal extends wepy.page {
       config = {
-        navigationBarTitleText: '保养详情'
+        navigationBarTitleText: '保养异常项'
       }
       components = {
         machinedetails: MachineDetails
@@ -103,33 +75,6 @@
         maintainSuggestion: ''
       };
       methods = {
-        async bindAcceptOrder() {
-          this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_TASK_DOING
-          let acceptOrderJson = await api.updateMaintainRecord({
-            query: this.maintainRecordDetail
-          })
-          console.log(acceptOrderJson)
-          if (acceptOrderJson.data.code !== 200) {
-            wx.showModal({
-              title: '接单失败！',
-              content: '网络错误',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-              }
-            })
-          } else {
-            wx.showModal({
-              title: '接单成功！',
-              content: '接单成功',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
-          }
-        },
         bindMaintainSuggestionInput(e) {
           console.log(e.detail.value)
           this.maintainSuggestion = e.detail.value

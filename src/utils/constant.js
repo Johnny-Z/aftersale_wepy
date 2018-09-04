@@ -31,6 +31,11 @@ export const AUTHORIZATION = 'Authorization'
  */
 export const ACCOUNT = 'account'
 /**
+ * 用户id
+ * @type {String}
+ */
+export const USER_ID = 'user_id'
+/**
  * 维修状态
  * 0: 报修进行中（报修过程中，文件上传没完成等情况）
  * 1：未派单，
