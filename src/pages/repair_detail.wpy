@@ -74,9 +74,7 @@
                 </view>
                 <view class="input_line_vw">
                     <input class="line_input" type="text" name="search_input" @input="searchInput" placeholder="输入配件名" focus="true"/>
-                    <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
-                        <view class="line_picker">{{resultMark[resultIndex]}}</view>
-                    </picker>
+                    <switch class="tui-fr" type="checkbox" checked="{{isChecked6}}" bindchange="changeSwitch6"/>需要寄回
                     <icon class="clear_icon" size='20' color="red" type='clear'></icon>
                 </view>
             </view>
