@@ -3,11 +3,11 @@
     <view class="line_vw">
         <text>问题描述：</text>
     </view>
-    <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入问题详情"></textarea>
+    <textarea @input="bindAbnormalInput" class="textarea" style="height: 3em" placeholder="输入问题详情"></textarea>
     <view class="line_vw">
         <text>解决方法：</text>
     </view>
-    <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入解决办法"></textarea>
+    <textarea @input="bindFixResultInput" class="textarea" style="height: 3em" placeholder="输入解决办法"></textarea>
     <view class="button_view">
         <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
         <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
@@ -72,12 +72,17 @@
           customerMark: '',
           customerSuggestion: ''
         },
-        maintainSuggestion: ''
+        maintainAbnormalContent: '',
+        maintainFixResult: ''
       };
       methods = {
-        bindMaintainSuggestionInput(e) {
+        bindAbnormalInput(e) {
           console.log(e.detail.value)
-          this.maintainSuggestion = e.detail.value
+          this.maintainAbnormalContent = e.detail.value
+        },
+        bindFixResultInput(e) {
+          console.log(e.detail.value)
+          this.maintainFixResult = e.detail.value
         },
         async bindUploadFeedback() {
           this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED

@@ -66,6 +66,19 @@
                     <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
                 </view>
                 <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+                <button class="add_btn" @tap="bindUploadFeedback" >添加更多故障信息</button>
+                <button class="double_btn" @tap="bindNavigateBack" size="mini" >添加配件信息</button>
+                <view class="line_vw">
+                    <text class="line_half_vw">配件名</text>
+                    <text class="line_center_vw">是否寄回</text>
+                </view>
+                <view class="input_line_vw">
+                    <input class="line_input" type="text" name="search_input" @input="searchInput" placeholder="输入配件名" focus="true"/>
+                    <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+                        <view class="line_picker">{{resultMark[resultIndex]}}</view>
+                    </picker>
+                    <icon class="clear_icon" size='20' color="red" type='clear'></icon>
+                </view>
             </view>
             <view class="button_view">
                 <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
@@ -89,6 +102,21 @@
             width: 50%;
             height: 60%
         }
+        .line_center_vw {
+            width: 50%;
+            justify-content: center;
+        }
+    }
+    .input_line_vw {
+        margin: 20rpx;
+        display: flex;
+        border-bottom: 1px solid #ababab;
+        .line_input {
+            width: 50%;
+        }
+        .clear_icon {
+            width: 10%;
+        }
     }
     .line_picker {
         background: #EEC591;
@@ -107,6 +135,10 @@
     }
     .double_btn {
         margin: 25rpx;
+        display: flex;
+    }
+    .add_btn {
+        font-size: 26rpx;
     }
     .pre_repair_image {
         margin-left: 2.5%;
