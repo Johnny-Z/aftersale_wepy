@@ -53,8 +53,8 @@
         }
     }
     .textarea {
-        width: 100%;
-        padding: 20rpx;
+        width: 90%;
+        margin-left: 20rpx;
         background-color: #fff;
     }
     .title_vw {

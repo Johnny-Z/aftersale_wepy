@@ -41,17 +41,15 @@
         <view wx:else >
             <view class="title_vw">维修详情</view>
             <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
-                <view class="line_vw">
-                    请选择本次维修结果：
+                <view class="line_vw">请选择本次维修结果：
                     <view class="line_picker">{{resultMark[resultIndex]}}</view>
                 </view>
             </picker>
             <view wx:if="{{isResolved}}">
-                <view class="list_view" wx:for="{{repairRecordList}}" @tap='bindRepairRecordNum({{index}})'>
-                    <picker @change="bindPartPickerChange" value="{{repairRecordList[index].partIndex}}" range="{{partMark}}">
-                        <view class="line_vw">
-                            故障部位：
-                            <view class="line_picker">{{partMark[repairRecordList[index].partIndex]}}</view>
+                <view class="list_view" wx:for="{{repairRecordList}}" wx:key="listItem" @tap='bindRepairRecordNum({{index}})'>
+                    <picker @change="bindPartPickerChange" value="{{listItem.partIndex}}" range="{{partMark}}">
+                        <view class="line_vw">故障部位：
+                            <view class="line_picker">{{partMark[listItem.partIndex]}}</view>
                         </view>
                     </picker>
                     <view class="line_vw">
@@ -66,19 +64,19 @@
                         <text>照片：</text>
                         <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
                     </view>
-                    <image class="repair_image" mode="aspectFill" wx:for="{{repairRecordList[index].repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+                    <image class="repair_image" mode="aspectFill" wx:for="{{listItem.repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+                    <view class="line_vw">
+                        <text class="line_half_vw">配件名</text>
+                        <text class="line_half_vw">是否寄回</text>
+                    </view>
+                    <view class="input_line_vw" wx:for="{{listItem.partsList}}" @tap='bindPartsNum({{index}})'>
+                        <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
+                        <switch class="switch" type="checkbox" @change="bindSwitch"/>
+                        <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
+                    </view>
+                    <button class="double_btn" @tap="bindAddPartListBtn" size="mini" >添加配件信息</button>
                 </view>
                 <button class="add_btn" @tap="bindAddRepairListBtn" >添加更多故障信息</button>
-                <button class="double_btn" @tap="bindAddPartListBtn" size="mini" >添加配件信息</button>
-                <view class="line_vw" wx:if="{{isPartsShow}}">
-                    <text class="line_half_vw">配件名</text>
-                    <text class="line_half_vw">是否寄回</text>
-                </view>
-                <view class="input_line_vw" wx:for="{{partsList}}" @tap='bindPartsNum({{index}})'>
-                    <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
-                    <switch class="switch" type="checkbox" @change="bindSwitch"/>
-                    <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
-                </view>
             </view>
             <view class="button_view">
                 <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
@@ -124,8 +122,8 @@
         background: #EEC591;
     }
     .textarea {
-        width: 100%;
-        padding: 20rpx;
+        width: 90%;
+        margin-left: 20rpx;
         background-color: #fff;
     }
     .button_view {
@@ -162,7 +160,8 @@
     import {
         USER_ID,
         REPAIR_STATUS_SIGNED_TO_REPAIRER,
-        REPAIR_STATUS_REPAIRER_ACCEPTED
+        REPAIR_STATUS_REPAIRER_ACCEPTED,
+        REPAIR_STATUS_REPAIR_NG
     } from '@/utils/constant'
     export default class RepairDetail extends wepy.page {
       config = {
@@ -179,18 +178,19 @@
         isChargePerson: false,
         preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
         isReady: true,
-        resultMark: ['没解决', '部分解决', '已解决'],
+        resultMark: ['没解决', '已解决'],
         resultIndex: 0,
         isResolved: false,
-        repairRecordList: [{partIndex: 0,
+        repairRecordList: [{
+          partIndex: 0,
           issueDescriptionInput: '',
           repairMethodInput: '',
-          repairImageArr: []}
+          repairImageArr: [],
+          partsList: []}
         ],
         repairRecordIndex: 0,
         partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
         isPartsShow: false,
-        partsList: [],
         partsIndex: 0
       };
       methods = {
@@ -259,6 +259,7 @@
             })
           }
         },
+          // 选择维修结果
         bindResultPickerChange(e) {
           console.log('结果picker发送选择改变，携带值为', e.detail.value)
           this.resultIndex = e.detail.value
@@ -310,12 +311,13 @@
             partIndex: 0,
             issueDescriptionInput: '',
             repairMethodInput: '',
-            repairImageArr: []})
+            repairImageArr: [],
+            partsList: []})
           this.$apply()
         },
           // 点击添加配件更换信息
         bindAddPartListBtn() {
-          this.partsList = this.partsList.concat({
+          this.repairRecordList[this.repairRecordIndex].partsList = this.repairRecordList[this.repairRecordIndex].partsList.concat({
             partName: '',
             partStatus: false
           })
@@ -330,46 +332,81 @@
           // 根据行号加入数据到数组中
         bindPartInput(e) {
           console.log(e.detail.value)
-          this.partsList[this.partsIndex].partName = e.detail.value
+          this.repairRecordList[this.repairRecordIndex].partsList[this.partsIndex].partName = e.detail.value
           console.log(this.partsList)
         },
           // 根据行号加入数据到数组中
         bindSwitch(e) {
           console.log(e.detail.value)
-          this.partsList[this.partsIndex].partStatus = e.detail.value
+          this.repairRecordList[this.repairRecordIndex].partsList[this.partsIndex].partStatus = e.detail.value
           console.log(this.partsList)
         },
           // 根据行号删除数组中的数据
         bindClear() {
-          this.partsList.splice(this.partsIndex, 1)
+          this.repairRecordList[this.repairRecordIndex].partsList.splice(this.partsIndex, 1)
           this.$apply()
         },
         async bindUploadFeedback() {
-          this.repairCustomerFeedback.customerMark = this.index
-          this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
-          let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
-          const repairFeedbackJson = await api.uploadRepairFeedback({
-            query: {
-              repairCustomerFeedback: repairCustomerFeedbackJson,
-              repairRecordId: this.machineDetail.id
+          if (this.resultIndex == 0) {
+                // 维修结果：没修完
+            this.repairRecordDetail.status = REPAIR_STATUS_REPAIR_NG
+            let repairNGJson = await api.updateRepairRecord({
+              query: this.repairRecordDetail
+            })
+            console.log(repairNGJson)
+            if (repairNGJson.data.code !== 200) {
+              wx.showModal({
+                title: '上传失败！',
+                content: '网络错误，请检查网络',
+                showCancel: false,
+                confirmColor: '#007aff',
+                success: function () {
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '维修结果：没修完！',
+                content: '将申请重新派单',
+                showCancel: false,
+                confirmColor: '#007aff',
+                success: function () {
+                  wepy.navigateBack()
+                }
+              })
             }
-          })
-          console.log('repairFeedbackJson:')
-          console.log(repairFeedbackJson)
-          console.log(repairFeedbackJson.data.code)
-          if (repairFeedbackJson.data.code === 200) {
-            wepy.showToast({
-              title: '上传成功',
-              icon: 'success',
-              duration: 2000
-            })
-            wepy.navigateBack()
           } else {
-            wepy.showToast({
-              title: '上传失败',
-              icon: 'none',
-              duration: 2000
+            this.repairCustomerFeedback.customerMark = this.index
+            this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
+            let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
+            const repairFeedbackJson = await api.uploadRepairFeedback({
+              query: {
+                repairCustomerFeedback: repairCustomerFeedbackJson,
+                repairRecordId: this.machineDetail.id
+              }
             })
+            console.log('repairFeedbackJson:')
+            console.log(repairFeedbackJson)
+            console.log(repairFeedbackJson.data.code)
+            if (repairFeedbackJson.data.code === 200) {
+              wx.showModal({
+                title: '上传成功！',
+                content: '信息已上传',
+                showCancel: false,
+                confirmColor: '#007aff',
+                success: function () {
+                  wepy.navigateBack()
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '上传失败！',
+                content: '网络错误，请检查网络',
+                showCancel: false,
+                confirmColor: '#007aff',
+                success: function () {
+                }
+              })
+            }
           }
         },
         bindNavigateBack() {

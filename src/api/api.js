@@ -28,7 +28,7 @@ const updateMaintainRecord = (params) => wxRequestRaw(params, apiMall + '/mainta
 const updateRepairRecord = (params) => wxRequestRaw(params, apiMall + '/repair/record/update')
 const uploadInstallFeedback = (params) => wxRequest(params, apiMall + '/install/customer/feedback/add')
 const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintain/customer/feedback/add')
-const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/customer/feedback/add')
+const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/actual/info/add')
 
 // 微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
