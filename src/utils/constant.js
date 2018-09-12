@@ -82,3 +82,14 @@ export const INSTALL_STATUS_ASSIGNED = '1'
 export const INSTALL_STATUS_TASK_DOING = '2'
 export const INSTALL_STATUS_FINISHED = '3'
 export const INSTALL_STATUS_CONFIRMED = '4'
+/**
+ * 配件寄回状态，
+ * 1: 无需回寄，其他表示需要寄回
+ * 2：未寄回，
+ * 3：已寄回（待售后确认）
+ * 4：售后已确认
+ */
+export const PARTS_STATUS_NOT_NEED = '1'
+export const PARTS_STATUS_WAIT_FOR_SENDBACK = '2'
+export const PARTS_STATUS_ALREADY_SENDBACK = '3'
+export const PARTS_STATUS_AFTERSALE_CONFIRMED = '4'

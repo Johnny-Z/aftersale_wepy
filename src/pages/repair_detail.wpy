@@ -64,12 +64,12 @@
                     <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
                 </view>
                 <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-                <button class="double_btn" @tap="bindAddPartListBtn" size="mini" >添加配件信息</button>
+                <button class="add_btn" @tap="bindAddPartListBtn" size="mini" >添加配件信息</button>
                 <view class="line_vw" wx:if="{{isPartsShow}}">
                     <text class="line_half_vw">配件名</text>
                     <text class="line_half_vw">是否寄回</text>
                 </view>
-                <view class="input_line_vw" wx:for="{{partsList}}" @tap='bindPartsNum({{index}})'>
+                <view class="input_line_vw" wx:for="{{partsInfoList}}" @tap='bindPartsNum({{index}})'>
                     <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
                     <switch class="switch" type="checkbox" @change="bindSwitch"/>
                     <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
@@ -135,7 +135,8 @@
         display: flex;
     }
     .add_btn {
-        font-size: 26rpx;
+        margin-left: 25rpx;
+        width: 80%;
     }
     .pre_repair_image {
         margin-left: 2.5%;
@@ -158,7 +159,10 @@
         USER_ID,
         REPAIR_STATUS_SIGNED_TO_REPAIRER,
         REPAIR_STATUS_REPAIRER_ACCEPTED,
-        REPAIR_STATUS_REPAIR_NG
+        REPAIR_STATUS_REPAIR_NG,
+        REPAIR_STATUS_REPAIR_OK,
+        PARTS_STATUS_NOT_NEED,
+        PARTS_STATUS_WAIT_FOR_SENDBACK
     } from '@/utils/constant'
     export default class RepairDetail extends wepy.page {
       config = {
@@ -183,16 +187,18 @@
           issuePosition: '',
           afterResolvePictures: '',
           issueDescription: '',
+          repairMethod: '',
           uploadFilesAmount: '',
           alreadyUploadedFilesNumber: ''
 
         },
         repairImageArr: [],
+        count: 0,
         repairRecordIndex: 0,
         partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
         partIndex: 0,
         isPartsShow: false,
-        partsList: [],
+        partsInfoList: [],
         partsIndex: 0
       };
       methods = {
@@ -234,6 +240,7 @@
             urls: self.data.preRepairImageArr
           })
         },
+          // accept order
         async bindAcceptOrder() {
           this.repairRecordDetail.status = REPAIR_STATUS_REPAIRER_ACCEPTED
           let acceptOrderJson = await api.updateRepairRecord({
@@ -261,7 +268,7 @@
             })
           }
         },
-          // 选择维修结果
+          // get repair result
         bindResultPickerChange(e) {
           console.log('结果picker发送选择改变，携带值为', e.detail.value)
           this.resultIndex = e.detail.value
@@ -272,17 +279,18 @@
           }
           this.$apply()
         },
+          // choose parts
         bindPartPickerChange(e) {
           console.log('部位picker发送选择改变，携带值为', e.detail.value)
           this.partIndex = e.detail.value
         },
         bindIssueDescriptionInput(e) {
           console.log(e.detail.value)
-          this.issueDescriptionInput = e.detail.value
+          this.repairActualInfo.issueDescription = e.detail.value
         },
         bindRepairMethodInput(e) {
           console.log(e.detail.value)
-          this.repairMethodInput = e.detail.value
+          this.repairActualInfo.repairMethod = e.detail.value
         },
         async bindPreviewImage() {
           let res = await wepy.chooseImage({count: 3})
@@ -303,9 +311,17 @@
         },
           // 点击添加配件更换信息
         bindAddPartListBtn() {
-          this.partsList = this.partsList.concat({
+          this.partsInfoList = this.partsInfoList.concat({
             partName: '',
-            partStatus: false
+            partStatus: '',
+            supplier: '',
+            params: '',
+            repairActualInfoId: '',
+            sendbackTrackingNumber: '',
+            sendbackTrackingPictrue: '',
+            sendbackDate: '',
+            sendbackConfirmedTime: '',
+            sendbackConfirmedPerson: ''
           })
           this.isPartsShow = true
           this.$apply()
@@ -318,18 +334,22 @@
           // 根据行号加入数据到数组中
         bindPartInput(e) {
           console.log(e.detail.value)
-          this.partsList[this.partsIndex].partName = e.detail.value
-          console.log(this.partsList)
+          this.partsInfoList[this.partsIndex].partName = e.detail.value
+          console.log(this.partsInfoList)
         },
-          // 根据行号加入数据到数组中
+          // get partStatus by switch
         bindSwitch(e) {
           console.log(e.detail.value)
-          this.partsList[this.partsIndex].partStatus = e.detail.value
-          console.log(this.partsList)
+          if (e.detail.value == true) {
+            this.partsInfoList[this.partsIndex].partStatus = PARTS_STATUS_WAIT_FOR_SENDBACK
+          } else {
+            this.partsInfoList[this.partsIndex].partStatus = PARTS_STATUS_NOT_NEED
+          }
+          console.log(this.partsInfoList)
         },
           // 根据行号删除数组中的数据
         bindClear() {
-          this.partsList.splice(this.partsIndex, 1)
+          this.partsInfoList.splice(this.partsIndex, 1)
           this.$apply()
         },
         async bindUploadFeedback() {
@@ -362,31 +382,24 @@
             }
           } else {
               // TODO:维修详情上传
-            this.repairCustomerFeedback.customerMark = this.index
-            this.repairCustomerFeedback.customerSuggestion = this.customerSuggestion
-            let repairCustomerFeedbackJson = JSON.stringify(this.repairCustomerFeedback)
+            this.repairActualInfo.repairRecordId = this.machineDetail.id
+            let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
             const repairFeedbackJson = await api.uploadRepairFeedback({
               query: {
-                repairActualInfo: repairCustomerFeedbackJson,
-                partsInfoList: this.machineDetail.id
+                repairActualInfo: strRepairActualInfo,
+                partsInfoList: this.partsInfoList
               }
             })
             console.log('repairFeedbackJson:')
             console.log(repairFeedbackJson)
             console.log(repairFeedbackJson.data.code)
             if (repairFeedbackJson.data.code === 200) {
-              wx.showModal({
-                title: '上传成功！',
-                content: '信息已上传',
-                showCancel: false,
-                confirmColor: '#007aff',
-                success: function () {
-                  wepy.navigateBack()
-                }
-              })
+              this.repairActualInfo.id = repairFeedbackJson.data.data
+              strRepairActualInfo = JSON.stringify(this.repairActualInfo)
+              this.addRepairActualImageSrc(strRepairActualInfo, this.count)
             } else {
               wx.showModal({
-                title: '上传失败！',
+                title: '上传信息失败！',
                 content: '网络错误，请检查网络',
                 showCancel: false,
                 confirmColor: '#007aff',
@@ -401,6 +414,49 @@
         }
       };
 
+      async addRepairActualImageSrc(strRepairActualInfo, count) {
+        let updateImageSrcJson = await api.uploadRepairActualFiles({
+          query: {
+            filePath: this.repairImageArr[count],
+            name: 'file',
+            data: {
+              repairActualInfo: strRepairActualInfo,
+              repairResult: REPAIR_STATUS_REPAIR_OK,
+              fileNumber: count + 1
+            }
+          }
+        })
+        console.log('upload结果： ', updateImageSrcJson)
+        let returnImageSrcData = JSON.parse(updateImageSrcJson.data)
+        if (returnImageSrcData.code === 200) {
+          console.log('count的值： ', count)
+          if (count >= this.repairImageArr.length - 1) {
+            wx.showModal({
+              title: '维修完成！',
+              content: '信息上传成功！',
+              showCancel: false,
+              confirmColor: '#007aff',
+              success: function () {
+                wepy.navigateBack()
+              }
+            })
+          } else {
+            count++
+            strRepairActualInfo = JSON.stringify(returnImageSrcData.data)
+            console.log('return结果： ', strRepairActualInfo)
+            this.addRepairActualImageSrc(strRepairActualInfo, count)
+          }
+        } else {
+          wepy.showModal({
+            title: '上传出错，请重新上传！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
+          })
+        }
+      }
       events = {};
 
       onLoad(options) {
@@ -417,7 +473,7 @@
         this.$apply()
       };
 
-      // 根据recordID获取record的详细信息
+      // get repair record detail by recordID
       async getRepairRecord(repairRecordId) {
         let repairRecordJson = await api.getRepairRecordList({
           query: {
