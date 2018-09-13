@@ -184,12 +184,12 @@
         isResolved: false,
         repairActualInfo: {
           repairRecordId: 0,
-          issuePosition: '',
+          issuePosition: '2',
           afterResolvePictures: '',
           issueDescription: '',
           repairMethod: '',
           uploadFilesAmount: '',
-          alreadyUploadedFilesNumber: ''
+          alreadyUploadedFilesNumber: '0'
 
         },
         repairImageArr: [],
@@ -312,16 +312,9 @@
           // 点击添加配件更换信息
         bindAddPartListBtn() {
           this.partsInfoList = this.partsInfoList.concat({
-            partName: '',
-            partStatus: '',
-            supplier: '',
-            params: '',
-            repairActualInfoId: '',
-            sendbackTrackingNumber: '',
-            sendbackTrackingPictrue: '',
-            sendbackDate: '',
-            sendbackConfirmedTime: '',
-            sendbackConfirmedPerson: ''
+            partsName: '',
+            partsStatus: '',
+            sendbackConfirmedPerson: 1
           })
           this.isPartsShow = true
           this.$apply()
@@ -334,16 +327,16 @@
           // 根据行号加入数据到数组中
         bindPartInput(e) {
           console.log(e.detail.value)
-          this.partsInfoList[this.partsIndex].partName = e.detail.value
+          this.partsInfoList[this.partsIndex].partsName = e.detail.value
           console.log(this.partsInfoList)
         },
-          // get partStatus by switch
+          // get partsStatus by switch
         bindSwitch(e) {
           console.log(e.detail.value)
           if (e.detail.value == true) {
-            this.partsInfoList[this.partsIndex].partStatus = PARTS_STATUS_WAIT_FOR_SENDBACK
+            this.partsInfoList[this.partsIndex].partsStatus = PARTS_STATUS_WAIT_FOR_SENDBACK
           } else {
-            this.partsInfoList[this.partsIndex].partStatus = PARTS_STATUS_NOT_NEED
+            this.partsInfoList[this.partsIndex].partsStatus = PARTS_STATUS_NOT_NEED
           }
           console.log(this.partsInfoList)
         },
@@ -381,20 +374,25 @@
               })
             }
           } else {
-              // TODO:维修详情上传
             this.repairActualInfo.repairRecordId = this.machineDetail.id
             let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
+            let strPartsInfoList = []
+            if (this.partsInfoList.length > 0) {
+              for (var i = 0; i < this.partsInfoList.length; i++) {
+                strPartsInfoList = strPartsInfoList.concat(JSON.stringify(this.partsInfoList[i]))
+              }
+            }
             const repairFeedbackJson = await api.uploadRepairFeedback({
               query: {
                 repairActualInfo: strRepairActualInfo,
-                partsInfoList: this.partsInfoList
+                partsInfoList: strPartsInfoList
               }
             })
-            console.log('repairFeedbackJson:')
-            console.log(repairFeedbackJson)
-            console.log(repairFeedbackJson.data.code)
+            console.log('add结果：', repairFeedbackJson)
+            console.log('add结果strPartsInfoList：', strPartsInfoList)
             if (repairFeedbackJson.data.code === 200) {
               this.repairActualInfo.id = repairFeedbackJson.data.data
+              this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
               strRepairActualInfo = JSON.stringify(this.repairActualInfo)
               this.addRepairActualImageSrc(strRepairActualInfo, this.count)
             } else {
