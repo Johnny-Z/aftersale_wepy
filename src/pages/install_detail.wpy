@@ -1,36 +1,50 @@
 <template>
-    <machinedetails :machine.sync="machineDetail"></machinedetails>
-    <view class="line_vw">
-        <text>订单编号：</text>
-        <text class="nameplate_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
+  <machinedetails :machine.sync="machineDetail"></machinedetails>
+  <view class="detail_view_column">
+    <view class="title_view">
+      <view class="title_view_fir_part">
+        <text class="title_tx">客户信息</text>
+      </view>
+      <view class="title_view_sec_part">
+        <text class="title_tx">V</text>
+      </view>
     </view>
-    <view class="title_vw">客户信息</view>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>客户：</text>
-            <text>{{installRecordDetail.machineCustomerName}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>地址：</text>
-            <text>{{installRecordDetail.customerAddressInInstallRecord}}</text>
-        </view>
+    <view class="main_view">
+      <view class="view_row">
+        <text class="label_tx">订单编号：</text>
+        <text class="info_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">客户名：</text>
+        <text class="info_tx">{{installRecordDetail.machineCustomerName}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">联系人：</text>
+        <text class="info_tx">{{installRecordDetail.customerInInstallRecord}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">联系电话：</text>
+        <text class="info_tx">{{installRecordDetail.customerPhoneInInstallRecord}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">联系地址：</text>
+        <text class="info_tx">{{installRecordDetail.customerAddressInInstallRecord}}</text>
+      </view>
     </view>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>联系人：</text>
-            <text>{{installRecordDetail.customerInInstallRecord}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{installRecordDetail.customerPhoneInInstallRecord}}</text>
-        </view>
-    </view>
+  </view>
     <view wx:if="{{isChargePerson}}">
         <view class="button_view" wx:if="{{isReady}}">
             <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
         </view>
         <view wx:else >
-            <view class="title_vw">调试详情</view>
+          <view class="title_view">
+            <view class="title_view_fir_part">
+              <text class="title_tx">调试详情</text>
+            </view>
+            <view class="title_view_sec_part">
+              <text class="title_tx">V</text>
+            </view>
+          </view>
             <view>{{installRecordDetail.installInfo}}</view>
             <view>调试项2：</view>
             <view class="line_vw">

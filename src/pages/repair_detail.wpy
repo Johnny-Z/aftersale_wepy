@@ -1,45 +1,74 @@
 <template>
-    <machinedetails :machine.sync="machineDetail"></machinedetails>
-    <view class="title_vw">客户信息</view>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>客户：</text>
-            <text>{{repairRecordDetail.machineCustomerName}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>地址：</text>
-            <text>{{repairRecordDetail.customerAddressInRepairRecord}}</text>
-        </view>
+  <machinedetails :machine.sync="machineDetail"></machinedetails>
+  <view class="detail_view_column">
+    <view class="title_view">
+      <view class="title_view_fir_part">
+        <text class="title_tx">客户信息</text>
+      </view>
+      <view class="title_view_sec_part">
+        <text class="title_tx">V</text>
+      </view>
     </view>
-    <view class="line_vw">
-        <view class="line_half_vw">
-            <text>联系人：</text>
-            <text>{{repairRecordDetail.customerNameInRepairRecord}}</text>
-        </view>
-        <view class="line_half_vw">
-            <text>电话：</text>
-            <text>{{repairRecordDetail.customerPhoneInRepairRecord}}</text>
-        </view>
+    <view class="main_view">
+      <view class="view_row">
+        <text class="label_tx">客户名：</text>
+        <text class="info_tx">{{repairRecordDetail.machineCustomerName}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">联系人：</text>
+        <text class="info_tx">{{repairRecordDetail.customerNameInRepairRecord}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">联系电话：</text>
+        <text class="info_tx">{{repairRecordDetail.customerPhoneInRepairRecord}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">联系地址：</text>
+        <text class="info_tx">{{repairRecordDetail.customerAddressInRepairRecord}}</text>
+      </view>
     </view>
-    <view class="title_vw">报修信息</view>
-    <view class="line_vw">
-        <text>标题：</text>
-        <text>{{repairRecordDetail.repairRequestTitle}}</text>
+  </view>
+  <view class="detail_view_column">
+    <view class="title_view">
+      <view class="title_view_fir_part">
+        <text class="title_tx">报修信息</text>
+      </view>
+      <view class="title_view_sec_part">
+        <text class="title_tx">V</text>
+      </view>
     </view>
-    <view class="line_vw">
-        <text>描述：{{repairRecordDetail.repairRequestContent}}</text>
+    <view class="main_view">
+      <view class="view_row">
+          <text class="label_tx">标题：</text>
+          <text class="info_tx">{{repairRecordDetail.repairRequestTitle}}</text>
+      </view>
+      <view class="view_row">
+          <text class="label_tx">描述：</text>
+          <text class="info_tx">{{repairRecordDetail.repairRequestContent}}</text>
+      </view>
+      <view class="view_row">
+        <text class="label_tx">语音：</text>
+        <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
+      </view>
+      <view class="view_row">
+          <text class="label_tx">照片：</text>
+      </view>
+      <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
     </view>
-    <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
-    <view class="line_vw">
-        <text>照片：</text>
-    </view>
-    <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-    <view wx:if="{{isChargePerson}}">
+  </view>
+  <view wx:if="{{isChargePerson}}">
         <view class="button_view" wx:if="{{isReady}}">
           <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
         </view>
         <view wx:else >
-            <view class="title_vw">维修详情</view>
+          <view class="title_view">
+            <view class="title_view_fir_part">
+              <text class="title_tx">维修详情</text>
+            </view>
+            <view class="title_view_sec_part">
+              <text class="title_tx">V</text>
+            </view>
+          </view>
             <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
                 <view class="line_vw">请选择本次维修结果：
                     <view class="line_picker">{{resultMark[resultIndex]}}</view>
@@ -52,15 +81,15 @@
                     </view>
                 </picker>
                 <view class="line_vw">
-                    <text>问题描述：</text>
+                    <text class="label_tx">问题描述：</text>
                 </view>
                 <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
                 <view class="line_vw">
-                    <text>处理方法：</text>
+                    <text class="label_tx">处理方法：</text>
                 </view>
                 <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
                 <view class="line_vw">
-                    <text>照片：</text>
+                    <text class="label_tx">照片：</text>
                     <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
                 </view>
                 <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
@@ -83,13 +112,6 @@
     </view>
 </template>
 <style lang="less">
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
     .line_vw {
         margin: 20rpx;
         display: flex;
