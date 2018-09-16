@@ -30,12 +30,17 @@
   }
 </style>
 <template>
-  <view class="maintain_list" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
-    <image class="machine_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.machineNameplate}}: </view>
-      <view>{{item.machineType}}: {{item.maintainStatus}} : </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="view_row" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button wx:if="{{item.maintainStatus == 1}}" class="status_btn_light">待接单</button>
+        <button wx:else class="status_btn_color">待保养</button>
+      </view>
     </view>
   </view>
 </template>
@@ -53,8 +58,7 @@
     components = {
     }
     data = {
-      maintainList: [],
-      logo: '/images/icon_maintain.png'
+      maintainList: []
     }
 
     events = {

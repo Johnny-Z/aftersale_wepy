@@ -1,41 +1,19 @@
 <!--积分规则-->
 <style lang="less">
-  .install_list {
-    background: #fff;
-    padding: 15rpx;
-    display: flex;
-    margin-top: 15rpx;
-    .machine_img {
-      width: 10%;
-      height: 70rpx;
-    }
-    .info {
-      padding: 5rpx;
-      color: #000000;
-      font-size: 26rpx;
-      line-height: 35rpx;
-      display: flex;
-      align-items: center;
-      .nameplate_tx {
-        font-weight: bold;
-        font-size: 36rpx;
-      }
-    }
-    .item {
-      background: #fff;
-      padding: 15rpx;
-      display: flex;
-      margin-top: 15rpx;
-    }
-  }
+
 </style>
 <template>
-  <view class="install_list" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
-    <image class="machine_img" src="{{logo}}"></image>
-    <view class="info">
-      <view class="nameplate_tx">{{item.machineNameplate}}: </view>
-      <view>{{item.machineType}}: {{item.installStatus}} : </view>
-      <view>{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}} </view>
+  <view class="list_column">
+    <view class="view_row" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <button wx:if="{{item.installStatus == 1}}" class="status_btn_light">待接单</button>
+        <button wx:else class="status_btn_color">待安装</button>
+      </view>
     </view>
   </view>
 </template>
@@ -53,8 +31,7 @@
     components = {
     }
     data = {
-      installList: [],
-      logo: '/images/icon_install.png'
+      installList: []
     }
 
     events = {

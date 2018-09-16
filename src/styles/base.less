@@ -1,12 +1,83 @@
-view {
-  font-size: 30rpx;
-  color: #666;
-}
-
 page {
-  background: #f5f5f5;
+  background: #F0F3F5;
 }
 
+.list_column {
+  display: flex;
+  flex-direction: column;
+  .view_row {
+    margin-bottom: 1rpx;
+    height: 206rpx;
+    width: 750rpx;
+    display: flex;
+    flex-direction: row;
+    background: #ffffff;
+    box-shadow: 0 2rpx 7rpx 0 rgba(0,0,0,0.10);
+    .view_column_left {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      padding-left: 30rpx;
+      .nameplate_tx {
+        font-size: 32rpx;
+        color: #3B403D;
+        font-family: PingFangSC-Medium;
+        letter-spacing: 0;
+        padding-top: 30rpx;
+        padding-bottom: 30rpx;
+      }
+      .type_tx {
+        font-size: 28rpx;
+        color: #3B403D;
+        font-family: PingFangSC-Regular;
+        letter-spacing: 0;
+      }
+    }
+    .view_column_right {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+      padding-right: 30rpx;
+      .details_tx {
+        font-size: 28rpx;
+        color: #858D8D;
+        font-family: PingFangSC-Regular;
+        letter-spacing: 0;
+        padding-top: 32.5rpx;
+        padding-bottom: 32.5rpx;
+      }
+      .status_btn_light {
+        border: 1rpx solid #007474;
+        border-radius: 10rpx;
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #007474;
+        letter-spacing: 0;
+        text-align: center;
+        margin-right: 0rpx;
+        width: 160rpx;
+        height: 70rpx;
+      }
+      .status_btn_color {
+        background: #007474;
+        box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+        border-radius: 10rpx;
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        margin-right: 0rpx;
+        width: 160rpx;
+        height: 70rpx;
+      }
+    }
+  }
+}
 .container {
   position: relative;
   background: #ffffff;
@@ -137,19 +208,4 @@ page {
 .type_empity {
   color: #333;
   border: 1px solid #cccccc;
-}
-
-.button {
-  font-size: 36rpx;
-  height: 95rpx;
-  line-height: 95rpx;
-  text-align: center;
-  margin: 0 auto;
-  width: 100%;
-  -moz-border-radius: 10rpx;
-  /* Firefox */
-  -webkit-border-radius: 10rpx;
-  /* Safari 和 Chrome */
-  border-radius: 10rpx;
-  /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
 }
