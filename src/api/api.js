@@ -7,7 +7,7 @@ import {
 let env = '-test' // -dev 或者 -test
 // const apiMall = 'https://eservice-tech.cn/'
 // const apiMall = 'http://47.101.141.182:2032/'
-const apiMall = 'http://192.168.0.104:8080'
+const apiMall = 'http://192.168.43.223:8080'
 
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
 const getMachineListByCustomer = (params) => wxRequest(params, apiMall + '/machine/selectByAccount')
@@ -20,7 +20,8 @@ const getMaintainRecordList = (params) => wxRequest(params, apiMall + '/maintain
 const getRepairRecordList = (params) => wxRequest(params, apiMall + '/repair/record/getRepairRecordInfoList')
 const uploadInstallFeedback = (params) => wxRequest(params, apiMall + '/install/customer/feedback/add')
 const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintain/customer/feedback/add')
-const uploadRepairFeedback = (params) => wxRequest(params, apiMall + '/repair/actual/info/add')
+
+const uploadRepairFeedback = (params) => wxRequestRaw(params, apiMall + '/repair/actual/info/add')
 
 const updateInstallRecord = (params) => wxRequestRaw(params, apiMall + '/install/record/update')
 const updateMaintainRecord = (params) => wxRequestRaw(params, apiMall + '/maintain/record/update')

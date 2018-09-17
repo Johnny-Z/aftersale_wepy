@@ -5,11 +5,11 @@
       <view class="title_view_fir_part">
         <text class="title_tx">客户信息</text>
       </view>
-      <view class="title_view_sec_part">
+      <view class="title_view_sec_part"  @tap="bindIsShowCustomer">
         <text class="title_tx">V</text>
       </view>
     </view>
-    <view class="main_view">
+    <view wx:if="{{isShowCustomer}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">订单编号：</text>
         <text class="info_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
@@ -33,30 +33,29 @@
     </view>
   </view>
     <view wx:if="{{isChargePerson}}">
-        <view class="button_view" wx:if="{{isReady}}">
-            <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
-        </view>
-        <view wx:else >
+      <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder">确认接单</button>
+      <view wx:else >
+        <button class="single_button" @tap="bindUploadFeedback">提交</button>
+        <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
               <text class="title_tx">调试详情</text>
             </view>
-            <view class="title_view_sec_part">
-              <text class="title_tx">V</text>
-            </view>
           </view>
-            <view>{{installRecordDetail.installInfo}}</view>
-            <view>调试项2：</view>
-            <view class="line_vw">
-                <text>调试结果：</text>
-            </view>
+        <view class="main_view">
+          <view class="view_row">
+            <text class="label_tx">调试结果：</text>
+            <text class="info_tx" @tap="showResultInput">口口口</text>
+          </view>
+          <modal hidden="{{hiddenResult}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
             <textarea @input="bindInstallResultInput" class="textarea" style="height: 3em" placeholder="输入调试结果"></textarea>
-            <view class="button_view">
-                <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-                <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
-            </view>
+          </modal>
+          <view>{{installRecordDetail.installInfo}}</view>
+            <view>调试项2：</view>
         </view>
+      </view>
     </view>
+  </view>
 </template>
 <style lang="less">
     .line_vw {
@@ -80,10 +79,6 @@
     }
     .button_view {
       margin: 50rpx 10rpx;
-    }
-    .single_btn {
-        margin-left: 25rpx;
-        width: 50%;
     }
     .double_btn {
         margin: 25rpx;
@@ -110,17 +105,19 @@
         machinedetails: MachineDetails
       }
       data = {
+        isShowCustomer: false,
         isReady: true,
+        hiddenResult: true,
         machineDetail: {},
         installRecordDetail: {},
         isChargePerson: false,
-        installCustomerFeedback: {
-          customerMark: '',
-          customerSuggestion: ''
-        },
         installResult: ''
       };
       methods = {
+        bindIsShowCustomer() {
+          let isShow = this.isShowCustomer
+          this.isShowCustomer = !isShow
+        },
         async bindAcceptOrder() {
           this.installRecordDetail.installStatus = INSTALL_STATUS_TASK_DOING
           let acceptOrderJson = await api.updateInstallRecord({
@@ -147,6 +144,14 @@
               }
             })
           }
+        },
+        showResultInput() {
+          this.hiddenResult = false
+          this.$apply()
+        },
+        listenerResult() {
+          this.hiddenResult = true
+          this.$apply()
         },
         bindInstallResultInput(e) {
           console.log(e.detail.value)

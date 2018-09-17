@@ -5,11 +5,11 @@
       <view class="title_view_fir_part">
         <text class="title_tx">客户信息</text>
       </view>
-      <view class="title_view_sec_part">
+      <view class="title_view_sec_part" @tap="bindIsShowCustomer">
         <text class="title_tx">V</text>
       </view>
     </view>
-    <view class="main_view">
+    <view wx:if="{{isShowCustomer}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">客户名：</text>
         <text class="info_tx">{{maintainRecordDetail.machineCustomerName}}</text>
@@ -29,32 +29,35 @@
     </view>
   </view>
     <view wx:if="{{isChargePerson}}">
-        <view class="button_view" wx:if="{{isReady}}">
-            <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
-        </view>
-        <view wx:else >
+      <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
+      <view wx:else >
+        <button class="single_button" @tap="bindUploadFeedback" >提交</button>
+        <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
               <text class="title_tx">保养详情</text>
             </view>
-            <view class="title_view_sec_part">
-              <text class="title_tx">V</text>
-            </view>
           </view>
+          <view class="main_view">
             <view>{{maintainRecordDetail.installInfo}}</view>
             <view>保养项项：</view>
-            <view class="line_vw">
-                <text class="label_tx">保养建议：</text>
+            <view class="view_row">
+              <text class="label_tx">保养建议：</text>
+              <text class="info_tx" @tap="showSuggestionInput">口口口</text>
             </view>
-            <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入保养建议"></textarea>
-            <view class="button_view">
-                <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-                <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
-            </view>
+            <modal hidden="{{hiddenSuggestion}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
+              <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入保养建议"></textarea>
+            </modal>
+          </view>
         </view>
+      </view>
     </view>
 </template>
 <style lang="less">
+  page {
+    background: #F0F3F5;
+    margin-bottom: 98rpx;
+  }
     .line_vw {
         margin: 20rpx;
         display: flex;
@@ -76,10 +79,6 @@
     }
     .button_view {
       margin: 50rpx 10rpx;
-    }
-    .single_btn {
-        margin-left: 25rpx;
-        width: 50%;
     }
     .double_btn {
         margin: 25rpx;
@@ -106,17 +105,19 @@
         machinedetails: MachineDetails
       }
       data = {
+        isShowCustomer: false,
         isReady: true,
         isChargePerson: false,
+        hiddenSuggestion: true,
         machineDetail: {},
         maintainRecordDetail: {},
-        installCustomerFeedback: {
-          customerMark: '',
-          customerSuggestion: ''
-        },
         maintainSuggestion: ''
       };
       methods = {
+        bindIsShowCustomer() {
+          let isShow = this.isShowCustomer
+          this.isShowCustomer = !isShow
+        },
         async bindAcceptOrder() {
           this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_TASK_DOING
           let acceptOrderJson = await api.updateMaintainRecord({
@@ -143,6 +144,14 @@
               }
             })
           }
+        },
+        showSuggestionInput() {
+          this.hiddenSuggestion = false
+          this.$apply()
+        },
+        listenerSuggestion() {
+          this.hiddenSuggestion = true
+          this.$apply()
         },
         bindMaintainSuggestionInput(e) {
           console.log(e.detail.value)

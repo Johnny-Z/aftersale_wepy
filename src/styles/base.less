@@ -87,15 +87,36 @@ page {
   padding-left: 30rpx;
   padding-right: 30rpx;
   padding-top: 25rpx;
-  padding-bottom: 40rpx;
   display: flex;
   flex-direction: column;
-}
-.main_view {
-  display: flex;
-  flex-direction: column;
-  background: #F0F3F5;
-  padding-top: 2rpx;
+  .title_view {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 20rpx;
+    .title_view_fir_part {
+      display: flex;
+      flex-direction: row;
+      background: #ffffff;
+      width: 80%;
+    }
+    .title_view_sec_part {
+      background: #ffffff;
+      width: 20%;
+      text-align: right;
+    }
+  }
+  .title_tx {
+    font-family: PingFangSC-Medium;
+    font-size: 34rpx;
+    color: #3B403D;
+    letter-spacing: 0;
+  }
+  .main_view {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #F0F3F5;
+    padding-bottom: 30rpx;
+  }
 }
 .view_row {
   display: flex;
@@ -106,28 +127,6 @@ page {
   display: flex;
   flex-direction: row;
   width: 50%;
-}
-.title_view {
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 20rpx;
-}
-.title_view_fir_part {
-  display: flex;
-  flex-direction: row;
-  background: #ffffff;
-  width: 80%;
-}
-.title_view_sec_part {
-  background: #ffffff;
-  width: 20%;
-  text-align: right;
-}
-.title_tx {
-  font-family: PingFangSC-Medium;
-  font-size: 34rpx;
-  color: #3B403D;
-  letter-spacing: 0;
 }
 .label_tx {
   font-family: PingFangSC-Regular;
@@ -142,7 +141,20 @@ page {
   color: #001C00;
   letter-spacing: 0;
   margin-top: 30rpx;
+  margin-left: 0rpx;
 }
+.single_button {
+  background: #007474;
+  font-family: PingFangSC-Regular;
+  font-size: 30rpx;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  width: 100%;
+  position: fixed;
+  bottom:0;
+}
+
 .container {
   position: relative;
   background: #ffffff;

@@ -5,11 +5,11 @@
       <view class="title_view_fir_part">
         <text class="title_tx">客户信息</text>
       </view>
-      <view class="title_view_sec_part">
+      <view class="title_view_sec_part" @tap="bindIsShowCustomer">
         <text class="title_tx">V</text>
       </view>
     </view>
-    <view class="main_view">
+    <view wx:if="{{isShowCustomer}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">客户名：</text>
         <text class="info_tx">{{repairRecordDetail.machineCustomerName}}</text>
@@ -33,11 +33,11 @@
       <view class="title_view_fir_part">
         <text class="title_tx">报修信息</text>
       </view>
-      <view class="title_view_sec_part">
+      <view class="title_view_sec_part" @tap="bindIsShowRepair">
         <text class="title_tx">V</text>
       </view>
     </view>
-    <view class="main_view">
+    <view wx:if="{{isShowRepair}}" class="main_view">
       <view class="view_row">
           <text class="label_tx">标题：</text>
           <text class="info_tx">{{repairRecordDetail.repairRequestTitle}}</text>
@@ -48,7 +48,7 @@
       </view>
       <view class="view_row">
         <text class="label_tx">语音：</text>
-        <button class="single_btn" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
+        <button class="info_tx" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
       </view>
       <view class="view_row">
           <text class="label_tx">照片：</text>
@@ -57,46 +57,54 @@
     </view>
   </view>
   <view wx:if="{{isChargePerson}}">
-        <view class="button_view" wx:if="{{isReady}}">
-          <button class="single_btn" @tap="bindAcceptOrder" size="mini" type="primary">确认接单</button>
-        </view>
-        <view wx:else >
+    <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
+    <view wx:else >
+      <button class="single_button" @tap="bindUploadFeedback">提交</button>
+      <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
               <text class="title_tx">维修详情</text>
             </view>
-            <view class="title_view_sec_part">
-              <text class="title_tx">V</text>
-            </view>
           </view>
+          <view class="main_view">
             <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
-                <view class="line_vw">请选择本次维修结果：
+                <view class="view_row">
+                    <text class="label_tx">维修结果：</text>
                     <view class="line_picker">{{resultMark[resultIndex]}}</view>
                 </view>
             </picker>
             <view wx:if="{{isResolved}}">
                 <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
-                    <view class="line_vw">故障部位：
+                    <view class="view_row">
+                        <text class="label_tx">故障部位：</text>
                         <view class="line_picker">{{partMark[partIndex]}}</view>
                     </view>
                 </picker>
-                <view class="line_vw">
+                <view class="view_row">
                     <text class="label_tx">问题描述：</text>
+                    <text class="info_tx" @tap="showDescriptionInput">口口口</text>
                 </view>
-                <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
-                <view class="line_vw">
+                <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
+                    <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
+                </modal>
+                <view class="view_row">
                     <text class="label_tx">处理方法：</text>
+                    <text class="info_tx" @tap="showMethodInput">口口口</text>
                 </view>
-                <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
-                <view class="line_vw">
+                <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
+                    <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
+                </modal>
+                <view class="view_row">
                     <text class="label_tx">照片：</text>
                     <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
                 </view>
                 <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-                <button class="add_btn" @tap="bindAddPartListBtn" size="mini" >添加配件信息</button>
-                <view class="line_vw" wx:if="{{isPartsShow}}">
-                    <text class="line_half_vw">配件名</text>
-                    <text class="line_half_vw">是否寄回</text>
+                <view class="view_row">
+                    <button class="add_btn" @tap="bindAddPartListBtn" >添加配件信息</button>
+                </view>
+                <view class="view_row" wx:if="{{isPartsShow}}">
+                    <text class="view_row_half">配件名</text>
+                    <text class="view_row_half">是否寄回</text>
                 </view>
                 <view class="input_line_vw" wx:for="{{partsInfoList}}" @tap='bindPartsNum({{index}})'>
                     <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
@@ -104,14 +112,27 @@
                     <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
                 </view>
             </view>
-            <view class="button_view">
-                <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-                <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
-            </view>
-        </view>
+          </view>
+      </view>
     </view>
+  </view>
 </template>
 <style lang="less">
+    page {
+        background: #F0F3F5;
+        margin-bottom: 98rpx;
+    }
+    .single_button {
+        background: #007474;
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        text-align: center;
+        width: 100%;
+        position: fixed;
+        bottom:0;
+    }
     .line_vw {
         margin: 20rpx;
         display: flex;
@@ -138,27 +159,32 @@
         }
     }
     .line_picker {
-        background: #EEC591;
+        height: 70rpx;
+        background: rgba(0,116,116,0.10);
+        border: 1rpx solid #007474;
+        border-radius: 10rpx;
+        font-family: PingFangSC-Regular;
+        font-size: 28rpx;
+        color: #007474;
+        letter-spacing: 0;
+        text-align: center;
     }
     .textarea {
         width: 90%;
         margin-left: 20rpx;
         background-color: #fff;
     }
-    .button_view {
-      margin: 50rpx 10rpx;
-    }
-    .single_btn {
-        margin-left: 25rpx;
-        width: 50%;
-    }
-    .double_btn {
-        margin: 25rpx;
-        display: flex;
-    }
     .add_btn {
-        margin-left: 25rpx;
-        width: 80%;
+        height: 70rpx;
+        width: 100%;
+        border: 1rpx solid #007474;
+        box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+        border-radius: 10rpx;
+        font-family: PingFangSC-Regular;
+        font-size: 30rpx;
+        color: #007474;
+        letter-spacing: 0;
+        text-align: center;
     }
     .pre_repair_image {
         margin-left: 2.5%;
@@ -197,6 +223,8 @@
       data = {
         machineDetail: {},
         repairRecordDetail: {},
+        isShowCustomer: false,
+        isShowRepair: true,
         isSpeaking: false,
         isChargePerson: false,
         preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
@@ -212,8 +240,9 @@
           repairMethod: '',
           uploadFilesAmount: '',
           alreadyUploadedFilesNumber: '0'
-
         },
+        hiddenDescription: true,
+        hiddenMethod: true,
         repairImageArr: [],
         count: 0,
         repairRecordIndex: 0,
@@ -224,6 +253,14 @@
         partsIndex: 0
       };
       methods = {
+        bindIsShowCustomer() {
+          let isShow = this.isShowCustomer
+          this.isShowCustomer = !isShow
+        },
+        bindIsShowRepair() {
+          let isShow = this.isShowRepair
+          this.isShowRepair = !isShow
+        },
         voicePlay() {
           console.log('eventing_repair_info:手指按下了...')
           this.isSpeaking = true
@@ -306,9 +343,25 @@
           console.log('部位picker发送选择改变，携带值为', e.detail.value)
           this.partIndex = e.detail.value
         },
+        showDescriptionInput() {
+          this.hiddenDescription = false
+          this.$apply()
+        },
+        listenerDescription() {
+          this.hiddenDescription = true
+          this.$apply()
+        },
         bindIssueDescriptionInput(e) {
           console.log(e.detail.value)
           this.repairActualInfo.issueDescription = e.detail.value
+        },
+        showMethodInput() {
+          this.hiddenMethod = false
+          this.$apply()
+        },
+        listenerMethod() {
+          this.hiddenMethod = true
+          this.$apply()
         },
         bindRepairMethodInput(e) {
           console.log(e.detail.value)
@@ -397,21 +450,20 @@
             }
           } else {
             this.repairActualInfo.repairRecordId = this.machineDetail.id
-            let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
-            let strPartsInfoList = []
-            if (this.partsInfoList.length > 0) {
-              for (var i = 0; i < this.partsInfoList.length; i++) {
-                strPartsInfoList = strPartsInfoList.concat(JSON.stringify(this.partsInfoList[i]))
-              }
-            }
+            // let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
+            // let strPartsInfoList = []
+            // if (this.partsInfoList.length > 0) {
+            //   for (var i = 0; i < this.partsInfoList.length; i++) {
+            //     strPartsInfoList = strPartsInfoList.concat(JSON.stringify(this.partsInfoList[i]))
+            //   }
+            // }
             const repairFeedbackJson = await api.uploadRepairFeedback({
               query: {
-                repairActualInfo: strRepairActualInfo,
-                partsInfoList: strPartsInfoList
+                partsInfoList: this.partsInfoList,
+                repairActualInfo: this.repairActualInfo
               }
             })
             console.log('add结果：', repairFeedbackJson)
-            console.log('add结果strPartsInfoList：', strPartsInfoList)
             if (repairFeedbackJson.data.code === 200) {
               this.repairActualInfo.id = repairFeedbackJson.data.data
               this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
