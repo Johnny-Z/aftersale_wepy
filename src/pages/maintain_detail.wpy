@@ -46,7 +46,7 @@
               <text class="info_tx" @tap="showSuggestionInput">口口口</text>
             </view>
             <modal hidden="{{hiddenSuggestion}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
-              <textarea @input="bindMaintainSuggestionInput" class="textarea" style="height: 3em" placeholder="输入保养建议"></textarea>
+              <textarea @input="bindMaintainSuggestionInput" class="textareaInput" placeholder="输入保养建议"></textarea>
             </modal>
           </view>
         </view>

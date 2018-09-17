@@ -67,50 +67,62 @@
             </view>
           </view>
           <view class="main_view">
-            <picker @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
-                <view class="view_row">
-                    <text class="label_tx">维修结果：</text>
-                    <view class="line_picker">{{resultMark[resultIndex]}}</view>
-                </view>
-            </picker>
+            <view class="view_row">
+              <text class="line_label_tx">维修结果：</text>
+              <picker class="line_picker" @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+                <text class="line_picker_tx">{{resultMark[resultIndex]}}</text>
+              </picker>
+            </view>
             <view wx:if="{{isResolved}}">
-                <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">
-                    <view class="view_row">
-                        <text class="label_tx">故障部位：</text>
-                        <view class="line_picker">{{partMark[partIndex]}}</view>
-                    </view>
-                </picker>
+              <view class="view_row">
+                <text class="label_tx">故障部位：</text>
+                <view class="line_picker">
+                  <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">{{partMark[partIndex]}}</picker>
+                </view>
+              </view>
+              <view class="view_row">
+                  <text class="label_tx">问题描述：</text>
+                  <text class="info_tx" @tap="showDescriptionInput">口口口</text>
+              </view>
+              <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
+                  <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因"></textarea>
+              </modal>
+              <view class="view_row">
+                  <text class="label_tx">处理方法：</text>
+                  <text class="info_tx" @tap="showMethodInput">口口口</text>
+              </view>
+              <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
+                  <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法"></textarea>
+              </modal>
+              <view class="view_row">
+                  <text class="label_tx">照片：</text>
+                  <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
+              </view>
+              <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+              <view class="view_row">
+                  <button class="add_btn" @tap="bindAddPartListBtn" >添加配件信息</button>
+              </view>
+              <view class="input_line_vw">
+                <text class="part_label_tx">配件：</text>
+              </view>
+              <view class="view_row" wx:for="{{partsInfoList}}" @tap='bindPartsNum({{index}})'>
+                  <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
+                  <switch class="switch" type="checkbox" @change="bindSwitch"/>
+                  <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
+              </view>
+              <modal hidden="{{hiddenMethod}}" title="配件" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
                 <view class="view_row">
-                    <text class="label_tx">问题描述：</text>
-                    <text class="info_tx" @tap="showDescriptionInput">口口口</text>
+                  <text class="label_tx">配件名：</text>
+                  <input class="part_input" @input="bindPartInput" placeholder="输入配件名"></input>
                 </view>
-                <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
-                    <textarea @input="bindIssueDescriptionInput" class="textarea" style="height: 3em" placeholder="输入问题原因"></textarea>
-                </modal>
                 <view class="view_row">
-                    <text class="label_tx">处理方法：</text>
-                    <text class="info_tx" @tap="showMethodInput">口口口</text>
+                  <text class="label_tx">是否寄回：</text>
+                  <radio-group bindchange="radioChange">
+                    <radio value="1" checked="true">否</radio>
+                    <radio value="2" >是</radio>
+                  </radio-group>
                 </view>
-                <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
-                    <textarea @input="bindRepairMethodInput" class="textarea" style="height: 3em" placeholder="输入维修方法"></textarea>
-                </modal>
-                <view class="view_row">
-                    <text class="label_tx">照片：</text>
-                    <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
-                </view>
-                <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
-                <view class="view_row">
-                    <button class="add_btn" @tap="bindAddPartListBtn" >添加配件信息</button>
-                </view>
-                <view class="view_row" wx:if="{{isPartsShow}}">
-                    <text class="view_row_half">配件名</text>
-                    <text class="view_row_half">是否寄回</text>
-                </view>
-                <view class="input_line_vw" wx:for="{{partsInfoList}}" @tap='bindPartsNum({{index}})'>
-                    <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
-                    <switch class="switch" type="checkbox" @change="bindSwitch"/>
-                    <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
-                </view>
+              </modal>
             </view>
           </view>
       </view>
@@ -122,24 +134,47 @@
         background: #F0F3F5;
         margin-bottom: 98rpx;
     }
-    .single_button {
-        background: #007474;
-        font-family: PingFangSC-Regular;
-        font-size: 30rpx;
-        color: #FFFFFF;
-        letter-spacing: 0;
-        text-align: center;
-        width: 100%;
-        position: fixed;
-        bottom:0;
+    .line_label_tx {
+      font-family: PingFangSC-Regular;
+      font-size: 30rpx;
+      color: #858D8D;
+      letter-spacing: 0;
+      margin-top: 53rpx;
     }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-            height: 60%
-        }
+    .line_picker {
+      height: 70rpx;
+      width: 160rpx;
+      background: rgba(0,116,116,0.10);
+      border: 1rpx solid #007474;
+      border-radius: 10rpx;
+      text-align: center;
+      margin-left: 30rpx;
+      margin-top: 40rpx;
+      .line_picker_tx {
+        font-family: PingFangSC-Regular;
+        font-size: 28rpx;
+        color: #007474;
+        letter-spacing: 0;
+        margin: 0rpx auto;
+      }
+    }
+    .part_label_tx {
+      font-family: PingFangSC-Regular;
+      font-size: 30rpx;
+      color: #858D8D;
+      letter-spacing: 0;
+      margin-top: 65rpx;
+    }
+    .part_input {
+      width: 340rpx;
+      height: 66rpx;
+      background: rgba(0,116,116,0.10);
+      border: 1rpx solid #007474;
+      border-radius: 6rpx;
+      font-family: PingFangSC-Regular;
+      font-size: 30rpx;
+      color: #3B403D;
+      letter-spacing: 0;
     }
     .list_view {
         border-bottom: 1px solid #ababab;
@@ -157,22 +192,6 @@
         .clear_icon {
             width: 10%;
         }
-    }
-    .line_picker {
-        height: 70rpx;
-        background: rgba(0,116,116,0.10);
-        border: 1rpx solid #007474;
-        border-radius: 10rpx;
-        font-family: PingFangSC-Regular;
-        font-size: 28rpx;
-        color: #007474;
-        letter-spacing: 0;
-        text-align: center;
-    }
-    .textarea {
-        width: 90%;
-        margin-left: 20rpx;
-        background-color: #fff;
     }
     .add_btn {
         height: 70rpx;
@@ -248,7 +267,6 @@
         repairRecordIndex: 0,
         partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
         partIndex: 0,
-        isPartsShow: false,
         partsInfoList: [],
         partsIndex: 0
       };
@@ -391,13 +409,15 @@
             partsStatus: '',
             sendbackConfirmedPerson: 1
           })
-          this.isPartsShow = true
           this.$apply()
         },
           // get点击的行号
         bindPartsNum(e) {
           console.log(e)
           this.partsIndex = e
+        },
+        radioChange(e) {
+          console.log('radio发生change事件，携带value值为：', e.detail.value)
         },
           // 根据行号加入数据到数组中
         bindPartInput(e) {

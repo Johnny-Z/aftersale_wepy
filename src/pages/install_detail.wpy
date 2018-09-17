@@ -48,7 +48,7 @@
             <text class="info_tx" @tap="showResultInput">口口口</text>
           </view>
           <modal hidden="{{hiddenResult}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
-            <textarea @input="bindInstallResultInput" class="textarea" style="height: 3em" placeholder="输入调试结果"></textarea>
+            <textarea @input="bindInstallResultInput" class="textareaInput" placeholder="输入调试结果"></textarea>
           </modal>
           <view>{{installRecordDetail.installInfo}}</view>
             <view>调试项2：</view>
