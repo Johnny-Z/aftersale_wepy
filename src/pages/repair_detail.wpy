@@ -59,7 +59,6 @@
   <view wx:if="{{isChargePerson}}">
     <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
     <view wx:else >
-      <button class="single_button" @tap="bindUploadFeedback">提交</button>
       <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
@@ -77,12 +76,11 @@
               <view class="view_row">
                 <text class="label_tx">故障部位：</text>
                 <view class="checkbox_view">
-                  <checkbox-group bindchange="checkboxChange">
+                  <checkbox-group @change="bindCheckboxChange">
                     <label class="checkbox_label" wx:for="{{partMark}}">
                       <checkbox class="checkbox" value="{{item.id}}"/>{{item.name}}
                     </label>
                   </checkbox-group>
-                  <!--<picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">{{partMark[partIndex]}}</picker>-->
                 </view>
               </view>
               <view class="view_row">
@@ -90,14 +88,14 @@
                   <text class="info_tx" @tap="showDescriptionInput">口口口</text>
               </view>
               <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
-                  <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因"></textarea>
+                  <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因" focus="true"></textarea>
               </modal>
               <view class="view_row">
                   <text class="label_tx">处理方法：</text>
                   <text class="info_tx" @tap="showMethodInput">口口口</text>
               </view>
               <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
-                  <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法"></textarea>
+                  <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法" auto-focus="true"></textarea>
               </modal>
               <view class="view_row">
                   <text class="label_tx">照片：</text>
@@ -105,32 +103,32 @@
               </view>
               <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
               <view class="view_row">
-                  <button class="add_btn" @tap="bindAddPartListBtn" >添加配件信息</button>
-              </view>
-              <view class="input_line_vw">
-                <text class="part_label_tx">配件：</text>
+                <text class="label_tx">配件：</text>
               </view>
               <view class="view_row" wx:for="{{partsInfoList}}" @tap='bindPartsNum({{index}})'>
-                  <input class="line_input" type="text" @input="bindPartInput" placeholder="输入配件名" focus="true"/>
-                  <switch class="switch" type="checkbox" @change="bindSwitch"/>
-                  <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
+                <text class="info_tx">{{item.partsName}}-{{(item.partsStatus=='1')? '不寄回':'寄回'}}</text>
+                <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
               </view>
-              <modal hidden="{{hiddenMethod}}" title="配件" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
+              <view class="view_row">
+                <button class="add_btn" @tap="showPartsInfo" >添加配件信息</button>
+              </view>
+              <modal hidden="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" bindconfirm="listenerPartsInfo" >
                 <view class="view_row">
-                  <text class="label_tx">配件名：</text>
-                  <input class="part_input" @input="bindPartInput" placeholder="输入配件名"></input>
+                  <text class="label_tx">配件名称：</text>
+                  <input class="part_input" type="text" value="{{partsName}}" @input="bindPartInput" placeholder="输入配件名" auto-focus="true"/>
                 </view>
                 <view class="view_row">
                   <text class="label_tx">是否寄回：</text>
                   <radio-group bindchange="radioChange">
-                    <radio value="1" checked="true">否</radio>
-                    <radio value="2" >是</radio>
+                    <radio class="radio" value="1" checked="true">否</radio>
+                    <radio class="radio" value="2" >是</radio>
                   </radio-group>
                 </view>
               </modal>
             </view>
           </view>
       </view>
+      <button class="single_button" @tap="bindUploadFeedback">提交</button>
     </view>
   </view>
 </template>
@@ -168,24 +166,22 @@
       font-size: 30rpx;
       color: #333333;
       letter-spacing: 0;
-    }
-    .part_label_tx {
-      font-family: PingFangSC-Regular;
-      font-size: 30rpx;
-      color: #858D8D;
-      letter-spacing: 0;
-      margin-top: 65rpx;
+      margin-left: 30rpx
     }
     .part_input {
       width: 340rpx;
       height: 66rpx;
-      background: rgba(0,116,116,0.10);
       border: 1rpx solid #007474;
       border-radius: 6rpx;
       font-family: PingFangSC-Regular;
       font-size: 30rpx;
       color: #3B403D;
       letter-spacing: 0;
+      margin-left: 15rpx;
+      padding-left: 25rpx;
+    }
+    .radio {
+      margin-right: 87rpx;
     }
     .list_view {
         border-bottom: 1px solid #ababab;
@@ -273,6 +269,7 @@
         },
         hiddenDescription: true,
         hiddenMethod: true,
+        hiddenPartsInfo: true,
         repairImageArr: [],
         count: 0,
         repairRecordIndex: 0,
@@ -283,7 +280,8 @@
             {id: 4, name: '下轴'},
             {id: 5, name: '驱动'}
         ],
-        partIndex: 0,
+        partsName: '',
+        partsStatus: '1',
         partsInfoList: [],
         partsIndex: 0
       };
@@ -374,9 +372,9 @@
           this.$apply()
         },
           // choose parts
-        bindPartPickerChange(e) {
+        bindCheckboxChange(e) {
           console.log('部位picker发送选择改变，携带值为', e.detail.value)
-          this.partIndex = e.detail.value
+          this.repairActualInfo.issuePosition = e.detail.value.toString()
         },
         showDescriptionInput() {
           this.hiddenDescription = false
@@ -419,28 +417,38 @@
             urls: self.data.repairImageArr
           })
         },
-          // 点击添加配件更换信息
-        bindAddPartListBtn() {
-          this.partsInfoList = this.partsInfoList.concat({
-            partsName: '',
-            partsStatus: '',
-            sendbackConfirmedPerson: 1
-          })
+        showPartsInfo() {
+          this.hiddenPartsInfo = false
+          this.partsName = ''
+          this.partsStatus = '1'
+          this.$apply()
+        },
+        bindPartInput(e) {
+          console.log(e.detail.value)
+          this.partsName = e.detail.value
+        },
+        radioChange(e) {
+          console.log('radio发生change事件，携带value值为：', e.detail.value)
+          this.partsStatus = e.detail.value
+        },
+        // 添加配件更换信息到列表
+        listenerPartsInfo() {
+          if (this.partsName == '') {
+            this.hiddenPartsInfo = true
+          } else {
+            this.hiddenPartsInfo = true
+            this.partsInfoList = this.partsInfoList.concat({
+              partsName: this.partsName,
+              partsStatus: this.partsStatus,
+              sendbackConfirmedPerson: 1
+            })
+          }
           this.$apply()
         },
           // get点击的行号
         bindPartsNum(e) {
           console.log(e)
           this.partsIndex = e
-        },
-        radioChange(e) {
-          console.log('radio发生change事件，携带value值为：', e.detail.value)
-        },
-          // 根据行号加入数据到数组中
-        bindPartInput(e) {
-          console.log(e.detail.value)
-          this.partsInfoList[this.partsIndex].partsName = e.detail.value
-          console.log(this.partsInfoList)
         },
           // get partsStatus by switch
         bindSwitch(e) {

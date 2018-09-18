@@ -7,7 +7,7 @@ import {
 let env = '-test' // -dev 或者 -test
 // const apiMall = 'https://eservice-tech.cn/'
 // const apiMall = 'http://47.101.141.182:2032/'
-const apiMall = 'http://192.168.43.223:8080'
+const apiMall = 'http://192.168.0.104:8080'
 
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
 
