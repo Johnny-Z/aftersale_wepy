@@ -4,7 +4,7 @@
 </style>
 <template>
   <view class="list_column">
-    <view class="view_row" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
+    <view class="list_view_row" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
       <view class="view_column_left">
         <text class="nameplate_tx">{{item.machineNameplate}}</text>
         <text class="type_tx">{{item.machineType}}</text>

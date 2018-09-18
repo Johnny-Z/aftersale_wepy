@@ -5,10 +5,10 @@ page {
 .list_column {
   display: flex;
   flex-direction: column;
-  .view_row {
-    margin-bottom: 1rpx;
+  .list_view_row {
+    margin-bottom: 2rpx;
     height: 206rpx;
-    width: 750rpx;
+    width: 100%;
     display: flex;
     flex-direction: row;
     background: #ffffff;
@@ -80,7 +80,7 @@ page {
 }
 .detail_view_column {
   background: #FFFFFF;
-  border-radius: 26rpx;
+  border-radius: 26rpx;// 边框圆角
   margin-left: 24rpx;
   margin-right: 24rpx;
   margin-top: 20rpx;
@@ -122,6 +122,8 @@ page {
   display: flex;
   flex-direction: row;
   background: #ffffff;
+  padding-top: 30rpx;
+  align-items: center;// 居中对齐
 }
 .view_row_half {
   display: flex;
@@ -133,14 +135,13 @@ page {
   font-size: 30rpx;
   color: #858D8D;
   letter-spacing: 0;
-  margin-top: 30rpx;
+  white-space: nowrap;// 单行显示
 }
 .info_tx {
   font-family: PingFangSC-Regular;
   font-size: 30rpx;
   color: #001C00;
   letter-spacing: 0;
-  margin-top: 30rpx;
   margin-left: 0rpx;
 }
 .single_button {

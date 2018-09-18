@@ -68,16 +68,21 @@
           </view>
           <view class="main_view">
             <view class="view_row">
-              <text class="line_label_tx">维修结果：</text>
-              <picker class="line_picker" @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
-                <text class="line_picker_tx">{{resultMark[resultIndex]}}</text>
+              <text class="label_tx">维修结果：</text>
+              <picker class="picker_view" @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+                <text class="picker_tx">{{resultMark[resultIndex]}}</text>
               </picker>
             </view>
             <view wx:if="{{isResolved}}">
               <view class="view_row">
                 <text class="label_tx">故障部位：</text>
-                <view class="line_picker">
-                  <picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">{{partMark[partIndex]}}</picker>
+                <view class="checkbox_view">
+                  <checkbox-group bindchange="checkboxChange">
+                    <label class="checkbox_label" wx:for="{{partMark}}">
+                      <checkbox class="checkbox" value="{{item.id}}"/>{{item.name}}
+                    </label>
+                  </checkbox-group>
+                  <!--<picker @change="bindPartPickerChange" value="{{partIndex}}" range="{{partMark}}">{{partMark[partIndex]}}</picker>-->
                 </view>
               </view>
               <view class="view_row">
@@ -134,29 +139,35 @@
         background: #F0F3F5;
         margin-bottom: 98rpx;
     }
-    .line_label_tx {
-      font-family: PingFangSC-Regular;
-      font-size: 30rpx;
-      color: #858D8D;
-      letter-spacing: 0;
-      margin-top: 53rpx;
+    checkbox .wx-checkbox-input{
+      border: 2rpx solid #007474;
+      border-radius: 7rpx;
+      height: 30rpx;
+      width: 30rpx;
     }
-    .line_picker {
+    checkbox .wx-checkbox-input.wx-checkbox-input-checked::before{
+    }
+    .picker_view {
       height: 70rpx;
       width: 160rpx;
       background: rgba(0,116,116,0.10);
       border: 1rpx solid #007474;
       border-radius: 10rpx;
       text-align: center;
+      align-items: center;
       margin-left: 30rpx;
-      margin-top: 40rpx;
-      .line_picker_tx {
+      .picker_tx {
         font-family: PingFangSC-Regular;
         font-size: 28rpx;
         color: #007474;
         letter-spacing: 0;
-        margin: 0rpx auto;
       }
+    }
+    .checkbox_label {
+      font-family: PingFangSC-Regular;
+      font-size: 30rpx;
+      color: #333333;
+      letter-spacing: 0;
     }
     .part_label_tx {
       font-family: PingFangSC-Regular;
@@ -265,7 +276,13 @@
         repairImageArr: [],
         count: 0,
         repairRecordIndex: 0,
-        partMark: ['电脑故障', '框架故障', '上轴故障', '下轴故障'],
+        partMark: [
+            {id: 1, name: '电脑'},
+            {id: 2, name: '框架'},
+            {id: 3, name: '上轴'},
+            {id: 4, name: '下轴'},
+            {id: 5, name: '驱动'}
+        ],
         partIndex: 0,
         partsInfoList: [],
         partsIndex: 0
@@ -469,14 +486,8 @@
               })
             }
           } else {
+              // 维修结果：已修完
             this.repairActualInfo.repairRecordId = this.machineDetail.id
-            // let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
-            // let strPartsInfoList = []
-            // if (this.partsInfoList.length > 0) {
-            //   for (var i = 0; i < this.partsInfoList.length; i++) {
-            //     strPartsInfoList = strPartsInfoList.concat(JSON.stringify(this.partsInfoList[i]))
-            //   }
-            // }
             const repairFeedbackJson = await api.uploadRepairFeedback({
               query: {
                 partsInfoList: this.partsInfoList,
@@ -487,7 +498,7 @@
             if (repairFeedbackJson.data.code === 200) {
               this.repairActualInfo.id = repairFeedbackJson.data.data
               this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
-              strRepairActualInfo = JSON.stringify(this.repairActualInfo)
+              let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
               this.addRepairActualImageSrc(strRepairActualInfo, this.count)
             } else {
               wx.showModal({
