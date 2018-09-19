@@ -1,6 +1,31 @@
 page {
   background: #F0F3F5;
 }
+checkbox .wx-checkbox-input{
+  border: 1rpx solid #007474;
+  border-radius: 7rpx;
+  height: 28rpx;
+  width: 28rpx;
+}
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+  background: #007474;
+}
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before{
+  text-align: center;
+  font-size: 25rpx;
+  color: #ffffff
+}
+radio .wx-radio-input{
+  border: 1rpx solid #007474;
+  border-radius: 65rpx;
+  height: 28rpx;
+  width: 28rpx;
+}
+radio .wx-radio-input.wx-radio-input-checked::before{
+  text-align: center;
+  font-size: 25rpx;
+  color: #ffffff
+}
 
 .list_column {
   display: flex;
@@ -144,10 +169,19 @@ page {
   letter-spacing: 0;
   margin-left: 0rpx;
 }
-.single_button {
-  background: #007474;
+.get_input_tx {
   font-family: PingFangSC-Regular;
   font-size: 30rpx;
+  color: #3B403D;
+  letter-spacing: 0.2rpx;
+  line-height: 48rpx;
+  padding-top: 30rpx;
+}
+.single_button {
+  height: 100rpx;
+  background: #007474;
+  font-family: PingFangSC-Regular;
+  font-size: 36rpx;
   color: #FFFFFF;
   letter-spacing: 0;
   text-align: center;
@@ -155,7 +189,6 @@ page {
   position: fixed;
   bottom:0;
 }
-
 .textareaInput {
   width: 100%;
   height: 200rpx;
@@ -163,7 +196,7 @@ page {
   font-family: PingFangSC-Regular;
   font-size: 32rpx;
   color: #3B403D;
-  letter-spacing: 0;
+  letter-spacing: 0.2rpx;
 }
 
 .container {

@@ -58,6 +58,9 @@
   </view>
 </template>
 <style lang="less">
+  page {
+    margin-bottom: 120rpx;
+  }
     .line_vw {
         margin: 20rpx;
         display: flex;

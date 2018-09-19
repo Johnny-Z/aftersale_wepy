@@ -75,28 +75,30 @@
             <view wx:if="{{isResolved}}">
               <view class="view_row">
                 <text class="label_tx">故障部位：</text>
-                <view class="checkbox_view">
-                  <checkbox-group @change="bindCheckboxChange">
-                    <label class="checkbox_label" wx:for="{{partMark}}">
-                      <checkbox class="checkbox" value="{{item.id}}"/>{{item.name}}
-                    </label>
-                  </checkbox-group>
-                </view>
+                <checkbox-group class="checkbox_label" @change="bindCheckboxChange">
+                  <label wx:for="{{partMark}}">
+                    <view class="checkbox_view">
+                      <checkbox value="{{item.id}}"/>{{item.name}}
+                    </view>
+                  </label>
+                </checkbox-group>
               </view>
               <view class="view_row">
                   <text class="label_tx">问题描述：</text>
                   <text class="info_tx" @tap="showDescriptionInput">口口口</text>
               </view>
               <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
-                  <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因" focus="true"></textarea>
+                  <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因"></textarea>
               </modal>
+              <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
               <view class="view_row">
                   <text class="label_tx">处理方法：</text>
                   <text class="info_tx" @tap="showMethodInput">口口口</text>
               </view>
               <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
-                  <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法" auto-focus="true"></textarea>
+                  <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法"></textarea>
               </modal>
+              <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
               <view class="view_row">
                   <text class="label_tx">照片：</text>
                   <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
@@ -115,12 +117,12 @@
               <modal hidden="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" bindconfirm="listenerPartsInfo" >
                 <view class="view_row">
                   <text class="label_tx">配件名称：</text>
-                  <input class="part_input" type="text" value="{{partsName}}" @input="bindPartInput" placeholder="输入配件名" auto-focus="true"/>
+                  <input class="part_input" type="text" value="{{partsName}}" @input="bindPartInput" placeholder="输入配件名"/>
                 </view>
                 <view class="view_row">
                   <text class="label_tx">是否寄回：</text>
                   <radio-group bindchange="radioChange">
-                    <radio class="radio" value="1" checked="true">否</radio>
+                    <radio class="radio" value="1" checked="{{radioChecked}}">否</radio>
                     <radio class="radio" value="2" >是</radio>
                   </radio-group>
                 </view>
@@ -134,39 +136,39 @@
 </template>
 <style lang="less">
     page {
-        background: #F0F3F5;
-        margin-bottom: 98rpx;
-    }
-    checkbox .wx-checkbox-input{
-      border: 2rpx solid #007474;
-      border-radius: 7rpx;
-      height: 30rpx;
-      width: 30rpx;
-    }
-    checkbox .wx-checkbox-input.wx-checkbox-input-checked::before{
+        margin-bottom: 120rpx;
     }
     .picker_view {
-      height: 70rpx;
+      height: 50rpx;
       width: 160rpx;
       background: rgba(0,116,116,0.10);
       border: 1rpx solid #007474;
       border-radius: 10rpx;
       text-align: center;
-      align-items: center;
+      align-items: flex-end;
       margin-left: 30rpx;
       .picker_tx {
         font-family: PingFangSC-Regular;
-        font-size: 28rpx;
+        font-size: 32rpx;
         color: #007474;
         letter-spacing: 0;
       }
     }
     .checkbox_label {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .checkbox_view {
       font-family: PingFangSC-Regular;
-      font-size: 30rpx;
+      font-size: 32rpx;
       color: #333333;
       letter-spacing: 0;
-      margin-left: 30rpx
+      align-items: center;
+      margin-left: 30rpx;
+      margin-top: 15rpx;
+      margin-bottom: 15rpx;
     }
     .part_input {
       width: 340rpx;
@@ -178,27 +180,14 @@
       color: #3B403D;
       letter-spacing: 0;
       margin-left: 15rpx;
-      padding-left: 25rpx;
+      padding-left: 10rpx;
     }
     .radio {
-      margin-right: 87rpx;
+      margin-right: 50rpx;
+      margin-left: 30rpx
     }
-    .list_view {
-        border-bottom: 1px solid #ababab;
-    }
-    .input_line_vw {
-        margin: 20rpx;
-        display: flex;
-        border-bottom: 1px solid #ababab;
-        .line_input {
-            width: 50%;
-        }
-        .switch{
-            width: 40%;
-        }
-        .clear_icon {
-            width: 10%;
-        }
+    .clear_icon {
+        width: 10%;
     }
     .add_btn {
         height: 70rpx;
@@ -250,17 +239,17 @@
         machineDetail: {},
         repairRecordDetail: {},
         isShowCustomer: false,
-        isShowRepair: true,
+        isShowRepair: false,
         isSpeaking: false,
         isChargePerson: false,
-        preRepairImageArr: ['http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg', 'http://img1.3lian.com/2015/w7/85/d/101.jpg'],
+        preRepairImageArr: [],
         isReady: true,
         resultMark: ['没解决', '已解决'],
         resultIndex: 0,
         isResolved: false,
         repairActualInfo: {
           repairRecordId: 0,
-          issuePosition: '2',
+          issuePosition: '',
           afterResolvePictures: '',
           issueDescription: '',
           repairMethod: '',
@@ -282,6 +271,7 @@
         ],
         partsName: '',
         partsStatus: '1',
+        radioChecked: true,
         partsInfoList: [],
         partsIndex: 0
       };
@@ -417,19 +407,25 @@
             urls: self.data.repairImageArr
           })
         },
+          // show add parts modal
         showPartsInfo() {
           this.hiddenPartsInfo = false
           this.partsName = ''
           this.partsStatus = '1'
+          this.radioChecked = true
           this.$apply()
         },
         bindPartInput(e) {
           console.log(e.detail.value)
           this.partsName = e.detail.value
         },
+          // get partsStatus by radio
         radioChange(e) {
           console.log('radio发生change事件，携带value值为：', e.detail.value)
           this.partsStatus = e.detail.value
+          if (this.partsStatus == '2') {
+            this.radioChecked = false
+          }
         },
         // 添加配件更换信息到列表
         listenerPartsInfo() {
@@ -449,16 +445,6 @@
         bindPartsNum(e) {
           console.log(e)
           this.partsIndex = e
-        },
-          // get partsStatus by switch
-        bindSwitch(e) {
-          console.log(e.detail.value)
-          if (e.detail.value == true) {
-            this.partsInfoList[this.partsIndex].partsStatus = PARTS_STATUS_WAIT_FOR_SENDBACK
-          } else {
-            this.partsInfoList[this.partsIndex].partsStatus = PARTS_STATUS_NOT_NEED
-          }
-          console.log(this.partsInfoList)
         },
           // 根据行号删除数组中的数据
         bindClear() {
@@ -495,28 +481,58 @@
             }
           } else {
               // 维修结果：已修完
-            this.repairActualInfo.repairRecordId = this.machineDetail.id
-            const repairFeedbackJson = await api.uploadRepairFeedback({
-              query: {
-                partsInfoList: this.partsInfoList,
-                repairActualInfo: this.repairActualInfo
-              }
-            })
-            console.log('add结果：', repairFeedbackJson)
-            if (repairFeedbackJson.data.code === 200) {
-              this.repairActualInfo.id = repairFeedbackJson.data.data
-              this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
-              let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
-              this.addRepairActualImageSrc(strRepairActualInfo, this.count)
+            if (this.repairActualInfo.issuePosition == '') {
+              wx.showToast({
+                title: '请选择故障部位',
+                icon: 'none',
+                mask: true,
+                duration: 1500
+              })
+            } else if (this.repairActualInfo.issueDescription == '') {
+              wx.showToast({
+                title: '请输入问题描述',
+                icon: 'none',
+                mask: true,
+                duration: 1500
+              })
+            } else if (this.repairActualInfo.repairMethod == '') {
+              wx.showToast({
+                title: '请输入处理方法',
+                icon: 'none',
+                mask: true,
+                duration: 1500
+              })
+            } else if (this.repairImageArr == '') {
+              wx.showToast({
+                title: '请拍下故障照片',
+                icon: 'none',
+                mask: true,
+                duration: 1500
+              })
             } else {
-              wx.showModal({
-                title: '上传信息失败！',
-                content: '网络错误，请检查网络',
-                showCancel: false,
-                confirmColor: '#007aff',
-                success: function () {
+              this.repairActualInfo.repairRecordId = this.machineDetail.id
+              const repairFeedbackJson = await api.uploadRepairFeedback({
+                query: {
+                  partsInfoList: this.partsInfoList,
+                  repairActualInfo: this.repairActualInfo
                 }
               })
+              console.log('add结果：', repairFeedbackJson)
+              if (repairFeedbackJson.data.code === 200) {
+                this.repairActualInfo.id = repairFeedbackJson.data.data
+                this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
+                let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
+                this.addRepairActualImageSrc(strRepairActualInfo, this.count)
+              } else {
+                wx.showModal({
+                  title: '上传信息失败！',
+                  content: '网络错误，请检查网络',
+                  showCancel: false,
+                  confirmColor: '#007aff',
+                  success: function () {
+                  }
+                })
+              }
             }
           }
         },

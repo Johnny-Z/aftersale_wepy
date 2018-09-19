@@ -55,8 +55,7 @@
 </template>
 <style lang="less">
   page {
-    background: #F0F3F5;
-    margin-bottom: 98rpx;
+    margin-bottom: 120rpx;
   }
     .line_vw {
         margin: 20rpx;
