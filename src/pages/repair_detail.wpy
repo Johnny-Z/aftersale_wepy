@@ -190,7 +190,6 @@
         width: 10%;
     }
     .add_btn {
-        height: 70rpx;
         width: 100%;
         border: 1rpx solid #007474;
         box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
@@ -502,7 +501,7 @@
                 mask: true,
                 duration: 1500
               })
-            } else if (this.repairImageArr == '') {
+            } else if (this.repairImageArr.length == 0) {
               wx.showToast({
                 title: '请拍下故障照片',
                 icon: 'none',

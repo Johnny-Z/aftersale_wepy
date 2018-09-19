@@ -35,57 +35,56 @@
     <view wx:if="{{isChargePerson}}">
       <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder">确认接单</button>
       <view wx:else >
-        <button class="single_button" @tap="bindUploadFeedback">提交</button>
         <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
               <text class="title_tx">调试详情</text>
             </view>
           </view>
-        <view class="main_view">
-          <view class="view_row">
-            <text class="label_tx">调试结果：</text>
-            <text class="info_tx" @tap="showResultInput">口口口</text>
+          <view class="main_view">
+            <view class="view_row">
+              <text class="label_tx">调试结果：</text>
+              <text class="info_tx" @tap="showResultInput">口口口</text>
+            </view>
+            <modal hidden="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
+              <textarea @input="bindInstallResultInput" class="textareaInput" placeholder="输入安装结果"></textarea>
+            </modal>
+            <view class="view_row">
+              <text class="label_tx">调试记录：</text>
+            </view>
+            <view class="view_row">
+              <text class="info_tx" >电源电压：</text>
+            </view>
+            <view class="view_row">
+              <text class="info_tx" >单相电压：</text>
+            </view>
+            <view class="view_row">
+              <text class="info_tx" >接地情况：</text>
+              <radio-group bindchange="radioChange">
+                <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
+                <radio class="radio" value="不正常" >不正常</radio>
+              </radio-group>
+            </view>
+            <view class="view_row">
+              <text class="info_tx" >机器水平：</text>
+              <radio-group bindchange="radioChange">
+                <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
+                <radio class="radio" value="不正常" >不正常</radio>
+              </radio-group>
+            </view>
+            <text class="get_input_tx">{{installResult}}</text>
+            <view>{{installRecordDetail.installInfo}}</view>
+              <view>调试项2：</view>
           </view>
-          <modal hidden="{{hiddenResult}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
-            <textarea @input="bindInstallResultInput" class="textareaInput" placeholder="输入调试结果"></textarea>
-          </modal>
-          <view>{{installRecordDetail.installInfo}}</view>
-            <view>调试项2：</view>
         </view>
+      <button class="single_button" @tap="bindUploadFeedback">提交</button>
       </view>
-    </view>
   </view>
 </template>
 <style lang="less">
   page {
     margin-bottom: 120rpx;
   }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-        }
-    }
-    .textarea {
-        width: 90%;
-        margin-left: 20rpx;
-        background-color: #fff;
-    }
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
-    .button_view {
-      margin: 50rpx 10rpx;
-    }
-    .double_btn {
-        margin: 25rpx;
-    }
 </style>
 <script>
     /* eslint-disable no-undef,eqeqeq */
@@ -114,7 +113,9 @@
         machineDetail: {},
         installRecordDetail: {},
         isChargePerson: false,
-        installResult: ''
+        installResult: '',
+        installInfoList: [],
+        installBasicItemList: []
       };
       methods = {
         bindIsShowCustomer() {
@@ -221,14 +222,7 @@
         console.log('installRecordJson 获取 :')
         console.log(installRecordJson)
         console.log(installRecordJson.data.data.list)
-        if (installRecordJson.data.data.list.length > 0) {
-          this.installRecordDetail = installRecordJson.data.data.list[0]
-          if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
-            this.isChargePerson = true
-          } else {
-            this.isChargePerson = false
-          }
-        } else {
+        if (installRecordJson.data.data.list.length < 1) {
           wx.showModal({
             title: '获取机器信息出错！',
             content: '网络错误',
@@ -238,6 +232,14 @@
               wepy.navigateBack()
             }
           })
+        } else {
+          this.installRecordDetail = installRecordJson.data.data.list[0]
+            this.installInfoList = JSON.parse(this.installRecordDetail.installInfo)
+          if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
+            this.isChargePerson = true
+          } else {
+            this.isChargePerson = false
+          }
         }
         this.$apply()
       };

@@ -48,6 +48,7 @@
             <modal hidden="{{hiddenSuggestion}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
               <textarea @input="bindMaintainSuggestionInput" class="textareaInput" placeholder="输入保养建议"></textarea>
             </modal>
+            <text class="get_input_tx">{{maintainSuggestion}}</text>
           </view>
         </view>
       </view>
@@ -57,31 +58,6 @@
   page {
     margin-bottom: 120rpx;
   }
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-        }
-    }
-    .textarea {
-        width: 90%;
-        margin-left: 20rpx;
-        background-color: #fff;
-    }
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
-    .button_view {
-      margin: 50rpx 10rpx;
-    }
-    .double_btn {
-        margin: 25rpx;
-    }
 </style>
 <script>
     /* eslint-disable no-undef,eqeqeq */
