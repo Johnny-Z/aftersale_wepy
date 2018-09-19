@@ -32,58 +32,121 @@
       </view>
     </view>
   </view>
-    <view wx:if="{{isChargePerson}}">
-      <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder">确认接单</button>
-      <view wx:else >
-        <view class="detail_view_column">
-          <view class="title_view">
-            <view class="title_view_fir_part">
-              <text class="title_tx">调试详情</text>
-            </view>
-          </view>
-          <view class="main_view">
-            <view class="view_row">
-              <text class="label_tx">调试结果：</text>
-              <text class="info_tx" @tap="showResultInput">口口口</text>
-            </view>
-            <modal hidden="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
-              <textarea @input="bindInstallResultInput" class="textareaInput" placeholder="输入安装结果"></textarea>
-            </modal>
-            <view class="view_row">
-              <text class="label_tx">调试记录：</text>
-            </view>
-            <view class="view_row">
-              <text class="info_tx" >电源电压：</text>
-            </view>
-            <view class="view_row">
-              <text class="info_tx" >单相电压：</text>
-            </view>
-            <view class="view_row">
-              <text class="info_tx" >接地情况：</text>
-              <radio-group bindchange="radioChange">
-                <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
-                <radio class="radio" value="不正常" >不正常</radio>
-              </radio-group>
-            </view>
-            <view class="view_row">
-              <text class="info_tx" >机器水平：</text>
-              <radio-group bindchange="radioChange">
-                <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
-                <radio class="radio" value="不正常" >不正常</radio>
-              </radio-group>
-            </view>
-            <text class="get_input_tx">{{installResult}}</text>
-            <view>{{installRecordDetail.installInfo}}</view>
-              <view>调试项2：</view>
+  <view wx:if="{{isChargePerson}}">
+    <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder">确认接单</button>
+    <view wx:else >
+      <view class="detail_view_column">
+        <view class="title_view">
+          <view class="title_view_fir_part">
+            <text class="title_tx">调试详情</text>
           </view>
         </view>
-      <button class="single_button" @tap="bindUploadFeedback">提交</button>
+        <view class="main_view">
+          <view class="view_row">
+            <text class="label_tx">调试结果：</text>
+            <text class="info_tx" @tap="showResultInput">口口口</text>
+          </view>
+          <modal hidden="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
+            <textarea @input="bindInstallResultInput" class="textareaInput" placeholder="输入安装结果"></textarea>
+          </modal>
+          <text class="get_input_tx">{{installResult}}</text>
+          <view class="view_row">
+            <text class="label_tx">调试记录：</text>
+          </view>
+          <view class="view_row">
+            <text class="info_tx" >电源电压：</text>
+          </view>
+          <view class="view_row">
+            <text class="info_tx" >单相电压：</text>
+          </view>
+          <view class="view_row">
+            <text class="info_tx" >接地情况：</text>
+            <radio-group bindchange="radioChange">
+              <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
+              <radio class="radio" value="不正常" >不正常</radio>
+            </radio-group>
+          </view>
+          <view class="view_row">
+            <text class="info_tx" >机器水平：</text>
+            <radio-group bindchange="radioChange">
+              <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
+              <radio class="radio" value="不正常" >不正常</radio>
+            </radio-group>
+          </view>
+          <view class="view_row">
+            <text class="info_tx" >台板支撑：</text>
+            <radio-group bindchange="radioChange">
+              <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
+              <radio class="radio" value="不正常" >不正常</radio>
+            </radio-group>
+          </view>
+        </view>
       </view>
+      <view class="detail_view_column">
+        <view class="title_view">
+          <text class="title_tx_half1">调试内容</text>
+          <text class="title_tx_half2">调试状态</text>
+        </view>
+        <view class="main_view">
+          <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" @tap="listItemClick({{item}})">
+            <view class="item_left">
+              <text class="content_tx">{{item.installContent}}</text>
+            </view>
+            <view class="item_right">
+              <button wx:if="{{item.installValue == 0}}" class="status_btn_light">待完成</button>
+              <button wx:else class="status_btn_color">完成</button>
+            </view>
+          </view>
+        </view>
+      </view>
+      <button class="single_button" @tap="bindUploadFeedback">提交</button>
+    </view>
   </view>
 </template>
 <style lang="less">
   page {
     margin-bottom: 120rpx;
+  }
+  .radio {
+    margin-right: 40rpx;
+    margin-left: 40rpx
+  }
+  .title_tx_half1 {
+    width: 50%;
+    text-align: left;
+    font-family: PingFangSC-Medium;
+    font-size: 30rpx;
+    color: #3B403D;
+    letter-spacing: 0;
+  }
+  .title_tx_half2 {
+    width: 50%;
+    text-align: right;
+    font-family: PingFangSC-Medium;
+    font-size: 30rpx;
+    color: #3B403D;
+    letter-spacing: 0;
+  }
+  .list_item_row {
+    border-bottom: 1px solid #F0F3F5;
+    margin-top: 30rpx;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .item_left {
+      width: 70%;
+    }
+    .item_left {
+      width: 30%;
+    }
+  }
+  .content_tx {
+    font-family: PingFangSC-Regular;
+    font-size: 30px;
+    color: #3B403D;
+    letter-spacing: 0.2px;
+    line-height: 48px;
   }
 </style>
 <script>
@@ -127,7 +190,7 @@
           let acceptOrderJson = await api.updateInstallRecord({
             query: this.installRecordDetail
           })
-          console.log(acceptOrderJson)
+          console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
             wx.showModal({
               title: '接单失败！',
@@ -167,9 +230,7 @@
           let installFeedbackJson = await api.updateInstallRecord({
             query: this.installRecordDetail
           })
-          console.log('uploadInstallFeedbackJson:')
-          console.log(installFeedbackJson)
-          console.log(installFeedbackJson.data.code)
+          console.log('提交结果:', installFeedbackJson)
           if (installFeedbackJson.data.code === 200) {
             wx.showModal({
               title: '提交成功！',
@@ -201,7 +262,7 @@
       events = {};
 
       onLoad(options) {
-        console.log(options)
+        console.log('from last page: ', options)
         this.machineDetail = JSON.parse(options.machineDetail)
         console.log(this.machineDetail)
         if (this.machineDetail.installStatus == INSTALL_STATUS_ASSIGNED) {
@@ -219,8 +280,7 @@
             installRecordId: installRecordId
           }
         })
-        console.log('installRecordJson 获取 :')
-        console.log(installRecordJson)
+        console.log('get installRecord list by id: ', installRecordJson)
         console.log(installRecordJson.data.data.list)
         if (installRecordJson.data.data.list.length < 1) {
           wx.showModal({
@@ -234,7 +294,9 @@
           })
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
-            this.installInfoList = JSON.parse(this.installRecordDetail.installInfo)
+          // this.installInfoList = JSON.parse(this.installRecordDetail.installInfo)
+          console.log('id: ', wepy.getStorageSync(USER_ID))
+          console.log('id: ', installRecordJson.data.data.list[0].installChargePerson)
           if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
             this.isChargePerson = true
           } else {

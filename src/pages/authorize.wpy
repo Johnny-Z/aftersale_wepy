@@ -77,7 +77,9 @@ page {
   </view>
 </template>
 <script>
-import wepy from 'wepy'
+  /* eslint-disable no-undef */
+
+  import wepy from 'wepy'
 import api from '@/api/api'
 import {
     AUTHORIZATION,
@@ -88,66 +90,73 @@ import {
   USER_INFO
 } from '@/utils/constant'
 export default class Authorize extends wepy.page {
-  config = {
-    navigationBarTitleText: '授权登录'
-  }
-  async onLoad() {
-    let jwtAuthorization = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhZGRyZXNzXCI6XCLlrqLmiLflnLDlnYBhZG1pbjExMVwiLFwiYWdlbnRcIjowLFwiYXV0aG9yaXRpZXNcIjpbXSxcImNyZWF0ZVRpbWVcIjoxNTMxMjc0NjIzMDAwLFwiY3JlZGVudGlhbHNOb25FeHBpcmVkXCI6dHJ1ZSxcImN1c3RvbWVyQ29tcGFueVwiOjAsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6MSxcIm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwic2luc2ltXCIsXCJwaG9uZVwiOlwiMTM1NjY2Njc3NzdcIixcInJvbGVJZFwiOjEsXCJ1c2VybmFtZVwiOlwiYWRtaW5cIixcInZhbGlkXCI6XCIxXCIsXCJ3ZWNoYXRVbmlvbklkXCI6XCJ3ZWNoYXQyMjJcIn0iLCJleHAiOjE1Mzk2MDY2Mzh9.qLx0FickQEqtO1-aFGou9ji1oTYq2uScEsk3zNEO-zSWos-4zNpMqeO2BDb-m3QL2mejm64peH-EXsFoR9wRNA'
-    wepy.setStorageSync(AUTHORIZATION, jwtAuthorization)
-    wepy.setStorageSync(ACCOUNT, 'repairPerson_lisi')
-    wepy.setStorageSync(USER_ID, '4')
-    let res = await wepy.getSetting()
-    console.log(res)
-    if ((res.authSetting)['scope.userInfo']) {
-      wepy.switchTab({
-        url: '/pages/repair'
-      })
+    config = {
+      navigationBarTitleText: '授权登录'
     }
-  }
-  async onGotUserInfo(e) {
-    if (e.detail.errMsg === 'getUserInfo:ok') {
-      let res = await wepy.login()
-      console.log(res.code)
-      if (res.code) {
-        console.log(e.detail.userInfo)
-        wepy.setStorageSync(USER_INFO, e.detail.userInfo)
-        let systemInfo = wepy.getSystemInfoSync()
-        wepy.setStorageSync(SYSTEM_INFO, systemInfo)
-        let rlt = await api.wxJsCode2Session({
-          query: {
-            jsCode: res.code,
-            nickName: e.detail.userInfo.nickName
-          }
+    async onLoad() {
+      wepy.setStorageSync(ACCOUNT, 'repairPerson_lisi')
+      wepy.setStorageSync(USER_ID, '4')
+      let res = await wepy.getSetting()
+      console.log(res)
+      if ((res.authSetting)['scope.userInfo']) {
+        wepy.switchTab({
+          url: '/pages/repair'
         })
-        console.log('get session resoult: ' + rlt.data.result)
-        if (rlt.data.result) {
-          let data = rlt.data
-          if (data.data.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, data.data)
-            wepy.switchTab({
-              url: '/pages/repair'
-            })
-          }
-        } else {
-          let res = await wepy.showModal({
-            title: 'appid有误',
-            content: '授权失败'
+      }
+    }
+    async onGotUserInfo(e) {
+      let loginJson = await api.login({
+        query: {
+          account: 'repairPerson_lisi',
+          password: 'sinsim'
+        }
+      })
+      let jwtAuthorization = loginJson.header.Authorization
+      console.log('一大串', jwtAuthorization)
+      wepy.setStorageSync(AUTHORIZATION, jwtAuthorization)
+      if (e.detail.errMsg === 'getUserInfo:ok') {
+        let res = await wepy.login()
+        console.log(res.code)
+        if (res.code) {
+          console.log(e.detail.userInfo)
+          wepy.setStorageSync(USER_INFO, e.detail.userInfo)
+          let systemInfo = wepy.getSystemInfoSync()
+          wepy.setStorageSync(SYSTEM_INFO, systemInfo)
+          let rlt = await api.wxJsCode2Session({
+            query: {
+              jsCode: res.code,
+              nickName: e.detail.userInfo.nickName
+            }
           })
-          if (res.confirm) {
-            wepy.switchTab({
-              url: '/pages/repair'
+          console.log('get session resoult: ' + rlt.data.result)
+          if (rlt.data.result) {
+            let data = rlt.data
+            if (data.data.openid) {
+              wepy.setStorageSync(USER_SPECICAL_INFO, data.data)
+              wepy.switchTab({
+                url: '/pages/repair'
+              })
+            }
+          } else {
+            let res = await wepy.showModal({
+              title: 'appid有误',
+              content: '授权失败'
             })
+            if (res.confirm) {
+              wepy.switchTab({
+                url: '/pages/repair'
+              })
+            }
           }
         }
       }
     }
-  }
-  methods = {
+    methods = {
 
-  }
-  events = {
+    }
+    events = {
 
-  }
+    }
 }
 
 </script>

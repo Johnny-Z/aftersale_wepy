@@ -139,17 +139,14 @@
         margin-bottom: 120rpx;
     }
     .picker_view {
-      height: 50rpx;
       width: 160rpx;
       background: rgba(0,116,116,0.10);
       border: 1rpx solid #007474;
       border-radius: 10rpx;
       text-align: center;
-      align-items: flex-end;
       margin-left: 30rpx;
       .picker_tx {
         font-family: PingFangSC-Regular;
-        font-size: 32rpx;
         color: #007474;
         letter-spacing: 0;
       }
@@ -222,9 +219,7 @@
         REPAIR_STATUS_SIGNED_TO_REPAIRER,
         REPAIR_STATUS_REPAIRER_ACCEPTED,
         REPAIR_STATUS_REPAIR_NG,
-        REPAIR_STATUS_REPAIR_OK,
-        PARTS_STATUS_NOT_NEED,
-        PARTS_STATUS_WAIT_FOR_SENDBACK
+        REPAIR_STATUS_REPAIR_OK
     } from '@/utils/constant'
     export default class RepairDetail extends wepy.page {
       config = {
@@ -327,7 +322,7 @@
           let acceptOrderJson = await api.updateRepairRecord({
             query: this.repairRecordDetail
           })
-          console.log(acceptOrderJson)
+          console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
             wx.showModal({
               title: '接单失败！',
@@ -394,8 +389,7 @@
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
             this.repairImageArr = tempFilePaths
-            console.log('srcssssssssssssssssssssssss')
-            console.log(tempFilePaths)
+            console.log('srcsssss：', tempFilePaths)
             this.$apply()
           }
         },
@@ -442,7 +436,7 @@
         },
           // get点击的行号
         bindPartsNum(e) {
-          console.log(e)
+          console.log('行号', e)
           this.partsIndex = e
         },
           // 根据行号删除数组中的数据
@@ -457,7 +451,7 @@
             let repairNGJson = await api.updateRepairRecord({
               query: this.repairRecordDetail
             })
-            console.log(repairNGJson)
+            console.log('没修完提交结果：', repairNGJson)
             if (repairNGJson.data.code !== 200) {
               wx.showModal({
                 title: '上传失败！',
@@ -586,9 +580,8 @@
       events = {};
 
       onLoad(options) {
-        console.log(options)
+        console.log('from last page:', options)
         this.machineDetail = JSON.parse(options.machineDetail)
-        console.log(this.machineDetail)
         this.preRepairImageArr = this.machineDetail.repairRequestPictures.split(',')
         if (this.machineDetail.status === REPAIR_STATUS_SIGNED_TO_REPAIRER) {
           this.isReady = true
@@ -606,8 +599,7 @@
             repairRecordId: repairRecordId
           }
         })
-        console.log('repairRecordJson 获取 :')
-        console.log(repairRecordJson)
+        console.log('get repairRecord list by id:', repairRecordJson)
         console.log(repairRecordJson.data.data.list)
         if (repairRecordJson.data.data.list.length > 0) {
           this.repairRecordDetail = repairRecordJson.data.data.list[0]

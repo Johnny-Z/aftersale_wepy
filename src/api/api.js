@@ -1,14 +1,14 @@
 import {
   wxRequest,
   wxRequestRaw,
-    wxUploadFile
+  wxUploadFile
 } from '@/utils/wxRequest'
 
-let env = '-test' // -dev 或者 -test
-// const apiMall = 'https://eservice-tech.cn/'
+// const apiMall = 'https://eservice-tech.cn/api'
 // const apiMall = 'http://47.101.141.182:2032/'
-const apiMall = 'http://192.168.0.104:8080'
+ const apiMall = 'http://192.168.0.104:8080'
 
+const login = (params) => wxRequest(params, apiMall + '/login')
 const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
 
 const getMachineList = (params) => wxRequest(params, apiMall + '/machine/list')
@@ -32,6 +32,7 @@ const updateRepairRecord = (params) => wxRequestRaw(params, apiMall + '/repair/r
 const uploadRepairActualFiles = (params) => wxUploadFile(params, apiMall + '/repair/actual/info/update')
 
 export default {
+  login,
   wxJsCode2Session,
   getMachineList,
   getMachineListByCustomer,

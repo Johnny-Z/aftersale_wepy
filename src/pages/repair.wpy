@@ -39,8 +39,7 @@
 
       methods = {
         listItemClick(e) {
-          console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-          console.log(e)
+          console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee', e)
           let machines = JSON.stringify(e)
           wepy.navigateTo({
             url: '/pages/repair_detail?machineDetail=' + machines
@@ -60,9 +59,7 @@
         const repairMachineListJson = await api.getRepairList({
           query: {userName: userAccount}
         })
-        console.log('repairMachineListJson:')
-        console.log(repairMachineListJson)
-        console.log(repairMachineListJson.data.data.list)
+        console.log('获取列表:', repairMachineListJson)
         this.repairList = repairMachineListJson.data.data.list
 
         this.$apply()
