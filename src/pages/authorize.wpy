@@ -159,6 +159,15 @@ page {
           wepy.switchTab({
               url: '/pages/repair'
           })
+        } else {
+          wx.showModal({
+            title: '失败！',
+            content: '网络错误',
+            showCancel: false,
+            confirmColor: '#007aff',
+            success: function () {
+            }
+          })
         }
       }
     }

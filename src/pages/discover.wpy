@@ -1,20 +1,15 @@
 <!--积分规则-->
 <template>
   <view class="jf_rule">
-    <view class="title tc">素洁服装厂积分规则</view>
-    <!--<view class="jf_jz_title tc">积分价值</view>-->
+    <view class="title tc">大豪高速一体简易绳绣安装及应用说明</view>
     <view class="jf_content">
-      <view class="sec_title">1.签到积分规则 </view>
-      <view class="jf_ins">亲，每天签到送积分啦！每天签到一次送10积分，多签多得，积分可以抵消现金的，记得每天签到一次哦。</view>
+      <view class="sec_title">类型：安装指南 </view>
+      <view class="jf_ins">高速一体绳绣装置是我公司最新开发的一款高性能的简易绳绣装置，主要目的是提高简易绳绣的绣作效率及绣品质量。目前市场上现有的简易绳绣稳定性低，易发生绕绳、丢步等问题，且最高转速在800rpm，效率较低。新产品将在打环电机加装编码器，采用闭环控制，最高绣作转速可达1200rpm不降速，效率提升接近50%。并且由于采用的是闭环控</view>
     </view>
     <view class="jf_content">
-      <view class="sec_title">2.积分使用规则 </view>
-      <view class="jf_ins">亲，签到的积分可以享受满立减，下单更优惠！即满100积分可抵消5元现金；在您下单微信支付界面，系统会自动显示你的总积分多少可用多少，微信付款之后在商品金额上系统会自动减去5元。</view>
+      <view class="sec_title">产品特点 </view>
+      <view class="jf_ins">板上DIP开关可进行功能选择，进行装置安装时已设置过，用户无需自己设置。DIP1表示左右装置，默认状态（OFF）为右装置，拨到ON为左装置。DIP2用于板上自测试，默认为OFF，属于正常工作状态，当拨到ON时，打环电机会自动进入自检测模式，如果检测正常自动进入老化模式，不正常则报错。</view>
     </view>
-    <!--<view class="jf_content">
-      <view class="sec_title">积分社区的价值</view>
-      <view class="jf_ins">小e们听过各种社区互动获得的积分可以用于提升小嗨的等级，等级越高开启的社区特权越多。</view>
-    </view>-->
   </view>
 </template>
 <script>
@@ -29,10 +24,6 @@
       }
 
       events = {
-            // 'index-broadcast': (...args) => {
-            //   let $event = args[args.length - 1]
-            //   console.log(`${this.$name} receive ${$event.name} from ${$event.source.name}`)
-            // }
       }
 
       methods = {
