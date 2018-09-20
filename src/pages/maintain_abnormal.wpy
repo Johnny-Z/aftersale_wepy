@@ -12,7 +12,7 @@
             <text class="title_tx">保养异常记录</text>
         </view>
         <view class="main_view">
-            <textarea @input="bindMaintainAbnormalContent" class="textareaInput" placeholder="输入保养建议"></textarea>
+            <textarea @input="bindMaintainAbnormalContent" class="textareaInput" placeholder="输入保养异常"></textarea>
         </view>
     </view>
     <view class="detail_view_column">
@@ -20,7 +20,7 @@
             <text class="title_tx">处理结果</text>
         </view>
         <view class="main_view">
-            <textarea @input="bindMaintainFixResult" class="textareaInput" placeholder="输入保养建议"></textarea>
+            <textarea @input="bindMaintainFixResult" class="textareaInput" placeholder="输入处理结果"></textarea>
         </view>
     </view>
     <button class="single_button" @tap="bindUploadFeedback">确定</button>
