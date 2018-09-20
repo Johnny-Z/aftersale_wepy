@@ -12,23 +12,23 @@
     <view wx:if="{{isShowCustomer}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">订单编号：</text>
-        <text class="info_tx">{{machineDetail.orderNum.empty? '暂无':machineDetail.orderNum}}</text>
+        <text class="info_tx">{{machineDetail.orderNum? machineDetail.orderNum:'暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">客户名：</text>
-        <text class="info_tx">{{installRecordDetail.machineCustomerName}}</text>
+        <text class="info_tx">{{installRecordDetail.machineCustomerName? installRecordDetail.machineCustomerName:'暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">联系人：</text>
-        <text class="info_tx">{{installRecordDetail.customerInInstallRecord}}</text>
+        <text class="info_tx">{{installRecordDetail.customerInInstallRecord? installRecordDetail.customerInInstallRecord:'暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">联系电话：</text>
-        <text class="info_tx">{{installRecordDetail.customerPhoneInInstallRecord}}</text>
+        <text class="info_tx">{{installRecordDetail.customerPhoneInInstallRecord? installRecordDetail.customerPhoneInInstallRecord:'暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">联系地址：</text>
-        <text class="info_tx">{{installRecordDetail.customerAddressInInstallRecord}}</text>
+        <text class="info_tx">{{installRecordDetail.customerAddressInInstallRecord? installRecordDetail.customerAddressInInstallRecord:'暂无'}}</text>
       </view>
     </view>
   </view>
@@ -53,29 +53,56 @@
           <view class="view_row">
             <text class="label_tx">调试记录：</text>
           </view>
-          <view class="view_row">
+          <view class="view_row" @tap="showSourceInput">
             <text class="info_tx" >电源电压：</text>
+            <text class="info_tx" >A-{{installBasicItemList[0].installValue? installBasicItemList[0].installValue:'暂无'}}</text>
+            <text class="info_tx" >B-{{installBasicItemList[1].installValue? installBasicItemList[1].installValue:'暂无'}}</text>
+            <text class="info_tx" >C-{{installBasicItemList[2].installValue? installBasicItemList[2].installValue:'暂无'}}</text>
           </view>
-          <view class="view_row">
+          <modal hidden="{{hiddenSource}}" title="电源电压" confirm-text="确定" no-cancel="true" bindconfirm="listenerSource" >
+            <view class="view_row">
+              <text class="label_tx">A：</text>
+              <input class="part_input" type="text" value="{{installBasicItemList[0].installValue}}" @input="bindASourceInput" placeholder="输入A电压"/>
+              <text class="label_tx">V</text>
+            </view>
+            <view class="view_row">
+              <text class="label_tx">B：</text>
+              <input class="part_input" type="text" value="{{installBasicItemList[1].installValue}}" @input="bindBSourceInput" placeholder="输入B电压"/>
+              <text class="label_tx">V</text>
+            </view>
+            <view class="view_row">
+              <text class="label_tx">C：</text>
+              <input class="part_input" type="text" value="{{installBasicItemList[2].installValue}}" @input="bindCSourceInput" placeholder="输入C电压"/>
+              <text class="label_tx">V</text>
+            </view>
+          </modal>
+          <view class="view_row" @tap="showPhaseInput">
             <text class="info_tx" >单相电压：</text>
+            <text class="info_tx" >{{installBasicItemList[3].installValue? installBasicItemList[3].installValue:'暂无'}}</text>
           </view>
+          <modal hidden="{{hiddenPhase}}" title="单相电压" confirm-text="确定" no-cancel="true" bindconfirm="listenerPhase" >
+            <view class="view_row">
+              <input class="part_input" type="text" value="{{installBasicItemList[3].installValue}}" @input="bindPhaseInput" placeholder="输入配件名"/>
+              <text class="label_tx">V</text>
+            </view>
+          </modal>
           <view class="view_row">
             <text class="info_tx" >接地情况：</text>
-            <radio-group bindchange="radioChange">
+            <radio-group bindchange="groundRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
               <radio class="radio" value="不正常" >不正常</radio>
             </radio-group>
           </view>
           <view class="view_row">
             <text class="info_tx" >机器水平：</text>
-            <radio-group bindchange="radioChange">
+            <radio-group bindchange="levelRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
               <radio class="radio" value="不正常" >不正常</radio>
             </radio-group>
           </view>
           <view class="view_row">
             <text class="info_tx" >台板支撑：</text>
-            <radio-group bindchange="radioChange">
+            <radio-group bindchange="supportRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
               <radio class="radio" value="不正常" >不正常</radio>
             </radio-group>
@@ -128,6 +155,19 @@
     color: #3B403D;
     letter-spacing: 0;
   }
+  .part_input {
+    width: 340rpx;
+    height: 66rpx;
+    border: 1rpx solid #007474;
+    border-radius: 6rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 30rpx;
+    color: #3B403D;
+    letter-spacing: 0;
+    margin-left: 15rpx;
+    margin-right: 15rpx;
+    padding-left: 10rpx;
+  }
   .list_item_row {
     border-bottom: 1px solid #F0F3F5;
     margin-top: 30rpx;
@@ -174,6 +214,8 @@
         isShowCustomer: false,
         isReady: true,
         hiddenResult: true,
+        hiddenSource: true,
+        hiddenPhase: true,
         machineDetail: {},
         installRecordDetail: {},
         isChargePerson: false,
@@ -225,12 +267,58 @@
           console.log(e.detail.value)
           this.installResult = e.detail.value
         },
+        groundRadioChange(e) {
+          console.log(e)
+          this.installBasicItemList[4].installValue = e.detail.value
+        },
+        levelRadioChange(e) {
+          console.log(e)
+          this.installBasicItemList[5].installValue = e.detail.value
+        },
+        supportRadioChange(e) {
+          console.log(e)
+          this.installBasicItemList[6].installValue = e.detail.value
+        },
+        showSourceInput() {
+          this.hiddenSource = false
+          this.$apply()
+        },
+        listenerSource() {
+          this.hiddenSource = true
+          this.$apply()
+        },
+        bindASourceInput(e) {
+          console.log(e.detail.value)
+          this.installBasicItemList[0].installValue = e.detail.value
+        },
+        bindBSourceInput(e) {
+          console.log(e.detail.value)
+          this.installBasicItemList[1].installValue = e.detail.value
+        },
+        bindCSourceInput(e) {
+          console.log(e.detail.value)
+          this.installBasicItemList[2].installValue = e.detail.value
+        },
+        showPhaseInput() {
+          this.hiddenPhase = false
+          this.$apply()
+        },
+        listenerPhase() {
+          this.hiddenPhase = true
+          this.$apply()
+        },
+        bindPhaseInput(e) {
+          console.log(e.detail.value)
+          this.installBasicItemList[3].installValue = e.detail.value
+        },
         bindWorkDone(e) {
           console.log('行号', e)
           this.installInfoList[e].installValue = '1'
+          this.$apply()
         },
         async bindUploadFeedback() {
-          this.installRecordDetail.installInfo = JSON.stringify(this.installInfoList)
+          let allInstallInfoList = this.installBasicItemList.concat(this.installInfoList)
+          this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
           this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
           this.installRecordDetail.installResult = this.installResult
           let installFeedbackJson = await api.updateInstallRecord({

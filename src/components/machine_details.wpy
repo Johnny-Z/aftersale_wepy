@@ -14,36 +14,36 @@
     <view wx:if="{{isShowMachine}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">机器编号：</text>
-        <text class="info_tx">{{machine.machineNameplate.empty? '暂无':machine.machineNameplate}}</text>
+        <text class="info_tx">{{machine.machineNameplate? machine.machineNameplate:'暂无'}}</text>
       </view>
       <view class="view_row" >
         <view class="view_row_half">
           <text class="label_tx">机型：</text>
-          <text class="info_tx">{{machine.machineType.empty? '暂无':machine.machineType}}</text>
+          <text class="info_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>
         </view>
         <view class="view_row_half">
           <text class="label_tx">针数：</text>
-          <text class="info_tx">{{machine.needleNum.empty? '暂无':machine.needleNum}}</text>
+          <text class="info_tx">{{machine.needleNum? machine.needleNum:'暂无'}}</text>
         </view>
       </view>
       <view class="view_row">
         <view class="view_row_half">
           <text class="label_tx">头数：</text>
-          <text class="info_tx">{{machine.headNum.empty? '暂无':machine.headNum}}</text>
+          <text class="info_tx">{{machine.headNum? machine.headNum:'暂无'}}</text>
         </view>
         <view class="view_row_half">
           <text class="label_tx">头距：</text>
-          <text class="info_tx">{{machine.headDistance.empty? '暂无':machine.headDistance}}</text>
+          <text class="info_tx">{{machine.headDistance? machine.headDistance:'暂无'}}</text>
         </view>
       </view>
       <view class="view_row" >
         <view class="view_row_half">
           <text class="label_tx">x行距：</text>
-          <text class="info_tx">{{machine.xDistance.empty? '暂无':machine.xDistance}}</text>
+          <text class="info_tx">{{machine.xDistance? machine.xDistance:'暂无'}}</text>
         </view>
         <view class="view_row_half">
           <text class="label_tx">y行距：</text>
-          <text class="info_tx">{{machine.yDistance.empty? '暂无':machine.yDistance}}</text>
+          <text class="info_tx">{{machine.yDistance? machine.yDistance:'暂无'}}</text>
         </view>
       </view>
     </view>
