@@ -5,7 +5,8 @@ import md5 from './md5'
 import tip from './tip'
 import {
     AUTHORIZATION,
-    JWT_ERROR_MESSAGE
+    JWT_ERROR_MESSAGE,
+    NO_JWT_ERROR_MESSAGE
 } from '@/utils/constant'
 
 const TIMESTAMP = util.getCurrentTime()
@@ -25,9 +26,17 @@ const wxRequest = async(params = {}, url) => {
       'Authorization': TOKEN_AUTHORIZATION }
   })
   tip.loaded()
-  if (res.message == JWT_ERROR_MESSAGE) {
-    wx.redirectTo({
-      url: '/pages/authorize'
+  if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
+    wx.showModal({
+      title: '失败！',
+      content: 'JWT错误',
+      showCancel: false,
+      confirmColor: '#007aff',
+      success: function () {
+        wx.redirectTo({
+          url: '/pages/authorize'
+        })
+      }
     })
   } else {
     return res
@@ -46,9 +55,17 @@ const wxRequestRaw = async(params = {}, url) => {
       'Authorization': TOKEN_AUTHORIZATION }
   })
   tip.loaded()
-  if (res.message == JWT_ERROR_MESSAGE) {
-    wx.redirectTo({
-      url: '/pages/authorize'
+  if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
+    wx.showModal({
+      title: '失败！',
+      content: '网络错误',
+      showCancel: false,
+      confirmColor: '#007aff',
+      success: function () {
+        wx.redirectTo({
+          url: '/pages/authorize'
+        })
+      }
     })
   } else {
     return res
@@ -67,9 +84,17 @@ const wxUploadFile = async(params = {}, url) => {
     header: { 'Authorization': TOKEN_AUTHORIZATION }
   })
   tip.loaded()
-  if (res.message == JWT_ERROR_MESSAGE) {
-    wx.redirectTo({
-      url: '/pages/authorize'
+  if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
+    wx.showModal({
+      title: '失败！',
+      content: '网络错误',
+      showCancel: false,
+      confirmColor: '#007aff',
+      success: function () {
+        wx.redirectTo({
+          url: '/pages/authorize'
+        })
+      }
     })
   } else {
     return res

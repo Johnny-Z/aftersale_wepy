@@ -170,7 +170,7 @@
         bindAbnormalRecord(e) {
           console.log('内容：', e)
           wepy.navigateTo({
-            url: '/pages/maintain_abnormal?maintainContent=' + e.maintainContent + '?maintainRecordId=' +
+            url: '/pages/maintain_abnormal?maintainContent=' + e.maintainContent + '?maintainRecordId=' + this.machineDetail.id
           })
         },
         bindWorkDone(e) {

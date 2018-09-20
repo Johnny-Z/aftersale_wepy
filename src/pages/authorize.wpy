@@ -152,10 +152,13 @@ page {
           }
         })
         console.log('登入返回：', loginJson)
+        let authorization = loginJson.header.Authorization
+        let account = loginJson.data.account
+        let id = loginJson.data.id
         if (loginJson.statusCode == 200) {
-          wx.setStorageSync(AUTHORIZATION, loginJson.header.Authorization)
-          wx.setStorageSync(ACCOUNT, loginJson.data.account)
-          wx.setStorageSync(USER_ID, loginJson.data.id)
+          wx.setStorageSync(AUTHORIZATION, authorization)
+          wx.setStorageSync(ACCOUNT, account)
+          wx.setStorageSync(USER_ID, id)
           wepy.switchTab({
               url: '/pages/repair'
           })
