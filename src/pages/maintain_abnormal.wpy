@@ -1,98 +1,69 @@
 <template>
-    <view class="title_vw">{{abnormalInfo}}</view>
-    <view class="line_vw">
-        <text>问题描述：</text>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <text class="title_tx">保养项</text>
+        </view>
+        <view class="main_view">
+          <text class="get_input_tx">{{maintainAbnormalRecord.maintainContent}}</text>
+        </view>
     </view>
-    <textarea @input="bindAbnormalInput" class="textarea" style="height: 3em" placeholder="输入问题详情"></textarea>
-    <view class="line_vw">
-        <text>解决方法：</text>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <text class="title_tx">保养异常记录</text>
+        </view>
+        <view class="main_view">
+            <textarea @input="bindMaintainAbnormalContent" class="textareaInput" placeholder="输入保养建议"></textarea>
+        </view>
     </view>
-    <textarea @input="bindFixResultInput" class="textarea" style="height: 3em" placeholder="输入解决办法"></textarea>
-    <view class="button_view">
-        <button class="double_btn" @tap="bindUploadFeedback" size="mini" type="primary">提交</button>
-        <button class="double_btn" @tap="bindNavigateBack" size="mini" >返回</button>
+    <view class="detail_view_column">
+        <view class="title_view">
+            <text class="title_tx">处理结果</text>
+        </view>
+        <view class="main_view">
+            <textarea @input="bindMaintainFixResult" class="textareaInput" placeholder="输入保养建议"></textarea>
+        </view>
     </view>
+    <button class="single_button" @tap="bindUploadFeedback">确定</button>
 </template>
 <style lang="less">
-    .line_vw {
-        margin: 20rpx;
-        display: flex;
-        .line_half_vw {
-            width: 50%;
-        }
-    }
-    .textarea {
-        width: 90%;
-        margin-left: 20rpx;
-        background-color: #fff;
-    }
-    .title_vw {
-        padding: 15rpx;
-        font-size: large;
-        font-weight: bold;
-        background: #EBEBEB;
-        color: #000000;
-    }
-    .button_view {
-      margin: 50rpx 10rpx;
-    }
-    .single_btn {
-        margin-left: 25rpx;
-        width: 50%;
-    }
-    .double_btn {
-        margin: 25rpx;
+    page {
+        margin-bottom: 120rpx;
     }
 </style>
 <script>
     /* eslint-disable no-undef,eqeqeq */
 
     import wepy from 'wepy'
-    import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
-    import {
-        USER_ID,
-        MAINTAIN_STATUS_ASSIGNED,
-        MAINTAIN_STATUS_FINISHED
-    } from '@/utils/constant'
 
     export default class MaintainAbnormal extends wepy.page {
       config = {
         navigationBarTitleText: '保养异常项'
       }
       components = {
-        machinedetails: MachineDetails
       }
       data = {
-        isReady: true,
-        isChargePerson: false,
-        machineDetail: {},
-        maintainRecordDetail: {},
-        installCustomerFeedback: {
-          customerMark: '',
-          customerSuggestion: ''
-        },
-        maintainAbnormalContent: '',
-        maintainFixResult: ''
+        maintainAbnormalRecord: {
+          maintainRecordId: '',
+          maintainContent: '',
+          maintainAbnormalContent: '',
+          maintainFixResult: ''
+        }
       };
       methods = {
-        bindAbnormalInput(e) {
+        bindMaintainAbnormalContent(e) {
           console.log(e.detail.value)
-          this.maintainAbnormalContent = e.detail.value
+          this.maintainAbnormalRecord.maintainAbnormalContent = e.detail.value
         },
-        bindFixResultInput(e) {
+        bindMaintainFixResult(e) {
           console.log(e.detail.value)
-          this.maintainFixResult = e.detail.value
+          this.maintainAbnormalRecord.maintainFixResult = e.detail.value
         },
         async bindUploadFeedback() {
-          this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED
-          this.maintainRecordDetail.maintainSuggestion = this.maintainSuggestion
-          let maintainFeedbackJson = await api.updateMaintainRecord({
-            query: this.maintainRecordDetail
+          let maintainFeedbackJson = await api.updateMaintainAbnormalRecord({
+            query: this.maintainAbnormalRecord
           })
-          console.log('maintainFeedbackJson:')
-          console.log(maintainFeedbackJson)
-          console.log(maintainFeedbackJson.data.code)
+          console.log('异常上报结果:', maintainFeedbackJson)
           if (maintainFeedbackJson.data.code === 200) {
             wx.showModal({
               title: '提交成功！',
@@ -104,8 +75,7 @@
               }
             })
           } else {
-            // 提交失败，状态回滚
-            this.maintainRecordDetail.maintainStatus = INSTALL_STATUS_TASK_DOING
+            // 提交失败
             wx.showModal({
               title: '提交失败！',
               content: '网络错误',
@@ -115,54 +85,15 @@
               }
             })
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 
       events = {};
 
       onLoad(options) {
-        console.log(options)
-        this.machineDetail = JSON.parse(options.machineDetail)
-        console.log(this.machineDetail)
-        if (this.machineDetail.maintainStatus === MAINTAIN_STATUS_ASSIGNED) {
-          this.isReady = true
-        } else {
-          this.isReady = false
-        }
-        this.getMaintainRecord(this.machineDetail.id)
-        this.$apply()
-      };
-
-      async getMaintainRecord(maintainRecordId) {
-        let maintainRecordJson = await api.getMaintainRecordList({
-          query: {
-            maintainRecordId: maintainRecordId
-          }
-        })
-        console.log('maintainRecordJson 获取 :')
-        console.log(maintainRecordJson)
-        console.log(maintainRecordJson.data.data.list)
-        if (maintainRecordJson.data.data.list.length > 0) {
-          this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
-          if (wepy.getStorageSync(USER_ID) == maintainRecordJson.data.data.list[0].maintainChargePerson) {
-            this.isChargePerson = true
-          } else {
-            this.isChargePerson = false
-          }
-        } else {
-          wx.showModal({
-            title: '获取机器信息出错！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-              wepy.navigateBack()
-            }
-          })
-        }
+        console.log('from last page: ', options)
+        this.maintainAbnormalRecord.maintainContent = JSON.parse(options.maintainContent)
+        this.maintainAbnormalRecord.maintainRecordId = JSON.parse(options.maintainRecordId)
         this.$apply()
       };
     }

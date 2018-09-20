@@ -31,7 +31,6 @@
     <view wx:if="{{isChargePerson}}">
       <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
       <view wx:else >
-        <button class="single_button" @tap="bindUploadFeedback" >提交</button>
         <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
@@ -39,25 +38,26 @@
             </view>
           </view>
           <view class="main_view">
-            <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" @tap="listItemClick({{item}})">
-              <view class="item_left">
-                <text class="content_tx">{{item.installContent}}</text>
+            <view class="list_item_row" wx:for="{{maintainInfoList}}" wx:key="item" >
+              <view class="item_left" @tap="bindAbnormalRecord({{item}})">
+                <text class="content_tx">{{item.maintainContent}}</text>
               </view>
               <view class="item_right">
-                <button wx:if="{{item.installValue == 0}}" class="status_btn_light">待完成</button>
-                <button wx:else class="status_btn_color">完成</button>
+                <button wx:if="{{item.maintainValue == 1}}" class="status_btn_color">完成</button>
+                <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
               </view>
             </view>
-            <view class="view_row">
-              <text class="label_tx">保养建议：</text>
-              <text class="info_tx" @tap="showSuggestionInput">口口口</text>
-            </view>
-            <modal hidden="{{hiddenSuggestion}}" title="保养建议" confirm-text="确定" no-cancel="true" bindconfirm="listenerSuggestion" >
-              <textarea @input="bindMaintainSuggestionInput" class="textareaInput" placeholder="输入保养建议"></textarea>
-            </modal>
-            <text class="get_input_tx">{{maintainSuggestion}}</text>
           </view>
         </view>
+        <view class="detail_view_column">
+          <view class="title_view">
+            <text class="title_tx">保养建议</text>
+          </view>
+          <view class="main_view">
+            <textarea @input="bindMaintainSuggestionInput" class="textareaInput" placeholder="输入保养建议"></textarea>
+          </view>
+        </view>
+        <button class="single_button" @tap="bindUploadFeedback">提交</button>
       </view>
     </view>
 </template>
@@ -79,12 +79,22 @@
       width: 30%;
     }
   }
+  .textareaInput {
+    width: 100%;
+    height: 200rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 30rpx;
+    color: #3B403D;
+    letter-spacing: 0.2rpx;
+    line-height: 48rpx;
+    padding-top: 30rpx;
+  }
   .content_tx {
     font-family: PingFangSC-Regular;
-    font-size: 30px;
+    font-size: 30rpx;
     color: #3B403D;
-    letter-spacing: 0.2px;
-    line-height: 48px;
+    letter-spacing: 0.2rpx;
+    line-height: 48rpx;
   }
 </style>
 <script>
@@ -114,7 +124,8 @@
         hiddenSuggestion: true,
         machineDetail: {},
         maintainRecordDetail: {},
-        maintainSuggestion: ''
+        maintainSuggestion: '',
+        maintainInfoList: []
       };
       methods = {
         bindIsShowCustomer() {
@@ -156,11 +167,22 @@
           this.hiddenSuggestion = true
           this.$apply()
         },
+        bindAbnormalRecord(e) {
+          console.log('内容：', e)
+          wepy.navigateTo({
+            url: '/pages/maintain_abnormal?maintainContent=' + e.maintainContent + '?maintainRecordId=' +
+          })
+        },
+        bindWorkDone(e) {
+          console.log('行号', e)
+          this.maintainInfoList[e].maintainValue = '1'
+        },
         bindMaintainSuggestionInput(e) {
           console.log(e.detail.value)
           this.maintainSuggestion = e.detail.value
         },
         async bindUploadFeedback() {
+          this.maintainRecordDetail.maintainInfo = JSON.stringify(this.maintainInfoList)
           this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED
           this.maintainRecordDetail.maintainSuggestion = this.maintainSuggestion
           let maintainFeedbackJson = await api.updateMaintainRecord({
@@ -180,8 +202,6 @@
               }
             })
           } else {
-            // 提交失败，状态回滚
-            this.maintainRecordDetail.maintainStatus = INSTALL_STATUS_TASK_DOING
             wx.showModal({
               title: '提交失败！',
               content: '网络错误',
@@ -191,9 +211,6 @@
               }
             })
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 
@@ -221,14 +238,7 @@
         console.log('maintainRecordJson 获取 :')
         console.log(maintainRecordJson)
         console.log(maintainRecordJson.data.data.list)
-        if (maintainRecordJson.data.data.list.length > 0) {
-          this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
-          if (wepy.getStorageSync(USER_ID) == maintainRecordJson.data.data.list[0].maintainChargePerson) {
-            this.isChargePerson = true
-          } else {
-            this.isChargePerson = false
-          }
-        } else {
+        if (maintainRecordJson.data.data.list.length < 1) {
           wx.showModal({
             title: '获取机器信息出错！',
             content: '网络错误',
@@ -238,6 +248,14 @@
               wepy.navigateBack()
             }
           })
+        } else {
+          this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
+            // this.maintainInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
+          if (wepy.getStorageSync(USER_ID) == maintainRecordJson.data.data.list[0].maintainChargePerson) {
+            this.isChargePerson = true
+          } else {
+            this.isChargePerson = false
+          }
         }
         this.$apply()
       };

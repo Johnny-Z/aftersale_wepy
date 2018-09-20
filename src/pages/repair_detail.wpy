@@ -107,9 +107,9 @@
               <view class="view_row">
                 <text class="label_tx">配件：</text>
               </view>
-              <view class="view_row" wx:for="{{partsInfoList}}" @tap='bindPartsNum({{index}})'>
+              <view class="view_row" wx:for="{{partsInfoList}}" >
                 <text class="info_tx">{{item.partsName}}-{{(item.partsStatus=='1')? '不寄回':'寄回'}}</text>
-                <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear"></icon>
+                <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear({{index}})"></icon>
               </view>
               <view class="view_row">
                 <button class="add_btn" @tap="showPartsInfo" >添加配件信息</button>
@@ -159,7 +159,7 @@
     }
     .checkbox_view {
       font-family: PingFangSC-Regular;
-      font-size: 32rpx;
+      font-size: 30rpx;
       color: #333333;
       letter-spacing: 0;
       align-items: center;
@@ -181,7 +181,8 @@
     }
     .radio {
       margin-right: 50rpx;
-      margin-left: 30rpx
+      margin-left: 30rpx;
+      font-size: 30rpx;
     }
     .clear_icon {
         width: 10%;
@@ -266,8 +267,7 @@
         partsName: '',
         partsStatus: '1',
         radioChecked: true,
-        partsInfoList: [],
-        partsIndex: 0
+        partsInfoList: []
       };
       methods = {
         bindIsShowCustomer() {
@@ -434,14 +434,10 @@
           }
           this.$apply()
         },
-          // get点击的行号
-        bindPartsNum(e) {
-          console.log('行号', e)
-          this.partsIndex = e
-        },
           // 根据行号删除数组中的数据
-        bindClear() {
-          this.partsInfoList.splice(this.partsIndex, 1)
+        bindClear(e) {
+          console.log('行号eeeeeeeeeeeeeeee', e)
+          this.partsInfoList.splice(e, 1)
           this.$apply()
         },
         async bindUploadFeedback() {

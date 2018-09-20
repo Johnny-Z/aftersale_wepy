@@ -14,17 +14,18 @@ export const USER_INFO = 'userInfo'
  * 系统信息
  * @type {String}
  */
-export const SYSTEM_INFO = 'systemInfo'
-
-export const ADDRESS_ID = 'addressId'
-
-export const SEL_CLASS_CODE = 'selClassCode'
+export const APIMALL = 'https://eservice-tech.cn'
 
 /**
  * JWT
  * @type {String}
  */
 export const AUTHORIZATION = 'Authorization'
+/**
+ * JWT error
+ * @type {String}
+ */
+export const JWT_ERROR_MESSAGE = 'JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.'
 /**
  * 用户名
  * @type {String}

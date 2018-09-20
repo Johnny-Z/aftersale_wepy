@@ -88,13 +88,13 @@
           <text class="title_tx_half2">调试状态</text>
         </view>
         <view class="main_view">
-          <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" @tap="listItemClick({{item}})">
-            <view class="item_left">
+          <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" >
+            <view class="item_left" >
               <text class="content_tx">{{item.installContent}}</text>
             </view>
             <view class="item_right">
-              <button wx:if="{{item.installValue == 0}}" class="status_btn_light">待完成</button>
-              <button wx:else class="status_btn_color">完成</button>
+              <button wx:if="{{item.installValue == 1}}" class="status_btn_color">完成</button>
+              <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
             </view>
           </view>
         </view>
@@ -109,7 +109,8 @@
   }
   .radio {
     margin-right: 40rpx;
-    margin-left: 40rpx
+    margin-left: 40rpx;
+    font-size: 30rpx;
   }
   .title_tx_half1 {
     width: 50%;
@@ -137,16 +138,16 @@
     .item_left {
       width: 70%;
     }
-    .item_left {
+    .item_right {
       width: 30%;
     }
   }
   .content_tx {
     font-family: PingFangSC-Regular;
-    font-size: 30px;
+    font-size: 30rpx;
     color: #3B403D;
-    letter-spacing: 0.2px;
-    line-height: 48px;
+    letter-spacing: 0.2rpx;
+    line-height: 48rpx;
   }
 </style>
 <script>
@@ -224,7 +225,12 @@
           console.log(e.detail.value)
           this.installResult = e.detail.value
         },
+        bindWorkDone(e) {
+          console.log('行号', e)
+          this.installInfoList[e].installValue = '1'
+        },
         async bindUploadFeedback() {
+          this.installRecordDetail.installInfo = JSON.stringify(this.installInfoList)
           this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
           this.installRecordDetail.installResult = this.installResult
           let installFeedbackJson = await api.updateInstallRecord({
@@ -242,8 +248,6 @@
               }
             })
           } else {
-            // 提交失败，状态回滚
-            this.installRecordDetail.installStatus = INSTALL_STATUS_TASK_DOING
             wx.showModal({
               title: '提交失败！',
               content: '网络错误',
@@ -253,9 +257,6 @@
               }
             })
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 
@@ -295,8 +296,6 @@
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
           // this.installInfoList = JSON.parse(this.installRecordDetail.installInfo)
-          console.log('id: ', wepy.getStorageSync(USER_ID))
-          console.log('id: ', installRecordJson.data.data.list[0].installChargePerson)
           if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
             this.isChargePerson = true
           } else {
