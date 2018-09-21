@@ -27,17 +27,7 @@ const wxRequest = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    wx.showModal({
-      title: '失败！',
-      content: 'JWT错误',
-      showCancel: false,
-      confirmColor: '#007aff',
-      success: function () {
-        wx.redirectTo({
-          url: '/pages/authorize'
-        })
-      }
-    })
+    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
   } else {
     return res
   }
@@ -56,17 +46,7 @@ const wxRequestRaw = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    wx.showModal({
-      title: '失败！',
-      content: '网络错误',
-      showCancel: false,
-      confirmColor: '#007aff',
-      success: function () {
-        wx.redirectTo({
-          url: '/pages/authorize'
-        })
-      }
-    })
+    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
   } else {
     return res
   }
@@ -85,17 +65,7 @@ const wxUploadFile = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    wx.showModal({
-      title: '失败！',
-      content: '网络错误',
-      showCancel: false,
-      confirmColor: '#007aff',
-      success: function () {
-        wx.redirectTo({
-          url: '/pages/authorize'
-        })
-      }
-    })
+    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
   } else {
     return res
   }

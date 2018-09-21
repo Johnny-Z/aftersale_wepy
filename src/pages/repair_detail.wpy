@@ -215,6 +215,7 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
         USER_ID,
         REPAIR_STATUS_SIGNED_TO_REPAIRER,
@@ -324,24 +325,9 @@
           })
           console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
-            wx.showModal({
-              title: '接单失败！',
-              content: '网络错误',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-              }
-            })
+            tip.confirm('接单失败！网络错误，请检查网络！')
           } else {
-            wx.showModal({
-              title: '接单成功！',
-              content: '接单成功',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+            tip.confirm('成功！返回上一页', wx.navigateBack())
           }
         },
           // get repair result
@@ -449,55 +435,20 @@
             })
             console.log('没修完提交结果：', repairNGJson)
             if (repairNGJson.data.code !== 200) {
-              wx.showModal({
-                title: '上传失败！',
-                content: '网络错误，请检查网络',
-                showCancel: false,
-                confirmColor: '#007aff',
-                success: function () {
-                }
-              })
+              tip.confirm('失败！网络错误，请检查网络！')
             } else {
-              wx.showModal({
-                title: '维修结果：没修完！',
-                content: '将申请重新派单',
-                showCancel: false,
-                confirmColor: '#007aff',
-                success: function () {
-                  wepy.navigateBack()
-                }
-              })
+              tip.confirm('成功！将启动重新派单！', wx.navigateBack(), '没修完')
             }
           } else {
               // 维修结果：已修完
             if (this.repairActualInfo.issuePosition == '') {
-              wx.showToast({
-                title: '请选择故障部位',
-                icon: 'none',
-                mask: true,
-                duration: 1500
-              })
+              tip.alert('请选择故障部位')
             } else if (this.repairActualInfo.issueDescription == '') {
-              wx.showToast({
-                title: '请输入问题描述',
-                icon: 'none',
-                mask: true,
-                duration: 1500
-              })
+              tip.alert('请输入问题描述')
             } else if (this.repairActualInfo.repairMethod == '') {
-              wx.showToast({
-                title: '请输入处理方法',
-                icon: 'none',
-                mask: true,
-                duration: 1500
-              })
+              tip.alert('请输入处理方法')
             } else if (this.repairImageArr.length == 0) {
-              wx.showToast({
-                title: '请拍下故障照片',
-                icon: 'none',
-                mask: true,
-                duration: 1500
-              })
+              tip.alert('请拍下故障照片')
             } else {
               this.repairActualInfo.repairRecordId = this.machineDetail.id
               const repairFeedbackJson = await api.uploadRepairFeedback({
@@ -513,14 +464,7 @@
                 let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
                 this.addRepairActualImageSrc(strRepairActualInfo, this.count)
               } else {
-                wx.showModal({
-                  title: '上传信息失败！',
-                  content: '网络错误，请检查网络',
-                  showCancel: false,
-                  confirmColor: '#007aff',
-                  success: function () {
-                  }
-                })
+                tip.confirm('上传信息失败！网络错误，请检查网络！')
               }
             }
           }
@@ -547,15 +491,7 @@
         if (returnImageSrcData.code === 200) {
           console.log('count的值： ', count)
           if (count >= this.repairImageArr.length - 1) {
-            wx.showModal({
-              title: '维修完成！',
-              content: '信息上传成功！',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+            tip.confirm('成功！返回上一页', wx.navigateBack(), '维修完成')
           } else {
             count++
             strRepairActualInfo = JSON.stringify(returnImageSrcData.data)
@@ -563,14 +499,7 @@
             this.addRepairActualImageSrc(strRepairActualInfo, count)
           }
         } else {
-          wepy.showModal({
-            title: '上传出错，请重新上传！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-            }
-          })
+          tip.confirm('失败！网络错误，请检查网络！')
         }
       }
       events = {};
@@ -606,15 +535,7 @@
             this.isChargePerson = false
           }
         } else {
-          wx.showModal({
-            title: '获取机器信息出错！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-              wepy.navigateBack()
-            }
-          })
+          tip.confirm('获取信息出错！网络错误，请检查网络', wx.navigateBack())
         }
         this.$apply()
       };

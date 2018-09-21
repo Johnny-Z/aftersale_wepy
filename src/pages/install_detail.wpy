@@ -196,6 +196,7 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
         USER_ID,
         INSTALL_STATUS_TASK_DOING,
@@ -235,24 +236,9 @@
           })
           console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
-            wx.showModal({
-              title: '接单失败！',
-              content: '网络错误',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-              }
-            })
+            tip.confirm('网络错误，接单失败')
           } else {
-            wx.showModal({
-              title: '接单成功！',
-              content: '接单成功',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+            tip.confirm('接单成功，返回上一页', wx.navigateBack())
           }
         },
         showResultInput() {
@@ -317,33 +303,28 @@
           this.$apply()
         },
         async bindUploadFeedback() {
-          let allInstallInfoList = this.installBasicItemList.concat(this.installInfoList)
-          this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
-          this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
-          this.installRecordDetail.installResult = this.installResult
-          let installFeedbackJson = await api.updateInstallRecord({
-            query: this.installRecordDetail
-          })
-          console.log('提交结果:', installFeedbackJson)
-          if (installFeedbackJson.data.code === 200) {
-            wx.showModal({
-              title: '提交成功！',
-              content: '成功',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+          if (this.installResult == '') {
+            tip.alert('请输入调试结果')
           } else {
-            wx.showModal({
-              title: '提交失败！',
-              content: '网络错误',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
+            let allInstallInfoList = this.installBasicItemList.concat(this.installInfoList)
+            for (var infoItem in allInstallInfoList) {
+              if (!infoItem.installValue) {
+                tip.alert('还有项目未完成')
+                return
               }
+            }
+            this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
+            this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
+            this.installRecordDetail.installResult = this.installResult
+            let installFeedbackJson = await api.updateInstallRecord({
+              query: this.installRecordDetail
             })
+            console.log('提交结果:', installFeedbackJson)
+            if (installFeedbackJson.data.code === 200) {
+              tip.confirm('成功！返回上一页', wx.navigateBack())
+            } else {
+              tip.confirm('失败！网络错误，请检查网络！')
+            }
           }
         }
       };
@@ -372,15 +353,7 @@
         console.log('get installRecord list by id: ', installRecordJson)
         console.log(installRecordJson.data.data.list)
         if (installRecordJson.data.data.list.length < 1) {
-          wx.showModal({
-            title: '获取机器信息出错！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-              wepy.navigateBack()
-            }
-          })
+          tip.confirm('获取信息出错！网络错误，返回上一页！', wx.navigateBack())
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
           // this.installInfoList = JSON.parse(this.installRecordDetail.installInfo)

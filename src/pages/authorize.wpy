@@ -81,17 +81,18 @@ page {
 
   import wepy from 'wepy'
   import api from '@/api/api'
+  import tip from '@/utils/tip'
   import {
-      AUTHORIZATION,
-      ACCOUNT,
-      USER_ID
+    AUTHORIZATION,
+    ACCOUNT,
+    USER_ID
   } from '@/utils/constant'
   export default class Authorize extends wepy.page {
     config = {
       navigationBarTitleText: '授权登录'
     }
     data = {
-      account: 'repairPerson_lisi',
+      account: 'lisi',
       password: 'sinsim'
     }
     async onLoad() {
@@ -163,14 +164,7 @@ page {
               url: '/pages/repair'
           })
         } else {
-          wx.showModal({
-            title: '失败！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-            }
-          })
+          tip.confirm('网络错误，登陆失败')
         }
       }
     }

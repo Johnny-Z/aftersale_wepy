@@ -103,6 +103,7 @@
     import wepy from 'wepy'
     import MachineDetails from '../components/machine_details'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
         USER_ID,
         MAINTAIN_STATUS_TASK_DOING,
@@ -139,24 +140,9 @@
           })
           console.log(acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
-            wx.showModal({
-              title: '接单失败！',
-              content: '网络错误',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-              }
-            })
+            tip.confirm('接单失败！网络错误，请检查网络！')
           } else {
-            wx.showModal({
-              title: '接单成功！',
-              content: '接单成功',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+            tip.confirm('成功！返回上一页', wx.navigateBack())
           }
         },
         showSuggestionInput() {
@@ -182,34 +168,29 @@
           this.maintainSuggestion = e.detail.value
         },
         async bindUploadFeedback() {
-          this.maintainRecordDetail.maintainInfo = JSON.stringify(this.maintainInfoList)
-          this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED
-          this.maintainRecordDetail.maintainSuggestion = this.maintainSuggestion
-          let maintainFeedbackJson = await api.updateMaintainRecord({
-            query: this.maintainRecordDetail
-          })
-          console.log('maintainFeedbackJson:')
-          console.log(maintainFeedbackJson)
-          console.log(maintainFeedbackJson.data.code)
-          if (maintainFeedbackJson.data.code === 200) {
-            wx.showModal({
-              title: '提交成功！',
-              content: '成功',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
-                wepy.navigateBack()
-              }
-            })
+          if (this.maintainSuggestion == '') {
+            tip.alert('请输入保养建议')
           } else {
-            wx.showModal({
-              title: '提交失败！',
-              content: '网络错误',
-              showCancel: false,
-              confirmColor: '#007aff',
-              success: function () {
+            for (var infoItem in this.maintainInfoList) {
+              if (!infoItem.maintainValue) {
+                tip.alert('还有项目未完成')
+                return
               }
+            }
+            this.maintainRecordDetail.maintainInfo = JSON.stringify(this.maintainInfoList)
+            this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED
+            this.maintainRecordDetail.maintainSuggestion = this.maintainSuggestion
+            let maintainFeedbackJson = await api.updateMaintainRecord({
+              query: this.maintainRecordDetail
             })
+            console.log('maintainFeedbackJson:')
+            console.log(maintainFeedbackJson)
+            console.log(maintainFeedbackJson.data.code)
+            if (maintainFeedbackJson.data.code === 200) {
+              tip.confirm('成功！返回上一页', wx.navigateBack())
+            } else {
+              tip.confirm('提交失败！网络错误，请检查网络！')
+            }
           }
         }
       };
@@ -239,15 +220,7 @@
         console.log(maintainRecordJson)
         console.log(maintainRecordJson.data.data.list)
         if (maintainRecordJson.data.data.list.length < 1) {
-          wx.showModal({
-            title: '获取机器信息出错！',
-            content: '网络错误',
-            showCancel: false,
-            confirmColor: '#007aff',
-            success: function () {
-              wepy.navigateBack()
-            }
-          })
+          tip.confirm('获取信息出错！网络错误，请检查网络', wx.navigateBack())
         } else {
           this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
             // this.maintainInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
