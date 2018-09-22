@@ -4,7 +4,7 @@
             <text class="title_tx">保养项</text>
         </view>
         <view class="main_view">
-          <text class="get_input_tx">{{maintainAbnormalRecord.maintainContent}}</text>
+          <text class="get_input_tx">{{maintainContent}}</text>
         </view>
     </view>
     <view class="detail_view_column">
@@ -12,7 +12,7 @@
             <text class="title_tx">保养异常记录</text>
         </view>
         <view class="main_view">
-            <textarea @input="bindMaintainAbnormalContent" class="textareaInput" placeholder="输入保养异常"></textarea>
+            <textarea @input="bindmaitainAbnormalContent" class="textareaInput" placeholder="输入保养异常"></textarea>
         </view>
     </view>
     <view class="detail_view_column">
@@ -20,7 +20,7 @@
             <text class="title_tx">处理方法</text>
         </view>
         <view class="main_view">
-            <textarea @input="bindMaintainFixResult" class="textareaInput" placeholder="输入处理方法"></textarea>
+            <textarea @input="bindmaintainFixResult" class="textareaInput" placeholder="输入处理方法"></textarea>
         </view>
     </view>
     <button class="single_button" @tap="bindUploadFeedback">确定</button>
@@ -44,36 +44,39 @@
       components = {
       }
       data = {
-        maintainAbnormalRecord: {
-          maintainRecordId: '',
-          maintainContent: '',
-          maintainAbnormalContent: '',
-          maintainFixResult: ''
-        }
+        maintainRecordId: '',
+        maintainContent: '',
+        maitainAbnormalContent: '',
+        maintainFixResult: ''
       };
       methods = {
-        bindMaintainAbnormalContent(e) {
+        bindmaitainAbnormalContent(e) {
           console.log(e.detail.value)
-          this.maintainAbnormalRecord.maintainAbnormalContent = e.detail.value
+          this.maitainAbnormalContent = e.detail.value
         },
-        bindMaintainFixResult(e) {
+        bindmaintainFixResult(e) {
           console.log(e.detail.value)
-          this.maintainAbnormalRecord.maintainFixResult = e.detail.value
+          this.maintainFixResult = e.detail.value
         },
         async bindUploadFeedback() {
-          if (this.maintainAbnormalRecord.maintainAbnormalContent == '') {
+          if (this.maitainAbnormalContent == '') {
             tip.alert('请输入异常内容')
-          } else if (this.maintainAbnormalRecord.maintainFixResult == '') {
+          } else if (this.maintainFixResult == '') {
             tip.alert('请输入处理方法')
           } else {
             let maintainFeedbackJson = await api.updateMaintainAbnormalRecord({
-              query: this.maintainAbnormalRecord
+              query: {
+                maintainRecordId: this.maintainRecordId,
+                maintainContent: this.maintainContent,
+                maitainAbnormalContent: this.maitainAbnormalContent,
+                maintainFixResult: this.maintainFixResult
+              }
             })
             console.log('异常上报结果:', maintainFeedbackJson)
             if (maintainFeedbackJson.data.code === 200) {
               tip.confirm('成功！返回上一页', wx.navigateBack())
             } else {
-                    // 提交失败
+                // 提交失败
               tip.confirm('提交失败！网络错误，请检查网络！')
             }
           }
@@ -84,8 +87,8 @@
 
       onLoad(options) {
         console.log('from last page: ', options)
-        this.maintainAbnormalRecord.maintainContent = JSON.parse(options.maintainContent)
-        this.maintainAbnormalRecord.maintainRecordId = JSON.parse(options.maintainRecordId)
+        this.maintainContent = options.content
+        this.maintainRecordId = options.maintainRecordId
         this.$apply()
       };
     }

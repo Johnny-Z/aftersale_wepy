@@ -61,7 +61,8 @@ const wxUploadFile = async(params = {}, url) => {
     filePath: data.filePath,
     name: data.name,
     formData: data.data,
-    header: { 'Authorization': TOKEN_AUTHORIZATION }
+    header: { 'Content-Type': 'multipart/form-data',
+      'Authorization': TOKEN_AUTHORIZATION }
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {

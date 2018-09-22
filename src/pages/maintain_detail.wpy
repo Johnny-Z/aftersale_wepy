@@ -40,10 +40,10 @@
           <view class="main_view">
             <view class="list_item_row" wx:for="{{maintainInfoList}}" wx:key="item" >
               <view class="item_left" @tap="bindAbnormalRecord({{item}})">
-                <text class="content_tx">{{item.maintainContent}}</text>
+                <text class="content_tx">{{item.content}}</text>
               </view>
               <view class="item_right">
-                <button wx:if="{{item.maintainValue == 1}}" class="status_btn_color">完成</button>
+                <button wx:if="{{item.checkValue == 1}}" class="status_btn_color">完成</button>
                 <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
               </view>
             </view>
@@ -88,6 +88,20 @@
     letter-spacing: 0.2rpx;
     line-height: 48rpx;
     padding-top: 30rpx;
+  }
+  .list_item_row {
+    border-bottom: 1px solid #F0F3F5;
+    margin-top: 30rpx;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .item_left {
+      width: 70%;
+    }
+    .item_right {
+      width: 30%;
+    }
   }
   .content_tx {
     font-family: PingFangSC-Regular;
@@ -134,9 +148,11 @@
           this.isShowCustomer = !isShow
         },
         async bindAcceptOrder() {
-          this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_TASK_DOING
           let acceptOrderJson = await api.updateMaintainRecord({
-            query: this.maintainRecordDetail
+            query: {
+              id: this.maintainRecordDetail.id,
+              maintainStatus: MAINTAIN_STATUS_TASK_DOING
+            }
           })
           console.log(acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
@@ -156,12 +172,12 @@
         bindAbnormalRecord(e) {
           console.log('内容：', e)
           wepy.navigateTo({
-            url: '/pages/maintain_abnormal?maintainContent=' + e.maintainContent + '?maintainRecordId=' + this.machineDetail.id
+            url: '/pages/maintain_abnormal?content=' + e.content + '&maintainRecordId=' + this.machineDetail.id
           })
         },
         bindWorkDone(e) {
           console.log('行号', e)
-          this.maintainInfoList[e].maintainValue = '1'
+          this.maintainInfoList[e].checkValue = '1'
         },
         bindMaintainSuggestionInput(e) {
           console.log(e.detail.value)
@@ -171,12 +187,12 @@
           if (this.maintainSuggestion == '') {
             tip.alert('请输入保养建议')
           } else {
-            for (var infoItem in this.maintainInfoList) {
-              if (!infoItem.maintainValue) {
-                tip.alert('还有项目未完成')
-                return
-              }
-            }
+            // for (var infoItem in this.maintainInfoList) {
+            //   if (!infoItem.checkValue) {
+            //     tip.alert('还有项目未完成')
+            //     return
+            //   }
+            // }
             this.maintainRecordDetail.maintainInfo = JSON.stringify(this.maintainInfoList)
             this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED
             this.maintainRecordDetail.maintainSuggestion = this.maintainSuggestion
@@ -223,7 +239,10 @@
           tip.confirm('获取信息出错！网络错误，请检查网络', wx.navigateBack())
         } else {
           this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
-            // this.maintainInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
+          let tempInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
+          for (var i = 0; i < tempInfoList.length; i++) {
+            this.maintainInfoList = this.maintainInfoList.concat(tempInfoList[i].contentList)
+          }
           if (wepy.getStorageSync(USER_ID) == maintainRecordJson.data.data.list[0].maintainChargePerson) {
             this.isChargePerson = true
           } else {

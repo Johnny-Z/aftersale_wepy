@@ -55,34 +55,34 @@
           </view>
           <view class="view_row" @tap="showSourceInput">
             <text class="info_tx" >电源电压：</text>
-            <text class="info_tx" >A-{{installBasicItemList[0].installValue? installBasicItemList[0].installValue:'暂无'}}</text>
-            <text class="info_tx" >B-{{installBasicItemList[1].installValue? installBasicItemList[1].installValue:'暂无'}}</text>
-            <text class="info_tx" >C-{{installBasicItemList[2].installValue? installBasicItemList[2].installValue:'暂无'}}</text>
+            <text class="info_tx" >A-{{installBasicItemList[0].install_value? installBasicItemList[0].install_value:'暂无'}}</text>
+            <text class="info_tx" >B-{{installBasicItemList[1].install_value? installBasicItemList[1].install_value:'暂无'}}</text>
+            <text class="info_tx" >C-{{installBasicItemList[2].install_value? installBasicItemList[2].install_value:'暂无'}}</text>
           </view>
           <modal hidden="{{hiddenSource}}" title="电源电压" confirm-text="确定" no-cancel="true" bindconfirm="listenerSource" >
             <view class="view_row">
               <text class="label_tx">A：</text>
-              <input class="part_input" type="text" value="{{installBasicItemList[0].installValue}}" @input="bindASourceInput" placeholder="输入A电压"/>
+              <input class="part_input" type="text" value="{{installBasicItemList[0].install_value}}" @input="bindASourceInput" placeholder="输入A电压"/>
               <text class="label_tx">V</text>
             </view>
             <view class="view_row">
               <text class="label_tx">B：</text>
-              <input class="part_input" type="text" value="{{installBasicItemList[1].installValue}}" @input="bindBSourceInput" placeholder="输入B电压"/>
+              <input class="part_input" type="text" value="{{installBasicItemList[1].install_value}}" @input="bindBSourceInput" placeholder="输入B电压"/>
               <text class="label_tx">V</text>
             </view>
             <view class="view_row">
               <text class="label_tx">C：</text>
-              <input class="part_input" type="text" value="{{installBasicItemList[2].installValue}}" @input="bindCSourceInput" placeholder="输入C电压"/>
+              <input class="part_input" type="text" value="{{installBasicItemList[2].install_value}}" @input="bindCSourceInput" placeholder="输入C电压"/>
               <text class="label_tx">V</text>
             </view>
           </modal>
           <view class="view_row" @tap="showPhaseInput">
             <text class="info_tx" >单相电压：</text>
-            <text class="info_tx" >{{installBasicItemList[3].installValue? installBasicItemList[3].installValue:'暂无'}}</text>
+            <text class="info_tx" >{{installBasicItemList[3].install_value? installBasicItemList[3].install_value:'暂无'}}</text>
           </view>
           <modal hidden="{{hiddenPhase}}" title="单相电压" confirm-text="确定" no-cancel="true" bindconfirm="listenerPhase" >
             <view class="view_row">
-              <input class="part_input" type="text" value="{{installBasicItemList[3].installValue}}" @input="bindPhaseInput" placeholder="输入配件名"/>
+              <input class="part_input" type="text" value="{{installBasicItemList[3].install_value}}" @input="bindPhaseInput" placeholder="输入配件名"/>
               <text class="label_tx">V</text>
             </view>
           </modal>
@@ -117,10 +117,10 @@
         <view class="main_view">
           <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" >
             <view class="item_left" >
-              <text class="content_tx">{{item.installContent}}</text>
+              <text class="content_tx">{{item.install_content}}</text>
             </view>
             <view class="item_right">
-              <button wx:if="{{item.installValue == 1}}" class="status_btn_color">完成</button>
+              <button wx:if="{{item.install_value == 1}}" class="status_btn_color">完成</button>
               <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
             </view>
           </view>
@@ -230,9 +230,11 @@
           this.isShowCustomer = !isShow
         },
         async bindAcceptOrder() {
-          this.installRecordDetail.installStatus = INSTALL_STATUS_TASK_DOING
           let acceptOrderJson = await api.updateInstallRecord({
-            query: this.installRecordDetail
+            query: {
+              id: this.installRecordDetail.id,
+              installStatus: INSTALL_STATUS_TASK_DOING
+            }
           })
           console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
@@ -255,15 +257,15 @@
         },
         groundRadioChange(e) {
           console.log(e)
-          this.installBasicItemList[4].installValue = e.detail.value
+          this.installBasicItemList[4].install_value = e.detail.value
         },
         levelRadioChange(e) {
           console.log(e)
-          this.installBasicItemList[5].installValue = e.detail.value
+          this.installBasicItemList[5].install_value = e.detail.value
         },
         supportRadioChange(e) {
           console.log(e)
-          this.installBasicItemList[6].installValue = e.detail.value
+          this.installBasicItemList[6].install_value = e.detail.value
         },
         showSourceInput() {
           this.hiddenSource = false
@@ -275,15 +277,15 @@
         },
         bindASourceInput(e) {
           console.log(e.detail.value)
-          this.installBasicItemList[0].installValue = e.detail.value
+          this.installBasicItemList[0].install_value = e.detail.value
         },
         bindBSourceInput(e) {
           console.log(e.detail.value)
-          this.installBasicItemList[1].installValue = e.detail.value
+          this.installBasicItemList[1].install_value = e.detail.value
         },
         bindCSourceInput(e) {
           console.log(e.detail.value)
-          this.installBasicItemList[2].installValue = e.detail.value
+          this.installBasicItemList[2].install_value = e.detail.value
         },
         showPhaseInput() {
           this.hiddenPhase = false
@@ -295,24 +297,24 @@
         },
         bindPhaseInput(e) {
           console.log(e.detail.value)
-          this.installBasicItemList[3].installValue = e.detail.value
+          this.installBasicItemList[3].install_value = e.detail.value
         },
         bindWorkDone(e) {
           console.log('行号', e)
-          this.installInfoList[e].installValue = '1'
+          this.installInfoList[e].install_value = '1'
           this.$apply()
         },
         async bindUploadFeedback() {
           if (this.installResult == '') {
             tip.alert('请输入调试结果')
           } else {
-            let allInstallInfoList = this.installBasicItemList.concat(this.installInfoList)
-            for (var infoItem in allInstallInfoList) {
-              if (!infoItem.installValue) {
-                tip.alert('还有项目未完成')
-                return
-              }
-            }
+            let allInstallInfoList = this.installInfoList.concat(this.installBasicItemList)
+            // for (var infoItem in allInstallInfoList) {
+            //   if (!infoItem.install_value) {
+            //     tip.alert('还有项目未完成')
+            //     return
+            //   }
+            // }
             this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
             this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
             this.installRecordDetail.installResult = this.installResult
@@ -356,7 +358,16 @@
           tip.confirm('获取信息出错！网络错误，返回上一页！', wx.navigateBack())
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
-          // this.installInfoList = JSON.parse(this.installRecordDetail.installInfo)
+          let tempInfoList = JSON.parse(this.installRecordDetail.installInfo)
+          for (var i = 0; i < tempInfoList.length; i++) {
+            if (tempInfoList[i].install_lib_name == '基础项') {
+              this.installBasicItemList = this.installBasicItemList.concat(tempInfoList[i])
+            } else {
+              this.installInfoList = this.installInfoList.concat(tempInfoList[i])
+            }
+          }
+          console.log('1111111', this.installInfoList)
+          console.log('1111111', this.installBasicItemList)
           if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
             this.isChargePerson = true
           } else {

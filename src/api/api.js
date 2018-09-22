@@ -25,7 +25,7 @@ const uploadRepairFeedback = (params) => wxRequestRaw(params, apiMall + '/api/re
 
 const updateInstallRecord = (params) => wxRequestRaw(params, apiMall + '/api/install/record/update')
 const updateMaintainRecord = (params) => wxRequestRaw(params, apiMall + '/api/maintain/record/update')
-const updateMaintainAbnormalRecord = (params) => wxRequestRaw(params, apiMall + '/maintain/abnormal/record/add')
+const updateMaintainAbnormalRecord = (params) => wxRequestRaw(params, apiMall + '/api/maintain/abnormal/record/add')
 const updateRepairRecord = (params) => wxRequestRaw(params, apiMall + '/api/repair/record/update')
 
 const uploadRepairActualFiles = (params) => wxUploadFile(params, apiMall + '/api/repair/actual/info/update')

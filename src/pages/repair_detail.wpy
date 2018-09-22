@@ -319,9 +319,11 @@
         },
           // accept order
         async bindAcceptOrder() {
-          this.repairRecordDetail.status = REPAIR_STATUS_REPAIRER_ACCEPTED
           let acceptOrderJson = await api.updateRepairRecord({
-            query: this.repairRecordDetail
+            query: {
+              id: this.repairRecordDetail.id,
+              status: REPAIR_STATUS_REPAIRER_ACCEPTED
+            }
           })
           console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {

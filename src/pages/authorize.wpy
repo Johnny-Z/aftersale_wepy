@@ -92,10 +92,10 @@ page {
       navigationBarTitleText: '授权登录'
     }
     data = {
-      account: 'lisi',
+      account: 'zhaopu',
       password: 'sinsim'
     }
-    async onLoad() {
+    onLoad() {
       // let res = await wepy.login()
       // console.log(res)
       // if (res.code) {
