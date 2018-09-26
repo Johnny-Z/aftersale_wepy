@@ -57,13 +57,29 @@
       }
       async getRepairMachineList() {
         let userAccount = wepy.getStorageSync(ACCOUNT)
-
         const repairMachineListJson = await api.getRepairList({
           query: {userName: userAccount}
         })
         console.log('获取列表:', repairMachineListJson)
-        this.repairList = repairMachineListJson.data.data.list
-
+        let tempList = repairMachineListJson.data.data.list
+        if (tempList.length > 0) {
+              // 删除同recordId的重复记录
+          this.repairList = []
+          this.repairList.push(tempList[0])
+          for (var i = 1; i < tempList.length; i++) {
+            var isRepeated = false
+            for (var j = 0; j < i; j++) {
+              if (tempList[i].id === tempList[j].id) {
+                isRepeated = true
+                break
+              }
+            }
+            if (!isRepeated) {
+              this.repairList.push(tempList[i])
+            }
+          }
+          console.log(this.repairList)
+        }
         this.$apply()
       }
     }

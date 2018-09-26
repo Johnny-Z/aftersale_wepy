@@ -1,4 +1,5 @@
 import {
+  wxLogin,
   wxRequest,
   wxRequestRaw,
   wxUploadFile
@@ -9,7 +10,7 @@ const apiMall = 'https://eservice-tech.cn'
 // const apiMall = 'http://192.168.0.104:8080'
 
 const login = (params) => wxRequest(params, apiMall + '/api/login')
-const wxJsCode2Session = (params) => wxRequest(params, apiMall + '/api/wechat/jscode2session')
+const wxJsCode2Session = (params) => wxLogin(params, apiMall + '/api/user/loginGetUnionIdAndSave')
 
 const getRepairList = (params) => wxRequest(params, apiMall + '/api/repair/record/selectRepairTaskByUser')
 const getMaintainList = (params) => wxRequest(params, apiMall + '/api/maintain/record/selectMaintainTaskByUser')

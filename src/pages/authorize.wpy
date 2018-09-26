@@ -93,10 +93,12 @@ page {
     }
     data = {
       account: 'zhaopu',
-      password: 'sinsim'
+      password: 'sinsim',
+      jcCode: ''
     }
     onLoad() {
-      // let res = await wepy.login()
+        this.getJcCode()
+        // let res = await wepy.login()
       // console.log(res)
       // if (res.code) {
       //   console.log('get session resoult: ')
@@ -133,41 +135,63 @@ page {
         this.password = e.detail.value
       },
       async bindLogin() {
-        // let res = await wepy.login()
-        // console.log(res)
-        // if (res.code) {
-        //   console.log('get session resoult: ')
-        //   let rlt = await api.wxJsCode2Session({
-        //     query: {
-        //       account: this.account,
-        //       password: this.password,
-        //       jsCode: res.code
-        //     }
-        //   })
-        //   console.log('get session resoult: ' + rlt)
-        // }
-        let loginJson = await api.login({
+          this.getJcCode()
+          let rlt = await api.wxJsCode2Session({
           query: {
             account: this.account,
-            password: this.password
+            password: this.password,
+            jsCode: this.jcCode
           }
         })
-        console.log('登入返回：', loginJson)
-        let authorization = loginJson.header.Authorization
-        let account = loginJson.data.account
-        let id = loginJson.data.id
-        if (loginJson.statusCode == 200) {
-          wx.setStorageSync(AUTHORIZATION, authorization)
-          wx.setStorageSync(ACCOUNT, account)
-          wx.setStorageSync(USER_ID, id)
-          wepy.switchTab({
-              url: '/pages/repair'
-          })
-        } else {
-          tip.confirm('网络错误，登陆失败')
-        }
+        console.log('get session resoult: ', rlt)
+          wx.setStorageSync(AUTHORIZATION, rlt.header.Authorization)
+          wx.setStorageSync(ACCOUNT, this.account)
+          wx.setStorageSync(USER_ID, 8)
+        if (rlt.data.code == 400) {
+            tip.confirm('请先关注公众号！', wepy.switchTab({
+                url: '/pages/repair'
+            }))
+        } else if (rlt.data.code == 200) {
+            let userJson = JSON.parse(rlt.data)
+            wx.setStorageSync(AUTHORIZATION, rlt.header.Authorization)
+            wx.setStorageSync(ACCOUNT, userJson.account)
+            wx.setStorageSync(USER_ID, userJson.id)
+            wepy.switchTab({
+                url: '/pages/repair'
+            })
+          }
+        // let loginJson = await api.login({
+        //   query: {
+        //     account: this.account,
+        //     password: this.password
+        //   }
+        // })
+        // console.log('登入返回：', loginJson)
+        // let authorization = loginJson.header.Authorization
+        // let account = loginJson.data.account
+        // let id = loginJson.data.id
+        // if (loginJson.statusCode == 200) {
+        //   wx.setStorageSync(AUTHORIZATION, authorization)
+        //   wx.setStorageSync(ACCOUNT, account)
+        //   wx.setStorageSync(USER_ID, id)
+        //   tip.confirm('成功！')
+        //   // wepy.switchTab({
+        //   //     url: '/pages/repair'
+        //   // })
+        // } else {
+        //   tip.confirm('网络错误，登陆失败')
+        // }
       }
     }
+      async getJcCode() {
+          let res = await wepy.login()
+          console.log(res)
+          if (res.code) {
+              this.jcCode = res.code
+          } else {
+              tip.confirm('登陆失败')
+          }
+      }
     events = {
     }
 }

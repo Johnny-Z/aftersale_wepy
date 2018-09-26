@@ -85,15 +85,31 @@
     }
     async getMaintainMachineList() {
       let userAccount = wepy.getStorageSync(ACCOUNT)
-
       const maintainMachineListJson = await api.getMaintainList({
         query: {userName: userAccount}
       })
       console.log('maintainMachineListJson:')
       console.log(maintainMachineListJson)
       console.log(maintainMachineListJson.data.data.list)
-      this.maintainList = maintainMachineListJson.data.data.list
-
+      let tempList = maintainMachineListJson.data.data.list
+      if (tempList.length > 0) {
+            // 删除同recordId的重复记录
+        this.maintainList = []
+        this.maintainList.push(tempList[0])
+        for (var i = 1; i < tempList.length; i++) {
+          var isRepeated = false
+          for (var j = 0; j < i; j++) {
+            if (tempList[i].id === tempList[j].id) {
+              isRepeated = true
+              break
+            }
+          }
+          if (!isRepeated) {
+            this.maintainList.push(tempList[i])
+          }
+        }
+        console.log(this.maintainList)
+      }
       this.$apply()
     }
   }
