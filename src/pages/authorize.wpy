@@ -2,18 +2,33 @@
 page {
   height: 100%;
 }
+
+.authorize_contianer {
+  height: 100%;
+  padding-top: 100rpx;
+  .authorize_icon {
+    width: 308rpx;
+    height: 111rpx;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 10rpx;
+  }
+}
 .title_name_tx {
   font-family: PingFangSC-Semibold;
   font-size: 38rpx;
   color: #ADC7C7;
   text-align: center;
   line-height: 43rpx;
+  margin-top: 30rpx;
+  margin-bottom: 50rpx;
 }
 .login_view_column {
   background: #FFFFFF;
   border-radius: 26rpx;
-  margin-left: 24rpx;
-  margin-right: 24rpx;
+  margin-left: 50rpx;
+  margin-right: 50rpx;
   margin-top: 20rpx;
   padding-left: 70rpx;
   padding-right: 70rpx;
@@ -26,13 +41,19 @@ page {
     border-bottom: 1px solid #efefef;
     padding-bottom: 20rpx;
     padding-top: 70rpx;
+    .login_image {
+      width: 30rpx;
+      height: 35rpx;
+    }
     .login_input {
+      width: 100%;
       font-family: PingFangSC-Regular;
       font-size: 30rpx;
       color: #3B403D;
+      margin-left: 14rpx;
     }
   }
-  .btn-authorize {
+  .btn_authorize {
     width: 100%;
     background: #007474;
     box-shadow: 0 6rpx 20rpx 0 rgba(0,116,116,0.20);
@@ -45,34 +66,22 @@ page {
     margin-bottom: 56rpx;
   }
 }
-.authorize-contianer {
-    height: 100%;
-    padding-top: 100rpx;
-    .authorize-icon {
-        width: 128rpx;
-        height: 128rpx;
-        text-align: center;
-        display: block;
-        margin: 0 auto;
-        padding-bottom: 10rpx;
-    }
-}
 
 </style>
 <template>
-  <view class="authorize-contianer">
-    <image class="authorize-icon" src="../images/authorize.png"></image>
+  <view class="authorize_contianer">
+    <image class="authorize_icon" src="../images/logo_sinsim.png"></image>
     <view class="title_name_tx">-员工端-</view>
     <view class="login_view_column">
       <view class="login_view_row">
-        <text class="login_input">账号:</text>
+        <image class="login_image" src="../images/icon_login_account.png"></image>
         <input class="login_input" type="text" focus="true" @input="bindAccountInput" placeholder="输入你的账号"/>
       </view>
       <view class="login_view_row">
-        <texit class="login_input">密码:</texit>
+        <image class="login_image" src="../images/icon_login_password.png"></image>
         <input class="login_input" type="text" password="true" @input="bindPasswordInput" placeholder="输入你的密码"/>
       </view>
-      <button class="btn-authorize" lang="zh_CN" @tap="bindLogin">授权登录</button>
+      <button class="btn_authorize" lang="zh_CN" @tap="bindLogin">授权登录</button>
     </view>
   </view>
 </template>
@@ -135,31 +144,47 @@ page {
         this.password = e.detail.value
       },
       async bindLogin() {
-          this.getJcCode()
-          let rlt = await api.wxJsCode2Session({
-          query: {
-            account: this.account,
-            password: this.password,
-            jsCode: this.jcCode
-          }
-        })
-        console.log('get session resoult: ', rlt)
-          wx.setStorageSync(AUTHORIZATION, rlt.header.Authorization)
-          wx.setStorageSync(ACCOUNT, this.account)
-          wx.setStorageSync(USER_ID, 8)
-        if (rlt.data.code == 400) {
-            tip.confirm('请先关注公众号！', wepy.switchTab({
-                url: '/pages/repair'
-            }))
-        } else if (rlt.data.code == 200) {
-            let userJson = JSON.parse(rlt.data)
-            wx.setStorageSync(AUTHORIZATION, rlt.header.Authorization)
-            wx.setStorageSync(ACCOUNT, userJson.account)
-            wx.setStorageSync(USER_ID, userJson.id)
-            wepy.switchTab({
-                url: '/pages/repair'
-            })
-          }
+          let FileSystemManager = wx.getFileSystemManager()
+          FileSystemManager.readFile({
+              filePath: 'weapp:///store/index.js',
+              success(res) {
+                  console.log('是成功：', res)
+              },
+              fail(res1) {
+                  console.log('是失败：', res1)
+              },
+              complete(res2) {
+                  console.log('是完成：', res2)
+              }
+          })
+          console.log('是什么：', res)
+        //   this.getJcCode()
+        //   let rlt = await api.wxJsCode2Session({
+        //   query: {
+        //     account: this.account,
+        //     password: this.password,
+        //     jsCode: this.jcCode
+        //   }
+        // })
+        // console.log('get session resoult: ', rlt)
+        //   wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWNjb3VudE5vbkV4cGlyZWRcIjp0cnVlLFwiYWNjb3VudE5vbkxvY2tlZFwiOnRydWUsXCJhZGRyZXNzXCI6XCLlrqLmiLflnLDlnYBhZG1pbjExMVwiLFwiYWdlbnRcIjowLFwiYXV0aG9yaXRpZXNcIjpbXSxcImNyZWF0ZVRpbWVcIjoxNTMxMjc0NjIzMDAwLFwiY3JlZGVudGlhbHNOb25FeHBpcmVkXCI6dHJ1ZSxcImN1c3RvbWVyQ29tcGFueVwiOjAsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6MSxcIm5hbWVcIjpcImFkbWluXCIsXCJwYXNzd29yZFwiOlwic2luc2ltXCIsXCJwaG9uZVwiOlwiMTM1NjY2Njc3NzdcIixcInJvbGVJZFwiOjEsXCJ1c2VybmFtZVwiOlwiYWRtaW5cIixcInZhbGlkXCI6XCIxXCIsXCJ3ZWNoYXRVbmlvbklkXCI6XCJ3ZWNoYXQyMjJcIn0iLCJleHAiOjE1MzcwODA3NDB9.FmU391_rnn1_qRwU5bUGNUw7GvI0zUVjXd1g0jq3RiddsweJQLYpnTDscNisuXYuSZblQrQxAVd3j9hpmfkZ4g')
+        //   // wx.setStorageSync(AUTHORIZATION, rlt.header.Authorization)
+        //   wx.setStorageSync(ACCOUNT, this.account)
+        //   wx.setStorageSync(USER_ID, 8)
+        // if (rlt.data.code == 400) {
+        //     tip.confirm(rlt.data.message, wepy.switchTab({
+        //         url: '/pages/repair'
+        //     }))
+        // } else if (rlt.data.code == 200) {
+        //     let userJson = JSON.parse(rlt.data.data)
+        //     wx.setStorageSync(AUTHORIZATION, rlt.header.Authorization)
+        //     wx.setStorageSync(ACCOUNT, userJson.account)
+        //     wx.setStorageSync(USER_ID, userJson.id)
+        //     wepy.switchTab({
+        //         url: '/pages/repair'
+        //     })
+        //   }
+        // //////////////
         // let loginJson = await api.login({
         //   query: {
         //     account: this.account,

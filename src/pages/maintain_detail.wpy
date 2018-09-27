@@ -3,10 +3,12 @@
   <view class="detail_view_column">
     <view class="title_view">
       <view class="title_view_fir_part">
+        <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
         <text class="title_tx">客户信息</text>
       </view>
       <view class="title_view_sec_part" @tap="bindIsShowCustomer">
-        <text class="title_tx">V</text>
+        <image wx:if="{{isShowCustomer}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+        <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>
     </view>
     <view wx:if="{{isShowCustomer}}" class="main_view">
@@ -34,6 +36,7 @@
         <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
+              <image class="detail_icon" src="../images/icon_detail_maintain.png"></image>
               <text class="title_tx">保养详情</text>
             </view>
           </view>
@@ -67,7 +70,8 @@
   }
   .list_item_row {
     border-bottom: 1px solid #F0F3F5;
-    margin-top: 30rpx;
+    padding-top: 30rpx;
+    padding-bottom: 30rpx;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -88,20 +92,6 @@
     letter-spacing: 0.2rpx;
     line-height: 48rpx;
     padding-top: 30rpx;
-  }
-  .list_item_row {
-    border-bottom: 1px solid #F0F3F5;
-    margin-top: 30rpx;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    .item_left {
-      width: 70%;
-    }
-    .item_right {
-      width: 30%;
-    }
   }
   .content_tx {
     font-family: PingFangSC-Regular;

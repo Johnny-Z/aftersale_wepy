@@ -3,10 +3,12 @@
   <view class="detail_view_column">
     <view class="title_view">
       <view class="title_view_fir_part">
+        <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
         <text class="title_tx">客户信息</text>
       </view>
       <view class="title_view_sec_part" @tap="bindIsShowCustomer">
-        <text class="title_tx">V</text>
+        <image wx:if="{{isShowCustomer}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+        <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>
     </view>
     <view wx:if="{{isShowCustomer}}" class="main_view">
@@ -31,10 +33,12 @@
   <view class="detail_view_column">
     <view class="title_view">
       <view class="title_view_fir_part">
+        <image class="detail_icon" src="../images/icon_detail_request.png"></image>
         <text class="title_tx">报修信息</text>
       </view>
       <view class="title_view_sec_part" @tap="bindIsShowRepair">
-        <text class="title_tx">V</text>
+        <image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+        <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>
     </view>
     <view wx:if="{{isShowRepair}}" class="main_view">
@@ -62,6 +66,7 @@
       <view class="detail_view_column">
           <view class="title_view">
             <view class="title_view_fir_part">
+              <image class="detail_icon" src="../images/icon_detail_repair.png"></image>
               <text class="title_tx">维修详情</text>
             </view>
           </view>
@@ -84,19 +89,19 @@
                 </checkbox-group>
               </view>
               <view class="view_row">
-                  <text class="label_tx">问题描述：</text>
-                  <text class="info_tx" @tap="showDescriptionInput">口口口</text>
+                <text class="label_tx">问题描述：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showDescriptionInput"></image>
               </view>
               <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
-                  <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因"></textarea>
+                <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
               <view class="view_row">
-                  <text class="label_tx">处理方法：</text>
-                  <text class="info_tx" @tap="showMethodInput">口口口</text>
+                <text class="label_tx">处理方法：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showMethodInput"></image>
               </view>
               <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
-                  <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法"></textarea>
+                <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
               <view class="view_row">
@@ -109,7 +114,7 @@
               </view>
               <view class="view_row" wx:for="{{partsInfoList}}" >
                 <text class="info_tx">{{item.partsName}}-{{(item.partsStatus=='1')? '不寄回':'寄回'}}</text>
-                <icon class="clear_icon" size='20' color="red" type='clear' @tap="bindClear({{index}})"></icon>
+                <image class="edit_icon" src="../images/icon_btn_delete.png" @tap="bindClear({{index}})"></image>
               </view>
               <view class="view_row">
                 <button class="add_btn" @tap="showPartsInfo" >添加配件信息</button>
@@ -183,9 +188,6 @@
       margin-right: 50rpx;
       margin-left: 30rpx;
       font-size: 30rpx;
-    }
-    .clear_icon {
-        width: 10%;
     }
     .add_btn {
         width: 100%;

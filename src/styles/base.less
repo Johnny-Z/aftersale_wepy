@@ -118,15 +118,21 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     display: flex;
     flex-direction: row;
     padding-bottom: 20rpx;
+    align-items: center;// 居中对齐
     .title_view_fir_part {
       display: flex;
       flex-direction: row;
+      align-items: center;// 居中对齐
       width: 80%;
     }
     .title_view_sec_part {
       width: 20%;
       text-align: right;
     }
+  }
+  .arrow_icon {
+    width: 18rpx;
+    height: 11rpx;
   }
   .title_tx {
     font-family: PingFangSC-Medium;
@@ -139,6 +145,16 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     flex-direction: column;
     border-top: 1px solid #F0F3F5;
     padding-bottom: 30rpx;
+  }
+  .detail_icon {
+    width: 32rpx;
+    height: 34rpx;
+    margin-right: 12rpx;
+  }
+  .edit_icon {
+    width: 32rpx;
+    height: 34rpx;
+    margin-left: 12rpx;
   }
 }
 .view_row {
@@ -198,7 +214,6 @@ radio .wx-radio-input.wx-radio-input-checked::before{
   line-height: 48rpx;
   padding-top: 30rpx;
 }
-
 .container {
   position: relative;
   background: #ffffff;

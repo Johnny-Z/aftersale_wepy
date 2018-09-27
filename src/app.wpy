@@ -34,23 +34,23 @@
           list: [{
             pagePath: 'pages/repair',
             text: '维修',
-            iconPath: 'images/icon_repair.png',
-            selectedIconPath: 'images/icon_repair_active.png'
+            iconPath: 'images/tab_btn_repair_normal.png',
+            selectedIconPath: 'images/tab_btn_repair_selected.png'
           }, {
             pagePath: 'pages/maintain',
             text: '保养',
-            iconPath: 'images/icon_maintain.png',
-            selectedIconPath: 'images/icon_maintain_active.png'
+            iconPath: 'images/tab_btn_maintain_normal.png',
+            selectedIconPath: 'images/tab_btn_maintain_selected.png'
           }, {
             pagePath: 'pages/install',
             text: '安装调试',
-            iconPath: 'images/icon_install.png',
-            selectedIconPath: 'images/icon_install_active.png'
+            iconPath: 'images/tab_btn_install_normal.png',
+            selectedIconPath: 'images/tab_btn_install_selected.png'
           }, {
             pagePath: 'pages/discover',
             text: '知识库',
-            iconPath: 'images/icon_discover.png',
-            selectedIconPath: 'images/icon_discover_active.png'
+            iconPath: 'images/tab_btn_knowledge_normal.png',
+            selectedIconPath: 'images/tab_btn_knowledge_selected.png'
           }]
         }
       }
