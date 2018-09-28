@@ -7,9 +7,10 @@ import {
 
 const apiMall = 'https://eservice-tech.cn'
 // const apiMall = 'http://47.101.141.182:2032/'
-// const apiMall = 'http://192.168.0.104:8080'
+// const apiMall = 'http://192.168.43.223:8080'
 
 const login = (params) => wxRequest(params, apiMall + '/api/login')
+const autoLogin = (params) => wxRequest(params, apiMall + '/api/user/getUsersByJsCode')
 const wxJsCode2Session = (params) => wxLogin(params, apiMall + '/api/user/loginGetUnionIdAndSave')
 
 const getRepairList = (params) => wxRequest(params, apiMall + '/api/repair/record/selectRepairTaskByUser')
@@ -33,6 +34,7 @@ const uploadRepairActualFiles = (params) => wxUploadFile(params, apiMall + '/api
 
 export default {
   login,
+  autoLogin,
   wxJsCode2Session,
   getRepairList,
   getMaintainList,

@@ -188,13 +188,6 @@
       width: 30%;
     }
   }
-  .content_tx {
-    font-family: PingFangSC-Regular;
-    font-size: 30rpx;
-    color: #3B403D;
-    letter-spacing: 0.2rpx;
-    line-height: 48rpx;
-  }
 </style>
 <script>
     /* eslint-disable no-undef,eqeqeq */
@@ -246,7 +239,7 @@
           if (acceptOrderJson.data.code !== 200) {
             tip.confirm('网络错误，接单失败')
           } else {
-            tip.confirm('接单成功，返回上一页', wx.navigateBack())
+            tip.confirm('接单成功，返回上一页', 'BACK')
           }
         },
         showResultInput() {
@@ -329,7 +322,7 @@
             })
             console.log('提交结果:', installFeedbackJson)
             if (installFeedbackJson.data.code === 200) {
-              tip.confirm('成功！返回上一页', wx.navigateBack())
+              tip.confirm('成功！返回上一页', 'BACK')
             } else {
               tip.confirm('失败！网络错误，请检查网络！')
             }
@@ -361,7 +354,7 @@
         console.log('get installRecord list by id: ', installRecordJson)
         console.log(installRecordJson.data.data.list)
         if (installRecordJson.data.data.list.length < 1) {
-          tip.confirm('获取信息出错！网络错误，返回上一页！', wx.navigateBack())
+          tip.confirm('获取信息出错！网络错误，返回上一页！', 'BACK')
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
           let tempInfoList = JSON.parse(this.installRecordDetail.installInfo)

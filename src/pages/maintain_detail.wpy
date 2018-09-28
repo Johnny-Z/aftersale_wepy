@@ -14,19 +14,19 @@
     <view wx:if="{{isShowCustomer}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">客户名：</text>
-        <text class="info_tx">{{maintainRecordDetail.machineCustomerName}}</text>
+        <text class="info_tx">{{maintainRecordDetail.machineCustomerName? maintainRecordDetail.machineCustomerName: '暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">联系人：</text>
-        <text class="info_tx">{{maintainRecordDetail.customerNameInMaintainRecord}}</text>
+        <text class="info_tx">{{maintainRecordDetail.customerNameInMaintainRecord? maintainRecordDetail.customerNameInMaintainRecord: '暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">联系电话：</text>
-        <text class="info_tx">{{maintainRecordDetail.customerPhoneInMaintainRecord}}</text>
+        <text class="info_tx">{{maintainRecordDetail.customerPhoneInMaintainRecord? maintainRecordDetail.customerPhoneInMaintainRecord: '暂无'}}</text>
       </view>
       <view class="view_row">
         <text class="label_tx">联系地址：</text>
-        <text class="info_tx">{{maintainRecordDetail.customerAddressInMaintainRecord}}</text>
+        <text class="info_tx">{{maintainRecordDetail.customerAddressInMaintainRecord? maintainRecordDetail.customerAddressInMaintainRecord: '暂无'}}</text>
       </view>
     </view>
   </view>
@@ -79,26 +79,9 @@
     .item_left {
       width: 70%;
     }
-    .item_left {
+    .item_right {
       width: 30%;
     }
-  }
-  .textareaInput {
-    width: 100%;
-    height: 200rpx;
-    font-family: PingFangSC-Regular;
-    font-size: 30rpx;
-    color: #3B403D;
-    letter-spacing: 0.2rpx;
-    line-height: 48rpx;
-    padding-top: 30rpx;
-  }
-  .content_tx {
-    font-family: PingFangSC-Regular;
-    font-size: 30rpx;
-    color: #3B403D;
-    letter-spacing: 0.2rpx;
-    line-height: 48rpx;
   }
 </style>
 <script>
@@ -148,7 +131,7 @@
           if (acceptOrderJson.data.code !== 200) {
             tip.confirm('接单失败！网络错误，请检查网络！')
           } else {
-            tip.confirm('成功！返回上一页', wx.navigateBack())
+            tip.confirm('成功！返回上一页', 'BACK')
           }
         },
         showSuggestionInput() {
@@ -193,7 +176,7 @@
             console.log(maintainFeedbackJson)
             console.log(maintainFeedbackJson.data.code)
             if (maintainFeedbackJson.data.code === 200) {
-              tip.confirm('成功！返回上一页', wx.navigateBack())
+              tip.confirm('成功！返回上一页', 'BACK')
             } else {
               tip.confirm('提交失败！网络错误，请检查网络！')
             }
@@ -226,10 +209,11 @@
         console.log(maintainRecordJson)
         console.log(maintainRecordJson.data.data.list)
         if (maintainRecordJson.data.data.list.length < 1) {
-          tip.confirm('获取信息出错！网络错误，请检查网络', wx.navigateBack())
+          tip.confirm('获取信息出错！网络错误，请检查网络', 'BACK')
         } else {
           this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
           let tempInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
+          console.log('保养信息：', tempInfoList)
           for (var i = 0; i < tempInfoList.length; i++) {
             this.maintainInfoList = this.maintainInfoList.concat(tempInfoList[i].contentList)
           }

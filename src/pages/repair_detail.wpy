@@ -52,12 +52,13 @@
       </view>
       <view class="view_row">
         <text class="label_tx">语音：</text>
-        <button class="info_tx" size="mini" disabled="{{isSpeaking}}" loading="{{isSpeaking}}" type="{{isSpeaking ? 'warn' : 'primary'}}" @tap="voicePlay">播放语音</button>
+        <button wx:if='{{isSpeaking}}' class="playing_btn" size="mini" loading="true">播放中...</button>
+        <button wx:else class="player_btn" size="mini" @tap="voicePlay">点击播放</button>
       </view>
       <view class="view_row">
-          <text class="label_tx">照片：</text>
+        <text class="label_tx">照片：</text>
       </view>
-      <image class="pre_repair_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+      <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
     </view>
   </view>
   <view wx:if="{{isChargePerson}}">
@@ -106,9 +107,9 @@
               <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
               <view class="view_row">
                   <text class="label_tx">照片：</text>
-                  <button class="single_btn" @tap="bindPreviewImage" size="mini" type="primary">点击拍照/选图</button>
               </view>
-              <image class="repair_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+              <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
+              <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
               <view class="view_row">
                 <text class="label_tx">配件：</text>
               </view>
@@ -156,6 +157,20 @@
         letter-spacing: 0;
       }
     }
+    .player_btn {
+      width: 300rpx;
+      background: #007474;
+      color: #ffffff;
+      border-radius: 100rpx;
+      margin-left: 15rpx;
+    }
+    .playing_btn {
+      width: 300rpx;
+      background: #007474;
+      color: #ffffff;
+      border-radius: 100rpx;
+      margin-left: 15rpx;
+    }
     .checkbox_label {
       width: 100%;
       display: flex;
@@ -200,15 +215,11 @@
         letter-spacing: 0;
         text-align: center;
     }
-    .pre_repair_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
-    }
-    .repair_image {
-        margin-left: 2.5%;
-        width: 30%;
-        height: 200rpx;
+    .photo_image {
+        margin-right: 20rpx;
+        margin-top: 20rpx;
+        width: 160rpx;
+        height: 160rpx;
     }
 </style>
 <script>
@@ -282,7 +293,7 @@
           this.isShowRepair = !isShow
         },
         voicePlay() {
-          console.log('eventing_repair_info:手指按下了...')
+          console.log('播放...')
           this.isSpeaking = true
           const innerAudioContext = wepy.createInnerAudioContext()
           innerAudioContext.autoplay = true
@@ -331,7 +342,7 @@
           if (acceptOrderJson.data.code !== 200) {
             tip.confirm('接单失败！网络错误，请检查网络！')
           } else {
-            tip.confirm('成功！返回上一页', wx.navigateBack())
+            tip.confirm('成功！返回上一页', 'BACK')
           }
         },
           // get repair result
@@ -435,13 +446,16 @@
                 // 维修结果：没修完
             this.repairRecordDetail.status = REPAIR_STATUS_REPAIR_NG
             let repairNGJson = await api.updateRepairRecord({
-              query: this.repairRecordDetail
+              query: {
+                id: this.repairRecordDetail.id,
+                status: REPAIR_STATUS_REPAIR_NG
+              }
             })
             console.log('没修完提交结果：', repairNGJson)
             if (repairNGJson.data.code !== 200) {
               tip.confirm('失败！网络错误，请检查网络！')
             } else {
-              tip.confirm('成功！将启动重新派单！', wx.navigateBack(), '没修完')
+              tip.confirm('成功！将启动重新派单！', 'BACK', '没修完')
             }
           } else {
               // 维修结果：已修完
@@ -472,9 +486,6 @@
               }
             }
           }
-        },
-        bindNavigateBack() {
-          wepy.navigateBack()
         }
       };
 
@@ -495,7 +506,7 @@
         if (returnImageSrcData.code === 200) {
           console.log('count的值： ', count)
           if (count >= this.repairImageArr.length - 1) {
-            tip.confirm('成功！返回上一页', wx.navigateBack(), '维修完成')
+            tip.confirm('成功！返回上一页', 'BACK', '维修完成')
           } else {
             count++
             strRepairActualInfo = JSON.stringify(returnImageSrcData.data)
@@ -539,7 +550,7 @@
             this.isChargePerson = false
           }
         } else {
-          tip.confirm('获取信息出错！网络错误，请检查网络', wx.navigateBack())
+          tip.confirm('获取信息出错！网络错误，请检查网络', 'BACK')
         }
         this.$apply()
       };

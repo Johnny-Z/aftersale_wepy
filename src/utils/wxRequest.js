@@ -41,7 +41,7 @@ const wxRequest = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
+    tip.confirm('JWT错误', 'TOP')
   } else {
     return res
   }
@@ -60,7 +60,7 @@ const wxRequestRaw = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
+    tip.confirm('JWT错误', 'TOP')
   } else {
     return res
   }
@@ -80,7 +80,7 @@ const wxUploadFile = async(params = {}, url) => {
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', wx.redirectTo({url: '/pages/authorize'}))
+    tip.confirm('JWT错误', 'TOP')
   } else {
     return res
   }

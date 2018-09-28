@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * 用户code 换取 session_key
  * @type {String}
@@ -21,6 +22,11 @@ export const APIMALL = 'https://eservice-tech.cn'
  * @type {String}
  */
 export const AUTHORIZATION = 'Authorization'
+/**
+ * JWT path
+ * @type {String}
+ */
+export const AUTHORIZATION_PATH = `${wx.env.USER_DATA_PATH}/Authorization.txt`
 /**
  * JWT error
  * @type {String}

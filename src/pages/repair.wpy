@@ -13,17 +13,23 @@
         <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
         <button wx:if="{{item.status == 2}}" class="status_btn_light">待接单</button>
         <button wx:elif="{{item.status == 3}}" class="status_btn_color">待维修</button>
+        <button wx:elif="{{item.status == 4}}" class="status_btn_color">失败</button>
         <button wx:elif="{{item.status == 7}}" class="status_btn_color">完成</button>
-        <button wx:else class="status_btn_color">失败</button>
+        <button wx:else class="status_btn_color">{{item.status}}</button>
       </view>
     </view>
   </view>
 </template>
 <script>
+    /* eslint-disable eqeqeq */
+
     import wepy from 'wepy'
     import api from '@/api/api'
+    import tip from '@/utils/tip'
     import {
-      ACCOUNT
+      ACCOUNT,
+      REPAIR_STATUS_REPAIR_NG,
+      REPAIR_STATUS_REPAIR_OK
     } from '@/utils/constant'
 
     export default class Repair extends wepy.page {
@@ -42,10 +48,18 @@
       methods = {
         listItemClick(e) {
           console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee', e)
-          let machines = JSON.stringify(e)
-          wepy.navigateTo({
-            url: '/pages/repair_detail?machineDetail=' + machines
-          })
+          // if (e.status == REPAIR_STATUS_REPAIR_NG) {
+          if (e.status == 0) {
+            tip.confirm('等待再派！')
+          // } else if (e.status == REPAIR_STATUS_REPAIR_OK) {
+          } else if (e.status == 10) {
+            tip.confirm('等待客户确认！')
+          } else {
+            let machines = JSON.stringify(e)
+            wepy.navigateTo({
+              url: '/pages/repair_detail?machineDetail=' + machines
+            })
+          }
         }
       }
 

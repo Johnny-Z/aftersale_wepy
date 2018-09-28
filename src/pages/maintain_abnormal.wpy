@@ -74,7 +74,7 @@
             })
             console.log('异常上报结果:', maintainFeedbackJson)
             if (maintainFeedbackJson.data.code === 200) {
-              tip.confirm('成功！返回上一页', wx.navigateBack())
+              tip.confirm('成功！返回上一页', 'BACK')
             } else {
                 // 提交失败
               tip.confirm('提交失败！网络错误，请检查网络！')

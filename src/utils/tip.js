@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef,eqeqeq */
 /**
  * 提示与加载工具类
  */
@@ -31,24 +31,28 @@ export default class Tips {
   /**
    * 弹出确认窗口
    */
-  static confirm(text, payload = {}, title = '提示') {
-    return new Promise((resolve, reject) => {
-      wx.showModal({
-        title: title,
-        content: text,
-        showCancel: true,
-        confirmColor: '#007474',
-        success: res => {
-          if (res.confirm) {
-            resolve(payload)
-          } else if (res.cancel) {
-            reject(payload)
-          }
-        },
-        fail: res => {
-          reject(payload)
+  static confirm(text, payload = '', title = '提示') {
+    wx.showModal({
+      title: title,
+      content: text,
+      showCancel: false,
+      confirmColor: '#007474',
+      success: res => {
+        console.log('结果及格过： ', res)
+        if (payload == 'BACK') {
+          wx.navigateBack()
+        } else if (payload == 'TOP') {
+          wx.redirectTo({
+            url: '/pages/authorize'
+          })
+        } else if (payload == 'TAB') {
+          wx.switchTab({
+            url: '/pages/repair'
+          })
         }
-      })
+      },
+      fail: res => {
+      }
     })
   }
 
