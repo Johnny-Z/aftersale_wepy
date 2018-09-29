@@ -38,7 +38,6 @@ export default class Tips {
       showCancel: false,
       confirmColor: '#007474',
       success: res => {
-        console.log('结果及格过： ', res)
         if (payload == 'BACK') {
           wx.navigateBack()
         } else if (payload == 'TOP') {
