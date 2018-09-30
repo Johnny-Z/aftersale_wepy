@@ -93,7 +93,7 @@
                 <text class="label_tx">问题描述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showDescriptionInput"></image>
               </view>
-              <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" bindconfirm="listenerDescription" >
+              <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" >
                 <textarea @input="bindIssueDescriptionInput" class="textareaInput" placeholder="输入问题原因"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
@@ -101,7 +101,7 @@
                 <text class="label_tx">处理方法：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showMethodInput"></image>
               </view>
-              <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" bindconfirm="listenerMethod" >
+              <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" >
                 <textarea @input="bindRepairMethodInput" class="textareaInput" placeholder="输入维修方法"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
