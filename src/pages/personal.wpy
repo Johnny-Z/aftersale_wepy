@@ -35,16 +35,6 @@
       height: 28rpx
     }
   }
-  .exit_btn {
-    background: #007474;
-    box-shadow: 0 6rpx 20rpx 0 rgba(0,116,116,0.20);
-    border-radius: 12rpx;
-    margin-top: 83rpx;
-    font-family: PingFangSC-Medium;
-    font-size: 32px;
-    color: #FFFFFF;
-    text-align: center;
-  }
 </style>
 <template>
   <view class="menu_row_view" @tap="bindChangePassword">
@@ -74,14 +64,18 @@
       <image class="right_icon" src="../images/icon_arrow_right.png"></image>
     </view>
   </view>
-  <button class="exit_btn" @tap="bindExit">退出登录</button>
-</template>
+  <view class="menu_row_view" @tap="bindExit">
+    <view class="menu_row_view_left">
+      <image class="menu_icon" src="../images/icon_mine_exit.png"></image>
+      <text class="menu_tx">退出登录</text>
+    </view>
+  </view></template>
 <script>
   /* eslint-disable no-undef */
 
   import wepy from 'wepy'
 
-  export default class Discover extends wepy.page {
+  export default class Personal extends wepy.page {
     config = {
       navigationBarTitleText: '个人中心'
     }

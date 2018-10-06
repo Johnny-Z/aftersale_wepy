@@ -1,4 +1,3 @@
-<!--积分规则-->
 <template>
   <view class="jf_rule">
     <view class="title tc">大豪高速一体简易绳绣安装及应用说明</view>
@@ -13,25 +12,25 @@
   </view>
 </template>
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class Discover extends wepy.page {
-      config = {
-        navigationBarTitleText: '我的消息'
-      }
-      data = {
-
-      }
-
-      events = {
-      }
-
-      methods = {
-
-      }
-
-      onLoad() {}
+  export default class News extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的消息'
     }
+    data = {
+
+    }
+
+    events = {
+    }
+
+    methods = {
+
+    }
+
+    onLoad() {}
+  }
 
 </script>
 <style lang="less">

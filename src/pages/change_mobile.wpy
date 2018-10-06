@@ -37,24 +37,24 @@
   </view>
 </template>
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class Discover extends wepy.page {
-      config = {
-        navigationBarTitleText: '修改联系电话'
-      }
-      data = {
-
-      }
-
-      events = {
-      }
-
-      methods = {
-
-      }
-
-      onLoad() {}
+  export default class ChangeMobile extends wepy.page {
+    config = {
+      navigationBarTitleText: '修改联系电话'
     }
+    data = {
+
+    }
+
+    events = {
+    }
+
+    methods = {
+
+    }
+
+    onLoad() {}
+  }
 
 </script>

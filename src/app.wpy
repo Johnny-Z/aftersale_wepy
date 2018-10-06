@@ -2,74 +2,74 @@
   @import "./styles/base";
 </style>
 <script>
-    import wepy from 'wepy'
-    import 'wepy-async-function'
-    export default class extends wepy.app {
-      config = {
-        pages: [
-          'pages/authorize',
-          'pages/repair',
-          'pages/repair_detail',
-          'pages/maintain',
-          'pages/maintain_detail',
-          'pages/maintain_abnormal',
-          'pages/install',
-          'pages/install_detail',
-          'pages/personal',
-          'pages/change_mobile',
-          'pages/change_password',
-          'pages/news',
-          'pages/discover'
-        ],
-        window: {
-          backgroundTextStyle: 'light',
-          navigationBarBackgroundColor: '#007474',
-          navigationBarTitleText: 'WeChat',
-          navigationBarTextStyle: 'white',
-          enablePullDownRefresh: false,
-          backgroundColor: '#666666'
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/authorize',
+        'pages/repair',
+        'pages/repair_detail',
+        'pages/maintain',
+        'pages/maintain_detail',
+        'pages/maintain_abnormal',
+        'pages/install',
+        'pages/install_detail',
+        'pages/personal',
+        'pages/change_mobile',
+        'pages/change_password',
+        'pages/news',
+        'pages/discover'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#007474',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'white',
+        enablePullDownRefresh: false,
+        backgroundColor: '#666666'
 
-        },
-        tabBar: {
-          color: '#ADC7C7',
-          selectedColor: '#007474',
-          backgroundColor: '#ffffff',
-          borderStyle: 'white',
-          list: [{
-            pagePath: 'pages/repair',
-            text: '维修',
-            iconPath: 'images/tab_btn_repair_normal.png',
-            selectedIconPath: 'images/tab_btn_repair_selected.png'
-          }, {
-            pagePath: 'pages/maintain',
-            text: '保养',
-            iconPath: 'images/tab_btn_maintain_normal.png',
-            selectedIconPath: 'images/tab_btn_maintain_selected.png'
-          }, {
-            pagePath: 'pages/install',
-            text: '安装调试',
-            iconPath: 'images/tab_btn_install_normal.png',
-            selectedIconPath: 'images/tab_btn_install_selected.png'
-          }, {
-            pagePath: 'pages/discover',
-            text: '知识库',
-            iconPath: 'images/tab_btn_knowledge_normal.png',
-            selectedIconPath: 'images/tab_btn_knowledge_selected.png'
-          }]
-        }
-      }
-
-      globalData = {}
-
-      constructor() {
-        super()
-        this.use('requestfix')
-        this.use('promisify')
-      }
-
-      onLaunch() {
-        console.log('进入小程序')
+      },
+      tabBar: {
+        color: '#ADC7C7',
+        selectedColor: '#007474',
+        backgroundColor: '#ffffff',
+        borderStyle: 'white',
+        list: [{
+          pagePath: 'pages/repair',
+          text: '维修',
+          iconPath: 'images/tab_btn_repair_normal.png',
+          selectedIconPath: 'images/tab_btn_repair_selected.png'
+        }, {
+          pagePath: 'pages/maintain',
+          text: '保养',
+          iconPath: 'images/tab_btn_maintain_normal.png',
+          selectedIconPath: 'images/tab_btn_maintain_selected.png'
+        }, {
+          pagePath: 'pages/install',
+          text: '安装调试',
+          iconPath: 'images/tab_btn_install_normal.png',
+          selectedIconPath: 'images/tab_btn_install_selected.png'
+        }, {
+          pagePath: 'pages/discover',
+          text: '知识库',
+          iconPath: 'images/tab_btn_knowledge_normal.png',
+          selectedIconPath: 'images/tab_btn_knowledge_selected.png'
+        }]
       }
     }
+
+    globalData = {}
+
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+    }
+
+    onLaunch() {
+      console.log('进入小程序')
+    }
+  }
 
 </script>

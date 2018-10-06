@@ -82,7 +82,7 @@
   </view>
 </template>
 <script>
-    /* eslint-disable no-undef,eqeqeq,indent */
+  /* eslint-disable no-undef,eqeqeq,indent */
 
   import wepy from 'wepy'
   import api from '@/api/api'
@@ -107,33 +107,33 @@
       let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
       console.log(fsStat)
       if (fsStat.stats.isDirectory()) {
-          let res = await wepy.login()
-          console.log(res)
-          if (res.code) {
-              this.jcCode = res.code
-              console.log(this.jcCode)
-              let auth = fs.readFileSync(AUTHORIZATION_PATH, 'utf8')
-              console.log('auth: ', auth)
-              wx.setStorageSync(AUTHORIZATION, auth)
-              let loginJson = await api.autoLogin({
-                  query: {
-                      jsCode: this.jcCode
-                  }
-              })
-              console.log(loginJson)
-              if (loginJson.data.code == 400) {
-                  tip.confirm(rlt.data.message + '+onLoad')
-              } else if (loginJson.data.code == 200) {
-                  let userJson = JSON.parse(loginJson.data.data)
-                  wx.setStorageSync(ACCOUNT, userJson.account)
-                  wx.setStorageSync(USER_ID, userJson.id)
-                  wepy.switchTab({
-                      url: '/pages/repair'
-                  })
-              }
-          } else {
-              tip.confirm('登陆失败')
+        let res = await wepy.login()
+        console.log(res)
+        if (res.code) {
+          this.jcCode = res.code
+          console.log(this.jcCode)
+          let auth = fs.readFileSync(AUTHORIZATION_PATH, 'utf8')
+          console.log('auth: ', auth)
+          wx.setStorageSync(AUTHORIZATION, auth)
+          let loginJson = await api.autoLogin({
+            query: {
+              jsCode: this.jcCode
+            }
+          })
+          console.log(loginJson)
+          if (loginJson.data.code == 400) {
+            tip.confirm(rlt.data.message + '+onLoad')
+          } else if (loginJson.data.code == 200) {
+            let userJson = JSON.parse(loginJson.data.data)
+            wx.setStorageSync(ACCOUNT, userJson.account)
+            wx.setStorageSync(USER_ID, userJson.id)
+            wepy.switchTab({
+                url: '/pages/repair'
+            })
           }
+        } else {
+          tip.confirm('登陆失败')
+        }
       }
     }
     methods = {
@@ -149,48 +149,48 @@
         let res = await wepy.login()
         console.log(res)
         if (res.code) {
-            this.jcCode = res.code
-            console.log(this.jcCode)
-            let rlt = await api.wxJsCode2Session({
-                query: {
-                    account: this.account,
-                    password: this.password,
-                    jsCode: this.jcCode
-                }
-            })
-            console.log('get session resoult: ', rlt)
-            // wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJ6aGFvcHVcIixcImFjY291bnROb25FeHBpcmVkXCI6dHJ1ZSxcImFjY291bnROb25Mb2NrZWRcIjp0cnVlLFwiYWRkcmVzc1wiOlwiXCIsXCJhZ2VudFwiOjAsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzIxMzQ0MjkwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiY3VzdG9tZXJDb21wYW55XCI6XCIxXCIsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6OCxcIm5hbWVcIjpcInpoYW9wdVwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzMTg4ODg4ODg4XCIsXCJyb2xlSWRcIjozLFwidXNlcm5hbWVcIjpcInpoYW9wdVwiLFwidmFsaWRcIjpcIjFcIn0iLCJleHAiOjE1NDA2OTgxNDZ9.70rPlMhSCZmozswaWrX1aut64Ga2aGSLk6ZchGy6DODEImcD_eSye_WVcgL0mJby9Rk2vwcVcg5HbdX_QBuX_g')
-            // wx.setStorageSync(ACCOUNT, this.account)
-            // wx.setStorageSync(USER_ID, 8)
-            if (rlt.data.code == 400) {
-                tip.confirm(rlt.data.message, 'TAB')
-            } else if (rlt.data.code == 200) {
-                let loginJson = await api.login({
-                    query: {
-                        account: this.account,
-                        password: this.password
-                    }
-                })
-                console.log('登入返回：', loginJson)
-                if (loginJson.statusCode == 200) {
-                    wx.setStorageSync(AUTHORIZATION, loginJson.header.Authorization)
-                    wx.setStorageSync(ACCOUNT, loginJson.data.account)
-                    wx.setStorageSync(USER_ID, loginJson.data.id)
-                    let fs = wx.getFileSystemManager()
-                    fs.writeFileSync(AUTHORIZATION_PATH, rlt.header.Authorization, 'utf8')
-                    wepy.switchTab({
-                        url: '/pages/repair'
-                    })
-                } else {
-                    tip.confirm('网络错误，登陆失败')
-                }
-            } else {
-                wepy.switchTab({
-                    url: '/pages/repair'
-                })
+          this.jcCode = res.code
+          console.log(this.jcCode)
+          let rlt = await api.wxJsCode2Session({
+            query: {
+              account: this.account,
+              password: this.password,
+              jsCode: this.jcCode
             }
+          })
+          console.log('get session resoult: ', rlt)
+          // wx.setStorageSync(AUTHORIZATION, 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ7XCJhY2NvdW50XCI6XCJ6aGFvcHVcIixcImFjY291bnROb25FeHBpcmVkXCI6dHJ1ZSxcImFjY291bnROb25Mb2NrZWRcIjp0cnVlLFwiYWRkcmVzc1wiOlwiXCIsXCJhZ2VudFwiOjAsXCJhdXRob3JpdGllc1wiOltdLFwiY3JlYXRlVGltZVwiOjE1MzIxMzQ0MjkwMDAsXCJjcmVkZW50aWFsc05vbkV4cGlyZWRcIjp0cnVlLFwiY3VzdG9tZXJDb21wYW55XCI6XCIxXCIsXCJlbmFibGVkXCI6dHJ1ZSxcImlkXCI6OCxcIm5hbWVcIjpcInpoYW9wdVwiLFwicGFzc3dvcmRcIjpcInNpbnNpbVwiLFwicGhvbmVcIjpcIjEzMTg4ODg4ODg4XCIsXCJyb2xlSWRcIjozLFwidXNlcm5hbWVcIjpcInpoYW9wdVwiLFwidmFsaWRcIjpcIjFcIn0iLCJleHAiOjE1NDA2OTgxNDZ9.70rPlMhSCZmozswaWrX1aut64Ga2aGSLk6ZchGy6DODEImcD_eSye_WVcgL0mJby9Rk2vwcVcg5HbdX_QBuX_g')
+          // wx.setStorageSync(ACCOUNT, this.account)
+          // wx.setStorageSync(USER_ID, 8)
+          if (rlt.data.code == 400) {
+            tip.confirm(rlt.data.message, 'TAB')
+          } else if (rlt.data.code == 200) {
+            let loginJson = await api.login({
+              query: {
+                account: this.account,
+                password: this.password
+              }
+            })
+            console.log('登入返回：', loginJson)
+            if (loginJson.statusCode == 200) {
+              wx.setStorageSync(AUTHORIZATION, loginJson.header.Authorization)
+              wx.setStorageSync(ACCOUNT, loginJson.data.account)
+              wx.setStorageSync(USER_ID, loginJson.data.id)
+              let fs = wx.getFileSystemManager()
+              fs.writeFileSync(AUTHORIZATION_PATH, rlt.header.Authorization, 'utf8')
+              wepy.switchTab({
+                url: '/pages/repair'
+              })
+            } else {
+              tip.confirm('网络错误，登陆失败')
+            }
+          } else {
+            wepy.switchTab({
+              url: '/pages/repair'
+            })
+          }
         } else {
-            tip.confirm('登陆失败')
+          tip.confirm('登陆失败')
         }
       }
     }
