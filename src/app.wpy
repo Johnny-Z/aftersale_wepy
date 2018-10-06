@@ -15,6 +15,10 @@
           'pages/maintain_abnormal',
           'pages/install',
           'pages/install_detail',
+          'pages/personal',
+          'pages/change_mobile',
+          'pages/change_password',
+          'pages/news',
           'pages/discover'
         ],
         window: {

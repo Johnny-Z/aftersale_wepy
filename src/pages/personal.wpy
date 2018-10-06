@@ -1,0 +1,121 @@
+<style lang="less">
+  .menu_row_view {
+    display: flex;
+    flex-direction: row;
+    background: #ffffff;
+    padding-top: 37rpx;
+    padding-bottom: 37rpx;
+    padding-left: 27rpx;
+    padding-right: 30rpx;
+    border-bottom: 1px solid #F0F3F5;
+    align-items: center;// 居中对齐
+    .menu_row_view_left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;// 居中对齐
+      width: 90%;
+    }
+    .menu_row_view_right {
+      width: 10%;
+      text-align: right;
+    }
+    .menu_icon {
+      width: 30rpx;
+      height: 35rpx
+    }
+    .menu_tx {
+      font-family: PingFangSC-Regular;
+      font-size: 32px;
+      color: #3B403D;
+      letter-spacing: 0;
+      padding-left: 14rpx;
+    }
+    .right_icon {
+      width: 16rpx;
+      height: 28rpx
+    }
+  }
+  .exit_btn {
+    background: #007474;
+    box-shadow: 0 6rpx 20rpx 0 rgba(0,116,116,0.20);
+    border-radius: 12rpx;
+    margin-top: 83rpx;
+    font-family: PingFangSC-Medium;
+    font-size: 32px;
+    color: #FFFFFF;
+    text-align: center;
+  }
+</style>
+<template>
+  <view class="menu_row_view" @tap="bindChangePassword">
+    <view class="menu_row_view_left">
+      <image class="menu_icon" src="../images/icon_mine_password.png"></image>
+      <text class="menu_tx">修改密码</text>
+    </view>
+    <view class="menu_row_view_right">
+      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
+    </view>
+  </view>
+  <view class="menu_row_view" @tap="bindChangeMobile">
+    <view class="menu_row_view_left">
+      <image class="menu_icon" src="../images/icon_mine_mobile.png"></image>
+      <text class="menu_tx">修改联系电话</text>
+    </view>
+    <view class="menu_row_view_right">
+      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
+    </view>
+  </view>
+  <view class="menu_row_view" @tap="bindShowNews">
+    <view class="menu_row_view_left">
+      <image class="menu_icon" src="../images/icon_mine_news.png"></image>
+      <text class="menu_tx">我的消息</text>
+    </view>
+    <view class="menu_row_view_right">
+      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
+    </view>
+  </view>
+  <button class="exit_btn" @tap="bindExit">退出登录</button>
+</template>
+<script>
+  /* eslint-disable no-undef */
+
+  import wepy from 'wepy'
+
+  export default class Discover extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人中心'
+    }
+    data = {
+
+    }
+
+    events = {
+    }
+
+    methods = {
+      bindChangePassword() {
+        wx.navigateTo({
+          url: '/pages/change_password'
+        })
+      },
+      bindChangeMobile() {
+        wx.navigateTo({
+          url: '/pages/change_mobile'
+        })
+      },
+      bindShowNews() {
+        wx.navigateTo({
+          url: '/pages/news'
+        })
+      },
+      bindExit() {
+        wx.redirectTo({
+          url: '/pages/authorize'
+        })
+      }
+    }
+
+    onLoad() {}
+    }
+
+</script>

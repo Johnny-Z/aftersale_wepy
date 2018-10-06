@@ -50,7 +50,7 @@
             <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showResultInput"></image>
           </view>
           <modal hidden="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
-            <textarea @input="bindInstallResultInput" class="textareaInput" placeholder="输入安装结果"></textarea>
+            <textarea @input="bindInstallResultInput" class="textarea_input" placeholder="输入安装结果"></textarea>
           </modal>
           <text class="get_input_tx">{{installResult}}</text>
           <view class="view_row">

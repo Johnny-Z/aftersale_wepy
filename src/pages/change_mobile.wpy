@@ -1,0 +1,60 @@
+<style lang="less">
+  .input_view_row {
+    display: flex;
+    flex-direction: row;
+    padding-top: 70rpx;
+    padding-bottom: 20rpx;
+    padding-left: 70rpx;
+    padding-right: 70rpx;
+    border-bottom: 1px solid #F0F3F5;
+    align-items: center;// 居中对齐
+    .number_input {
+      width: 100%;
+      font-family: PingFangSC-Regular;
+      font-size: 30px;
+      color: #3B403D;
+    }
+    .update_btn {
+      margin-top: 92rpx;
+      font-family: PingFangSC-Medium;
+      font-size: 34px;
+      color: #FFFFFF;
+      text-align: center;
+    }
+  }
+</style>
+<template>
+  <view class="detail_view_column">
+    <view class="input_view_row">
+      <text class="label_tx">旧联系电话：</text>
+      <text class="info_tx">{{phone}}</text>
+    </view>
+    <view class="input_view_row">
+      <text class="label_tx">新联系电话：</text>
+      <input class="number_input" type="number" placeholder="请输入新联系电话"/>
+    </view>
+    <buttom class="update_btn">确定</buttom>
+  </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class Discover extends wepy.page {
+      config = {
+        navigationBarTitleText: '修改联系电话'
+      }
+      data = {
+
+      }
+
+      events = {
+      }
+
+      methods = {
+
+      }
+
+      onLoad() {}
+    }
+
+</script>
