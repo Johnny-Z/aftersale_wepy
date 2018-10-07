@@ -1,14 +1,23 @@
+<style lang="less">
+  .message_tx {
+    font-family: PingFangSC-Regular;
+    font-size: 30rpx;
+    color: #3B403D;
+    letter-spacing: 0.3rpx;
+    line-height: 48rpx;
+  }
+  .time_tx {
+    margin-top: 10rpx;
+    margin-bottom: 30rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 26rpx;
+    color: #858D8D;
+  }
+</style>
 <template>
-  <view class="jf_rule">
-    <view class="title tc">大豪高速一体简易绳绣安装及应用说明</view>
-    <view class="jf_content">
-      <view class="sec_title">类型：安装指南 </view>
-      <view class="jf_ins">高速一体绳绣装置是我公司最新开发的一款高性能的简易绳绣装置，主要目的是提高简易绳绣的绣作效率及绣品质量。目前市场上现有的简易绳绣稳定性低，易发生绕绳、丢步等问题，且最高转速在800rpm，效率较低。新产品将在打环电机加装编码器，采用闭环控制，最高绣作转速可达1200rpm不降速，效率提升接近50%。并且由于采用的是闭环控</view>
-    </view>
-    <view class="jf_content">
-      <view class="sec_title">产品特点 </view>
-      <view class="jf_ins">板上DIP开关可进行功能选择，进行装置安装时已设置过，用户无需自己设置。DIP1表示左右装置，默认状态（OFF）为右装置，拨到ON为左装置。DIP2用于板上自测试，默认为OFF，属于正常工作状态，当拨到ON时，打环电机会自动进入自检测模式，如果检测正常自动进入老化模式，不正常则报错。</view>
-    </view>
+  <view class="detail_view_column">
+    <text class="message_tx">请于2018-08-22，前往客户韩梅梅处维修机器MPH123,地址浙江省杭州市西湖区古墩路707号城市发展大厦1349,联系电话：17887663720</text>
+    <text class="time_tx">2018.2.3</text>
   </view>
 </template>
 <script>
@@ -33,33 +42,3 @@
   }
 
 </script>
-<style lang="less">
-  .jf_rule {
-    border-top: 1px solid #efefef;
-    background: #fff;
-    padding: 33px 20rpx;
-    margin-top: 10rpx;
-    .title {
-      font-size: 36rpx;
-    }
-    .jf_jz_title {
-      color: #9999ff;
-      font-size: 30rpx;
-      padding-top: 56rpx;
-      display: block;
-    }
-    .jf_content {
-      text-align: left;
-      font-size: 30rpx;
-      .sec_title {
-        color: #666;
-        padding-top: 40rpx;
-      }
-      .jf_ins {
-        color: #999;
-        padding-top: 30rpx;
-      }
-    }
-  }
-
-</style>
