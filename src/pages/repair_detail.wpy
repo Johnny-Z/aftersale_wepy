@@ -166,6 +166,7 @@
     }
     .playing_btn {
       width: 300rpx;
+      opacity: 0.12;
       background: #007474;
       color: #ffffff;
       border-radius: 100rpx;
