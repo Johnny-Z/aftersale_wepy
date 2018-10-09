@@ -44,7 +44,7 @@
   <view class="detail_view_column">
     <view class="input_view_row">
       <text class="info_tx">旧联系电话：</text>
-      <text class="info_tx">{{phone}}</text>
+      <text class="info_tx">13333333333</text>
     </view>
     <view class="input_view_row">
       <text class="info_tx">新联系电话：</text>
