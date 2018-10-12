@@ -163,7 +163,7 @@
           // wx.setStorageSync(ACCOUNT, this.account)
           // wx.setStorageSync(USER_ID, 8)
           if (rlt.data.code == 400) {
-            tip.confirm(rlt.data.message, 'TAB')
+            tip.confirm(rlt.data.message)
           } else if (rlt.data.code == 200) {
             let loginJson = await api.login({
               query: {
@@ -185,9 +185,7 @@
               tip.confirm('网络错误，登陆失败')
             }
           } else {
-            wepy.switchTab({
-              url: '/pages/repair'
-            })
+              tip.confirm('网络错误，登陆失败')
           }
         } else {
           tip.confirm('登陆失败')

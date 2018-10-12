@@ -530,6 +530,7 @@
           this.isReady = false
         }
         this.getRepairRecord(this.machineDetail.id)
+        this.getPositionList()
         this.$apply()
       };
 
@@ -555,6 +556,13 @@
         }
         this.$apply()
       };
+
+      // get issue position list
+      async getPositionList() {
+        let positionListJson = await api.getIssuePositionList()
+        console.log('get position list: ', positionListJson)
+        this.partMark = positionListJson.data.data.list
+      }
 
         // Other properties
     }
