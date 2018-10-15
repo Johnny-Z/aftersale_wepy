@@ -44,34 +44,71 @@
   <view class="detail_view_column">
     <view class="input_view_row">
       <text class="info_tx">旧联系电话：</text>
-      <text class="info_tx">13333333333</text>
+      <text class="info_tx">{{oldMobileNum}}</text>
     </view>
     <view class="input_view_row">
       <text class="info_tx">新联系电话：</text>
-      <input class="number_input" type="number" placeholder="请输入新联系电话"/>
+      <input class="number_input" type="number" placeholder="请输入新联系电话" @input="bindNewMoblieNumInput"/>
     </view>
-    <buttom class="update_btn">确定</buttom>
+    <button class="update_btn" @tap="updateMobileNum">确定</button>
   </view>
 </template>
 <script>
+  /* eslint-disable eqeqeq */
+
   import wepy from 'wepy'
+  import api from '../api/api'
+  import tip from '@/utils/tip'
+  import {
+      USER_ID
+  } from '@/utils/constant'
 
   export default class ChangeMobile extends wepy.page {
     config = {
       navigationBarTitleText: '修改联系电话'
     }
     data = {
-
+      userId: 0,
+      oldMobileNum: '',
+      newMobileNum: ''
     }
 
     events = {
     }
 
     methods = {
-
+      bindNewMoblieNumInput(e) {
+        console.log(e.detail.value)
+        this.newMobileNum = e.detail.value
+      },
+      async updateMobileNum() {
+        console.log('id：', this.userId)
+        let updateUserJson = await api.updateUserInfo({
+          query: {
+            id: this.userId,
+            phone: this.newMobileNum
+          }
+        })
+        console.log('更新：', updateUserJson)
+        if (updateUserJson.data.code == 200) {
+          tip.confirm('提交成功！', 'BACK')
+        }
+      }
     }
 
-    onLoad() {}
+    async onLoad() {
+      this.userId = wepy.getStorageSync(USER_ID)
+      let getUserJson = await api.getMobileByUser({
+        query: {id: this.userId}
+      })
+      console.log('user info: ', getUserJson)
+      if (getUserJson.data.code == 200) {
+        this.oldMobileNum = getUserJson.data.data.phone
+      } else {
+        tip.confirm('获取联系方式出错！', 'BACK')
+      }
+      this.$apply()
+    }
   }
 
 </script>

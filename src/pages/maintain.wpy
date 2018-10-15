@@ -73,8 +73,7 @@
           listItemClick(e) {
             console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
             console.log(e)
-            // if (e.maintainStatus == MAINTAIN_STATUS_FINISHED) {
-            if (e.maintainStatus == 0) {
+            if (e.maintainStatus == MAINTAIN_STATUS_FINISHED) {
               tip.confirm('等待客户确认！')
             } else {
               let machines = JSON.stringify(e)

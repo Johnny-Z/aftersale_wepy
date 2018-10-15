@@ -105,13 +105,13 @@
     async onLoad() {
       let fs = wx.getFileSystemManager()
       let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
-      console.log(fsStat)
-      if (fsStat.stats.isDirectory()) {
+      console.log('文件读取', fsStat)
+      if (fsStat.isFile()) {
         let res = await wepy.login()
-        console.log(res)
+        console.log('login:', res)
         if (res.code) {
           this.jcCode = res.code
-          console.log(this.jcCode)
+          console.log('jcCode:', this.jcCode)
           let auth = fs.readFileSync(AUTHORIZATION_PATH, 'utf8')
           console.log('auth: ', auth)
           wx.setStorageSync(AUTHORIZATION, auth)
@@ -120,9 +120,9 @@
               jsCode: this.jcCode
             }
           })
-          console.log(loginJson)
+          console.log('autoLogin: ', loginJson)
           if (loginJson.data.code == 400) {
-            tip.confirm(rlt.data.message + '+onLoad')
+            tip.confirm(loginJson.data.message + '+onLoad')
           } else if (loginJson.data.code == 200) {
             let userJson = JSON.parse(loginJson.data.data)
             wx.setStorageSync(ACCOUNT, userJson.account)
@@ -147,10 +147,10 @@
       },
       async bindLogin() {
         let res = await wepy.login()
-        console.log(res)
+        console.log('login:', res)
         if (res.code) {
           this.jcCode = res.code
-          console.log(this.jcCode)
+          console.log('jcCOde: ', this.jcCode)
           let rlt = await api.wxJsCode2Session({
             query: {
               account: this.account,
@@ -177,7 +177,7 @@
               wx.setStorageSync(ACCOUNT, loginJson.data.account)
               wx.setStorageSync(USER_ID, loginJson.data.id)
               let fs = wx.getFileSystemManager()
-              fs.writeFileSync(AUTHORIZATION_PATH, rlt.header.Authorization, 'utf8')
+              fs.writeFileSync(AUTHORIZATION_PATH, loginJson.header.Authorization, 'utf8')
               wepy.switchTab({
                 url: '/pages/repair'
               })

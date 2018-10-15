@@ -47,11 +47,9 @@
       methods = {
         listItemClick(e) {
           console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee', e)
-          // if (e.status == REPAIR_STATUS_REPAIR_NG) {
-          if (e.status == 0) {
+          if (e.status == REPAIR_STATUS_REPAIR_NG) {
             tip.confirm('等待再派！')
-          // } else if (e.status == REPAIR_STATUS_REPAIR_OK) {
-          } else if (e.status == 10) {
+          } else if (e.status == REPAIR_STATUS_REPAIR_OK) {
             tip.confirm('等待客户确认！')
           } else {
             let machines = JSON.stringify(e)

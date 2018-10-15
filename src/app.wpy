@@ -55,6 +55,11 @@
           text: '知识库',
           iconPath: 'images/tab_btn_knowledge_normal.png',
           selectedIconPath: 'images/tab_btn_knowledge_selected.png'
+        }, {
+          pagePath: 'pages/personal',
+          text: '我的',
+          iconPath: 'images/tab_btn_mine_normal.png',
+          selectedIconPath: 'images/tab_btn_mine_selected.png'
         }]
       }
     }
