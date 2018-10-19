@@ -104,7 +104,7 @@
       },
       bindExit() {
         wx.redirectTo({
-          url: '/pages/authorize'
+          url: '/pages/authorize?exit=1'
         })
       }
     }

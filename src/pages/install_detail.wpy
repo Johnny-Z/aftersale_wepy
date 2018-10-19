@@ -357,20 +357,24 @@
           tip.confirm('获取信息出错！网络错误，返回上一页！', 'BACK')
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
-          let tempInfoList = JSON.parse(this.installRecordDetail.installInfo)
-          for (var i = 0; i < tempInfoList.length; i++) {
-            if (tempInfoList[i].install_lib_name == '基础项') {
-              this.installBasicItemList = this.installBasicItemList.concat(tempInfoList[i])
-            } else {
-              this.installInfoList = this.installInfoList.concat(tempInfoList[i])
-            }
-          }
-          console.log('1111111', this.installInfoList)
-          console.log('1111111', this.installBasicItemList)
-          if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
-            this.isChargePerson = true
+          if (!this.installRecordDetail.installInfo) {
+            tip.confirm('获取信息出错！没有保养项！', 'BACK')
           } else {
-            this.isChargePerson = false
+            let tempInfoList = JSON.parse(this.installRecordDetail.installInfo)
+            for (var i = 0; i < tempInfoList.length; i++) {
+              if (tempInfoList[i].install_lib_name == '基础项') {
+                this.installBasicItemList = this.installBasicItemList.concat(tempInfoList[i])
+              } else {
+                this.installInfoList = this.installInfoList.concat(tempInfoList[i])
+              }
+            }
+            console.log('1111111', this.installInfoList)
+            console.log('1111111', this.installBasicItemList)
+            if (wepy.getStorageSync(USER_ID) == installRecordJson.data.data.list[0].installChargePerson) {
+              this.isChargePerson = true
+            } else {
+              this.isChargePerson = false
+            }
           }
         }
         this.$apply()

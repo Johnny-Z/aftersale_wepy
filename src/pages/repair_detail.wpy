@@ -58,7 +58,9 @@
       <view class="view_row">
         <text class="label_tx">照片：</text>
       </view>
-      <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+      <view class="view_row">
+        <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+      </view>
     </view>
   </view>
   <view wx:if="{{isChargePerson}}">
@@ -108,8 +110,10 @@
               <view class="view_row">
                   <text class="label_tx">照片：</text>
               </view>
-              <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
-              <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+              <view class="view_row">
+                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
+                <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+              </view>
               <view class="view_row">
                 <text class="label_tx">配件：</text>
               </view>
@@ -231,6 +235,7 @@
     import api from '@/api/api'
     import tip from '@/utils/tip'
     import {
+        APIMALL,
         USER_ID,
         REPAIR_STATUS_SIGNED_TO_REPAIRER,
         REPAIR_STATUS_REPAIRER_ACCEPTED,
@@ -270,6 +275,7 @@
         hiddenMethod: true,
         hiddenPartsInfo: true,
         repairImageArr: [],
+        preRepairVoiceSrc: '',
         count: 0,
         repairRecordIndex: 0,
         partMark: [
@@ -298,7 +304,7 @@
           this.isSpeaking = true
           const innerAudioContext = wepy.createInnerAudioContext()
           innerAudioContext.autoplay = true
-          innerAudioContext.src = this.repairRecordDetail.repairRequestVoice
+          innerAudioContext.src = this.preRepairVoiceSrc
           innerAudioContext.onPlay(() => {
             console.log('开始播放')
           })
@@ -523,8 +529,7 @@
       onLoad(options) {
         console.log('from last page:', options)
         this.machineDetail = JSON.parse(options.machineDetail)
-        this.preRepairImageArr = this.machineDetail.repairRequestPictures.split(',')
-        if (this.machineDetail.status === REPAIR_STATUS_SIGNED_TO_REPAIRER) {
+        if (this.machineDetail.status == REPAIR_STATUS_SIGNED_TO_REPAIRER) {
           this.isReady = true
         } else {
           this.isReady = false
@@ -545,7 +550,18 @@
         console.log(repairRecordJson.data.data.list)
         if (repairRecordJson.data.data.list.length > 0) {
           this.repairRecordDetail = repairRecordJson.data.data.list[0]
-          this.preRepairImageArr = this.repairRecordDetail.repairRequestPictures.split(',')
+          if (this.repairRecordDetail.repairRequestPictures) {
+            let preRepairImageTmp = this.repairRecordDetail.repairRequestPictures.split(',')
+            for (var i = 0; i < preRepairImageTmp.length; i++) {
+              let temp = preRepairImageTmp[i].split('/aftersale')
+              this.preRepairImageArr.push(APIMALL + temp[1])
+            }
+          }
+          if (this.repairRecordDetail.repairRequestVoice) {
+            let temp2 = this.repairRecordDetail.repairRequestVoice.split('/aftersale')
+            this.preRepairVoiceSrc = APIMALL + temp2[1]
+            console.log('声音：', this.preRepairVoiceSrc)
+          }
           if (wepy.getStorageSync(USER_ID) == repairRecordJson.data.data.list[0].repairChargePerson) {
             this.isChargePerson = true
           } else {

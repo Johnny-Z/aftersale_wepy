@@ -98,11 +98,14 @@
       navigationBarTitleText: '授权登录'
     }
     data = {
-      account: 'zhaopu',
-      password: 'sinsim',
+      exit: 0,
+      account: '',
+      password: '',
       jcCode: ''
     }
-    async onLoad() {
+    async onLoad(options) {
+        console.log('start:', options)
+        if (!options.exit) {
       let fs = wx.getFileSystemManager()
       let fsStat = fs.statSync(AUTHORIZATION_PATH, false)
       console.log('文件读取', fsStat)
@@ -122,18 +125,20 @@
           })
           console.log('autoLogin: ', loginJson)
           if (loginJson.data.code == 400) {
-            tip.confirm(loginJson.data.message + '+onLoad')
+            tip.confirm(loginJson.data.message)
           } else if (loginJson.data.code == 200) {
-            let userJson = JSON.parse(loginJson.data.data)
-            wx.setStorageSync(ACCOUNT, userJson.account)
-            wx.setStorageSync(USER_ID, userJson.id)
-            wepy.switchTab({
+            wx.setStorageSync(ACCOUNT, loginJson.data.data.account)
+            wx.setStorageSync(USER_ID, loginJson.data.data.id)
+            wx.switchTab({
                 url: '/pages/repair'
             })
+          } else {
+            tip.confirm(loginJson.data.message)
           }
         } else {
-          tip.confirm('登陆失败')
-        }
+                    tip.confirm('登陆失败')
+                }
+            }
       }
     }
     methods = {

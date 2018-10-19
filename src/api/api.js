@@ -6,12 +6,12 @@ import {
 } from '@/utils/wxRequest'
 
 const apiMall = 'https://eservice-tech.cn/api'
-// const apiMall = 'http://47.101.141.182:2032/'
+// const apiMall = 'http://wxm.vaiwan.com:8081/'
 // const apiMall = 'http://192.168.43.223:8080'
 
 const login = (params) => wxRequest(params, apiMall + '/login')
-const autoLogin = (params) => wxRequest(params, apiMall + '/user/getUsersByJsCode')
-const wxJsCode2Session = (params) => wxLogin(params, apiMall + '/user/loginGetUnionIdAndSave')
+const autoLogin = (params) => wxRequest(params, apiMall + '/wechat/user/info/getUsersByJsCode')
+const wxJsCode2Session = (params) => wxLogin(params, apiMall + '/wechat/user/info/loginGetUnionIdAndSave')
 
 const getRepairList = (params) => wxRequest(params, apiMall + '/repair/record/selectRepairTaskByUser')
 const getMaintainList = (params) => wxRequest(params, apiMall + '/maintain/record/selectMaintainTaskByUser')

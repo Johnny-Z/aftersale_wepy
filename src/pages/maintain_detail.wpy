@@ -41,13 +41,31 @@
             </view>
           </view>
           <view class="main_view">
-            <view class="list_item_row" wx:for="{{maintainInfoList}}" wx:key="item" >
+            <view class="list_item_row" wx:for="{{maintainInfoList[0].contentList}}" wx:key="item" >
               <view class="item_left" @tap="bindAbnormalRecord({{item}})">
                 <text class="content_tx">{{item.content}}</text>
               </view>
               <view class="item_right">
                 <button wx:if="{{item.checkValue == 1}}" class="status_btn_color">完成</button>
-                <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
+                <button wx:else class="status_btn_light" @tap="bindWorkDone0({{index}})">待完成</button>
+              </view>
+            </view>
+            <view class="list_item_row" wx:for="{{maintainInfoList[1].contentList}}" wx:key="item" >
+              <view class="item_left" @tap="bindAbnormalRecord({{item}})">
+                <text class="content_tx">{{item.content}}</text>
+              </view>
+              <view class="item_right">
+                <button wx:if="{{item.checkValue == 1}}" class="status_btn_color">完成</button>
+                <button wx:else class="status_btn_light" @tap="bindWorkDone1({{index}})">待完成</button>
+              </view>
+            </view>
+            <view class="list_item_row" wx:for="{{maintainInfoList[2].contentList}}" wx:key="item" >
+              <view class="item_left" @tap="bindAbnormalRecord({{item}})">
+                <text class="content_tx">{{item.content}}</text>
+              </view>
+              <view class="item_right">
+                <button wx:if="{{item.checkValue == 1}}" class="status_btn_color">完成</button>
+                <button wx:else class="status_btn_light" @tap="bindWorkDone2({{index}})">待完成</button>
               </view>
             </view>
           </view>
@@ -109,7 +127,6 @@
         isShowCustomer: false,
         isReady: true,
         isChargePerson: false,
-        hiddenSuggestion: true,
         machineDetail: {},
         maintainRecordDetail: {},
         maintainSuggestion: '',
@@ -134,23 +151,23 @@
             tip.confirm('成功！返回上一页', 'BACK')
           }
         },
-        showSuggestionInput() {
-          this.hiddenSuggestion = false
-          this.$apply()
-        },
-        listenerSuggestion() {
-          this.hiddenSuggestion = true
-          this.$apply()
-        },
         bindAbnormalRecord(e) {
           console.log('内容：', e)
           wepy.navigateTo({
             url: '/pages/maintain_abnormal?content=' + e.content + '&maintainRecordId=' + this.machineDetail.id
           })
         },
-        bindWorkDone(e) {
+        bindWorkDone0(e) {
           console.log('行号', e)
-          this.maintainInfoList[e].checkValue = '1'
+          this.maintainInfoList[0].contentList[e].checkValue = '1'
+        },
+        bindWorkDone1(e) {
+          console.log('行号', e)
+          this.maintainInfoList[1].contentList[e].checkValue = '1'
+        },
+        bindWorkDone2(e) {
+          console.log('行号', e)
+          this.maintainInfoList[2].contentList[e].checkValue = '1'
         },
         bindMaintainSuggestionInput(e) {
           console.log(e.detail.value)
@@ -160,7 +177,7 @@
           if (this.maintainSuggestion == '') {
             tip.alert('请输入保养建议')
           } else {
-            // for (var infoItem in this.maintainInfoList) {
+            // for (var infoItem in this.maintainInfoList[0].contentList) {
             //   if (!infoItem.checkValue) {
             //     tip.alert('还有项目未完成')
             //     return
@@ -212,15 +229,16 @@
           tip.confirm('获取信息出错！网络错误，请检查网络', 'BACK')
         } else {
           this.maintainRecordDetail = maintainRecordJson.data.data.list[0]
-          let tempInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
-          console.log('保养信息：', tempInfoList)
-          for (var i = 0; i < tempInfoList.length; i++) {
-            this.maintainInfoList = this.maintainInfoList.concat(tempInfoList[i].contentList)
-          }
-          if (wepy.getStorageSync(USER_ID) == maintainRecordJson.data.data.list[0].maintainChargePerson) {
-            this.isChargePerson = true
+          if (!this.maintainRecordDetail.maintainInfo) {
+            tip.confirm('获取信息出错！没有保养项目！', 'BACK')
           } else {
-            this.isChargePerson = false
+            this.maintainInfoList = JSON.parse(this.maintainRecordDetail.maintainInfo)
+            console.log('保养信息：', this.maintainInfoList)
+            if (wepy.getStorageSync(USER_ID) == maintainRecordJson.data.data.list[0].maintainChargePerson) {
+              this.isChargePerson = true
+            } else {
+              this.isChargePerson = false
+            }
           }
         }
         this.$apply()
