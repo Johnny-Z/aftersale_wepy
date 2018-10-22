@@ -108,11 +108,11 @@
               </modal>
               <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
               <view class="view_row">
-                  <text class="label_tx">照片：</text>
+                  <text class="label_tx">照片（3张）：（长按删除）</text>
               </view>
               <view class="view_row">
+                <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
                 <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
-                <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
               </view>
               <view class="view_row">
                 <text class="label_tx">配件：</text>
@@ -124,14 +124,14 @@
               <view class="view_row">
                 <button class="add_btn" @tap="showPartsInfo" >添加配件信息</button>
               </view>
-              <modal hidden="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" bindconfirm="listenerPartsInfo" >
+              <modal hidden="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" @confirm="listenerPartsInfo" >
                 <view class="view_row">
                   <text class="label_tx">配件名称：</text>
                   <input class="part_input" type="text" value="{{partsName}}" @input="bindPartInput" placeholder="输入配件名"/>
                 </view>
                 <view class="view_row">
                   <text class="label_tx">是否寄回：</text>
-                  <radio-group bindchange="radioChange">
+                  <radio-group @change="radioChange">
                     <radio class="radio" value="1" checked="{{radioChecked}}">否</radio>
                     <radio class="radio" value="2" >是</radio>
                   </radio-group>
@@ -221,7 +221,7 @@
         text-align: center;
     }
     .photo_image {
-        margin-right: 20rpx;
+        margin-right: 5rpx;
         margin-top: 20rpx;
         width: 160rpx;
         height: 160rpx;
@@ -275,6 +275,8 @@
         hiddenMethod: true,
         hiddenPartsInfo: true,
         repairImageArr: [],
+        touchStartTime: 0,
+        touchEndTime: 0,
         preRepairVoiceSrc: '',
         count: 0,
         repairRecordIndex: 0,
@@ -393,20 +395,57 @@
           this.repairActualInfo.repairMethod = e.detail.value
         },
         async bindPreviewImage() {
-          let res = await wepy.chooseImage({count: 3})
+          let res = await wepy.chooseImage({
+            count: 3,
+            sizeType: 'compressed '
+          })
           if (res.errMsg === 'chooseImage:ok') {
             let tempFilePaths = res.tempFilePaths
-            this.repairImageArr = tempFilePaths
-            console.log('srcsssss：', tempFilePaths)
-            this.$apply()
+            if (this.repairImageArr.length >= 3) {
+              tip.alert('最多3张')
+            } else if ((this.repairImageArr.length + tempFilePaths.length) > 3) {
+              tip.alert('最多3张')
+              for (var i = 0; i < (3 - this.repairImageArr.length); i++) {
+                this.repairImageArr = this.repairImageArr.concat(tempFilePaths[i])
+              }
+              this.$apply()
+            } else {
+              this.repairImageArr = this.repairImageArr.concat(tempFilePaths)
+              this.$apply()
+            }
           }
         },
         changeRepairImagePreview(e) {
-          var self = this
-          wepy.previewImage({
-            current: e.currentTarget.dataset.src,
-            urls: self.data.repairImageArr
-          })
+            // 控制点击事件在450ms内触发，加这层判断是为了防止长按时会触发点击事件
+          if (this.touchEndTime - this.touchStartTime < 450) {
+            wepy.previewImage({
+              current: e.currentTarget.dataset.src,
+              urls: this.repairImageArr
+            })
+          }
+        },
+          // 按钮触摸开始触发的事件
+        touchStart(e) {
+          console.log('touchStart: ', e)
+          this.touchStartTime = e.timeStamp
+        },
+
+          // 按钮触摸结束触发的事件
+        touchEnd(e) {
+          console.log('touchEnd: ', e)
+          this.touchEndTime = e.timeStamp
+        },
+          // 长按删除图片
+        deleteImage(e) {
+          console.log('longTap: ', e)
+          for (var i = 0; i < this.repairImageArr.length; i++) {
+            if (this.repairImageArr[i] == e.currentTarget.dataset.src) {
+              this.repairImageArr.splice(i, 1)
+              tip.alert('已删除')
+              this.$apply()
+              break
+            }
+          }
         },
           // show add parts modal
         showPartsInfo() {

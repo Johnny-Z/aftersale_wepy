@@ -11,7 +11,6 @@ import {
 
 const TIMESTAMP = util.getCurrentTime()
 const SIGN = md5.hex_md5((TIMESTAMP).toLowerCase())
-const TOKEN_AUTHORIZATION = wepy.getStorageSync(AUTHORIZATION)
 
 const wxLogin = async(params = {}, url) => {
   tip.loading()
@@ -37,7 +36,7 @@ const wxRequest = async(params = {}, url) => {
     method: params.method || 'POST',
     data: data,
     header: { 'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': TOKEN_AUTHORIZATION }
+      'Authorization': wepy.getStorageSync(AUTHORIZATION) }
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
@@ -56,7 +55,7 @@ const wxRequestRaw = async(params = {}, url) => {
     method: params.method || 'POST',
     data: data,
     header: { 'Content-Type': 'application/json',
-      'Authorization': TOKEN_AUTHORIZATION }
+      'Authorization': wepy.getStorageSync(AUTHORIZATION) }
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
@@ -76,7 +75,7 @@ const wxUploadFile = async(params = {}, url) => {
     name: data.name,
     formData: data.data,
     header: { 'Content-Type': 'multipart/form-data',
-      'Authorization': TOKEN_AUTHORIZATION }
+      'Authorization': wepy.getStorageSync(AUTHORIZATION) }
   })
   tip.loaded()
   if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {

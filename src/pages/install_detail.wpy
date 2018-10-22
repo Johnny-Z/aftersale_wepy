@@ -358,7 +358,7 @@
         } else {
           this.installRecordDetail = installRecordJson.data.data.list[0]
           if (!this.installRecordDetail.installInfo) {
-            tip.confirm('获取信息出错！没有保养项！', 'BACK')
+            tip.confirm('获取信息出错！没有安装项目！', 'BACK')
           } else {
             let tempInfoList = JSON.parse(this.installRecordDetail.installInfo)
             for (var i = 0; i < tempInfoList.length; i++) {

@@ -120,7 +120,8 @@
           wx.setStorageSync(AUTHORIZATION, auth)
           let loginJson = await api.autoLogin({
             query: {
-              jsCode: this.jcCode
+              jsCode: this.jcCode,
+              roleOfCaller: '0'
             }
           })
           console.log('autoLogin: ', loginJson)
@@ -160,7 +161,8 @@
             query: {
               account: this.account,
               password: this.password,
-              jsCode: this.jcCode
+              jsCode: this.jcCode,
+              roleOfCaller: '0'
             }
           })
           console.log('get session resoult: ', rlt)
