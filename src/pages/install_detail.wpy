@@ -1,12 +1,12 @@
 <template>
   <machinedetails :machine.sync="machineDetail"></machinedetails>
   <view class="detail_view_column">
-    <view class="title_view">
+    <view class="title_view" @tap="bindIsShowCustomer">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
         <text class="title_tx">客户信息</text>
       </view>
-      <view class="title_view_sec_part"  @tap="bindIsShowCustomer">
+      <view class="title_view_sec_part">
         <image wx:if="{{isShowCustomer}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
         <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>
@@ -45,9 +45,9 @@
           </view>
         </view>
         <view class="main_view">
-          <view class="view_row">
+          <view class="view_row" @tap="showResultInput">
             <text class="label_tx">调试结果：</text>
-            <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showResultInput"></image>
+            <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
           <modal hidden="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" bindconfirm="listenerResult" >
             <textarea @input="bindInstallResultInput" class="textarea_input" placeholder="输入安装结果"></textarea>
@@ -56,38 +56,38 @@
           <view class="view_row">
             <text class="label_tx">调试记录：</text>
           </view>
-          <view class="view_row">
+          <view class="view_row" @tap="showSourceInput">
             <text class="info_tx" >电源电压：</text>
             <text class="info_tx" >A-{{installBasicItemList[0].install_value? installBasicItemList[0].install_value + 'V':'暂无'}}</text>
             <text class="info_tx" >B-{{installBasicItemList[1].install_value? installBasicItemList[1].install_value + 'V':'暂无'}}</text>
             <text class="info_tx" >C-{{installBasicItemList[2].install_value? installBasicItemList[2].install_value + 'V':'暂无'}}</text>
-            <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showSourceInput"></image>
+            <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
           <modal hidden="{{hiddenSource}}" title="电源电压" confirm-text="确定" no-cancel="true" bindconfirm="listenerSource" >
             <view class="view_row">
               <text class="label_tx">A：</text>
-              <input class="part_input" type="text" value="{{installBasicItemList[0].install_value}}" @input="bindASourceInput" placeholder="输入A电压"/>
+              <input class="part_input" type="number" value="{{installBasicItemList[0].install_value}}" @input="bindASourceInput" placeholder="输入A电压"/>
               <text class="label_tx">V</text>
             </view>
             <view class="view_row">
               <text class="label_tx">B：</text>
-              <input class="part_input" type="text" value="{{installBasicItemList[1].install_value}}" @input="bindBSourceInput" placeholder="输入B电压"/>
+              <input class="part_input" type="number" value="{{installBasicItemList[1].install_value}}" @input="bindBSourceInput" placeholder="输入B电压"/>
               <text class="label_tx">V</text>
             </view>
             <view class="view_row">
               <text class="label_tx">C：</text>
-              <input class="part_input" type="text" value="{{installBasicItemList[2].install_value}}" @input="bindCSourceInput" placeholder="输入C电压"/>
+              <input class="part_input" type="number" value="{{installBasicItemList[2].install_value}}" @input="bindCSourceInput" placeholder="输入C电压"/>
               <text class="label_tx">V</text>
             </view>
           </modal>
           <view class="view_row" @tap="showPhaseInput">
             <text class="info_tx" >单相电压：</text>
             <text class="info_tx" >{{installBasicItemList[3].install_value? installBasicItemList[3].install_value + 'V':'暂无'}}</text>
-            <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showPhaseInput"></image>
+            <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
           <modal hidden="{{hiddenPhase}}" title="单相电压" confirm-text="确定" no-cancel="true" bindconfirm="listenerPhase" >
             <view class="view_row">
-              <input class="part_input" type="text" value="{{installBasicItemList[3].install_value}}" @input="bindPhaseInput" placeholder="输入单相电压"/>
+              <input class="part_input" type="number" value="{{installBasicItemList[3].install_value}}" @input="bindPhaseInput" placeholder="输入单相电压"/>
               <text class="label_tx">V</text>
             </view>
           </modal>

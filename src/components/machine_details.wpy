@@ -2,12 +2,12 @@
 </style>
 <template>
   <view class="detail_view_column">
-    <view class="title_view">
+    <view class="title_view" @tap="bindIsShow">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_machine.png"></image>
         <text class="title_tx">机器详情</text>
       </view>
-      <view class="title_view_sec_part" @tap="bindIsShow">
+      <view class="title_view_sec_part">
         <image wx:if="{{isShowMachine}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
         <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>

@@ -12,7 +12,7 @@
         <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
         <button wx:if="{{item.installStatus == 1}}" class="status_btn_light">待接单</button>
         <button wx:elif="{{item.installStatus == 2}}" class="status_btn_color">待安装</button>
-        <button wx:elif="{{item.installStatus == 3}}" class="status_btn_color">完成</button>
+        <button wx:elif="{{item.installStatus == 3}}" class="status_btn_color">待评价</button>
         <button wx:else class="status_btn_color">{{item.installStatus}}</button>
       </view>
     </view>

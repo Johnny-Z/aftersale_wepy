@@ -13,7 +13,7 @@
         <button wx:if="{{item.status == 2}}" class="status_btn_light">待接单</button>
         <button wx:elif="{{item.status == 3}}" class="status_btn_color">待维修</button>
         <button wx:elif="{{item.status == 4}}" class="status_btn_color">失败</button>
-        <button wx:elif="{{item.status == 7}}" class="status_btn_color">完成</button>
+        <button wx:elif="{{item.status == 7}}" class="status_btn_color">待评价</button>
         <button wx:else class="status_btn_color">{{item.status}}</button>
       </view>
     </view>

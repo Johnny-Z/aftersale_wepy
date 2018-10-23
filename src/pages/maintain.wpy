@@ -39,7 +39,7 @@
         <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
         <button wx:if="{{item.maintainStatus == 1}}" class="status_btn_light">待接单</button>
         <button wx:elif="{{item.maintainStatus == 2}}" class="status_btn_color">待保养</button>
-        <button wx:elif="{{item.maintainStatus == 3}}" class="status_btn_color">完成</button>
+        <button wx:elif="{{item.maintainStatus == 3}}" class="status_btn_color">待评价</button>
         <button wx:else class="status_btn_color">{{item.maintainStatus}}</button>
       </view>
     </view>

@@ -1,12 +1,12 @@
 <template>
   <machinedetails :machine.sync="machineDetail"></machinedetails>
   <view class="detail_view_column">
-    <view class="title_view">
+    <view class="title_view" @tap="bindIsShowCustomer">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
         <text class="title_tx">客户信息</text>
       </view>
-      <view class="title_view_sec_part" @tap="bindIsShowCustomer">
+      <view class="title_view_sec_part">
         <image wx:if="{{isShowCustomer}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
         <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>
@@ -91,17 +91,17 @@
                   </label>
                 </checkbox-group>
               </view>
-              <view class="view_row">
+              <view class="view_row" @tap="showDescriptionInput">
                 <text class="label_tx">问题描述：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showDescriptionInput"></image>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
               </view>
               <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" >
                 <textarea @input="bindIssueDescriptionInput" class="textarea_input" placeholder="输入问题原因"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
-              <view class="view_row">
+              <view class="view_row" @tap="showMethodInput">
                 <text class="label_tx">处理方法：</text>
-                <image class="edit_icon" src="../images/icon_btn_edit.png" @tap="showMethodInput"></image>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
               </view>
               <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" >
                 <textarea @input="bindRepairMethodInput" class="textarea_input" placeholder="输入维修方法"></textarea>
@@ -112,7 +112,7 @@
               </view>
               <view class="view_row">
                 <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
-                <image class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
+                <image hidden="{{hiddenPhoto}}" class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
               </view>
               <view class="view_row">
                 <text class="label_tx">配件：</text>
@@ -221,7 +221,7 @@
         text-align: center;
     }
     .photo_image {
-        margin-right: 5rpx;
+        margin-right: 20rpx;
         margin-top: 20rpx;
         width: 160rpx;
         height: 160rpx;
@@ -273,6 +273,7 @@
         },
         hiddenDescription: true,
         hiddenMethod: true,
+        hiddenPhoto: false,
         hiddenPartsInfo: true,
         repairImageArr: [],
         touchStartTime: 0,
@@ -405,12 +406,16 @@
               tip.alert('最多3张')
             } else if ((this.repairImageArr.length + tempFilePaths.length) > 3) {
               tip.alert('最多3张')
+              this.hiddenPhoto = true
               for (var i = 0; i < (3 - this.repairImageArr.length); i++) {
                 this.repairImageArr = this.repairImageArr.concat(tempFilePaths[i])
               }
               this.$apply()
             } else {
               this.repairImageArr = this.repairImageArr.concat(tempFilePaths)
+              if (this.repairImageArr.length == 3) {
+                this.hiddenPhoto = true
+              }
               this.$apply()
             }
           }
@@ -441,6 +446,7 @@
           for (var i = 0; i < this.repairImageArr.length; i++) {
             if (this.repairImageArr[i] == e.currentTarget.dataset.src) {
               this.repairImageArr.splice(i, 1)
+              this.hiddenPhoto = false
               tip.alert('已删除')
               this.$apply()
               break

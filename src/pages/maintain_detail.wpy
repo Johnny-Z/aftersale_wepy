@@ -1,12 +1,12 @@
 <template>
   <machinedetails :machine.sync="machineDetail"></machinedetails>
   <view class="detail_view_column">
-    <view class="title_view">
+    <view class="title_view" @tap="bindIsShowCustomer">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
         <text class="title_tx">客户信息</text>
       </view>
-      <view class="title_view_sec_part" @tap="bindIsShowCustomer">
+      <view class="title_view_sec_part">
         <image wx:if="{{isShowCustomer}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
         <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
       </view>
