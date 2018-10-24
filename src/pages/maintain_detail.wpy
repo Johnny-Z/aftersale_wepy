@@ -177,12 +177,14 @@
           if (this.maintainSuggestion == '') {
             tip.alert('请输入保养建议')
           } else {
-            // for (var infoItem in this.maintainInfoList[0].contentList) {
-            //   if (!infoItem.checkValue) {
-            //     tip.alert('还有项目未完成')
-            //     return
-            //   }
-            // }
+            for (var i = 0; i < this.maintainInfoList.length; i++) {
+              for (var j = 0; j < this.maintainInfoList[i].contentList.length; j++) {
+                if (!this.maintainInfoList[i].contentList[j].checkValue) {
+                  tip.alert('还有项目未完成')
+                  return
+                }
+              }
+            }
             this.maintainRecordDetail.maintainInfo = JSON.stringify(this.maintainInfoList)
             this.maintainRecordDetail.maintainStatus = MAINTAIN_STATUS_FINISHED
             this.maintainRecordDetail.maintainSuggestion = this.maintainSuggestion

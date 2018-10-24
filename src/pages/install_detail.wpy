@@ -308,12 +308,12 @@
             tip.alert('请输入调试结果')
           } else {
             let allInstallInfoList = this.installInfoList.concat(this.installBasicItemList)
-            // for (var infoItem in allInstallInfoList) {
-            //   if (!infoItem.install_value) {
-            //     tip.alert('还有项目未完成')
-            //     return
-            //   }
-            // }
+            for (var i = 0; i < allInstallInfoList.length; i++) {
+              if (!allInstallInfoList[i].install_value) {
+                tip.alert('还有项目未完成')
+                return
+              }
+            }
             this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
             this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
             this.installRecordDetail.installResult = this.installResult
