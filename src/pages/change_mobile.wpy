@@ -78,7 +78,6 @@
 
     methods = {
       bindNewMoblieNumInput(e) {
-        console.log(e.detail.value)
         this.newMobileNum = e.detail.value
       },
       async updateMobileNum() {
@@ -91,7 +90,9 @@
         })
         console.log('更新：', updateUserJson)
         if (updateUserJson.data.code == 200) {
-          tip.confirm('提交成功！', 'BACK')
+          tip.confirm('更新成功！', 'BACK')
+        } else {
+          tip.confirm('更新失败，请检查网络！')
         }
       }
     }
@@ -105,7 +106,7 @@
       if (getUserJson.data.code == 200) {
         this.oldMobileNum = getUserJson.data.data.phone
       } else {
-        tip.confirm('获取联系方式出错！', 'BACK')
+        tip.confirm('获取联系方式出错，请检查网络！', 'BACK')
       }
       this.$apply()
     }

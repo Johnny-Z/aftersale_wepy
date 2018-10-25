@@ -61,6 +61,11 @@
           iconPath: 'images/tab_btn_mine_normal.png',
           selectedIconPath: 'images/tab_btn_mine_selected.png'
         }]
+      },
+      'networkTimeout': {
+        'request': 10000,
+        'uploadFile': 10000,
+        'downloadFile': 10000
       }
     }
 

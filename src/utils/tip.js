@@ -42,7 +42,7 @@ export default class Tips {
           wx.navigateBack()
         } else if (payload == 'TOP') {
           wx.redirectTo({
-            url: '/pages/authorize'
+            url: '/pages/authorize?exit=1'
           })
         } else if (payload == 'TAB') {
           wx.switchTab({

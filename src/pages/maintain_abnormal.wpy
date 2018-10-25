@@ -51,11 +51,9 @@
       };
       methods = {
         bindmaitainAbnormalContent(e) {
-          console.log(e.detail.value)
           this.maitainAbnormalContent = e.detail.value
         },
         bindmaintainFixResult(e) {
-          console.log(e.detail.value)
           this.maintainFixResult = e.detail.value
         },
         async bindUploadFeedback() {

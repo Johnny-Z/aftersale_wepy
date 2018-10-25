@@ -170,7 +170,6 @@
           this.maintainInfoList[2].contentList[e].checkValue = '1'
         },
         bindMaintainSuggestionInput(e) {
-          console.log(e.detail.value)
           this.maintainSuggestion = e.detail.value
         },
         async bindUploadFeedback() {

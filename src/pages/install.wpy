@@ -31,7 +31,8 @@
 
   export default class Install extends wepy.page {
         config = {
-          navigationBarTitleText: '调试安装'
+          navigationBarTitleText: '调试安装',
+          enablePullDownRefresh: true
         }
         components = {
         }
@@ -61,6 +62,10 @@
           console.log('start install onLoad')
         }
 
+        // 下拉刷新
+        onPullDownRefresh() {
+          this.getInstallMachineList()
+        }
         onShow() {
           this.getInstallMachineList()
         }
@@ -93,6 +98,7 @@
             console.log(this.installList)
           }
           this.$apply()
+          wepy.stopPullDownRefresh()
         }
   }
 

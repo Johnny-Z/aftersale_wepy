@@ -109,7 +109,7 @@
             <text class="info_tx" >台板支撑：</text>
             <radio-group bindchange="supportRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
-              <radio class="radio" value="不正常" >不正常</radio>
+              <radio class="radio" value="没有" >没有</radio>
             </radio-group>
           </view>
         </view>
@@ -251,19 +251,15 @@
           this.$apply()
         },
         bindInstallResultInput(e) {
-          console.log(e.detail.value)
           this.installResult = e.detail.value
         },
         groundRadioChange(e) {
-          console.log(e)
           this.installBasicItemList[4].install_value = e.detail.value
         },
         levelRadioChange(e) {
-          console.log(e)
           this.installBasicItemList[5].install_value = e.detail.value
         },
         supportRadioChange(e) {
-          console.log(e)
           this.installBasicItemList[6].install_value = e.detail.value
         },
         showSourceInput() {
@@ -275,15 +271,12 @@
           this.$apply()
         },
         bindASourceInput(e) {
-          console.log(e.detail.value)
           this.installBasicItemList[0].install_value = e.detail.value
         },
         bindBSourceInput(e) {
-          console.log(e.detail.value)
           this.installBasicItemList[1].install_value = e.detail.value
         },
         bindCSourceInput(e) {
-          console.log(e.detail.value)
           this.installBasicItemList[2].install_value = e.detail.value
         },
         showPhaseInput() {
@@ -295,7 +288,6 @@
           this.$apply()
         },
         bindPhaseInput(e) {
-          console.log(e.detail.value)
           this.installBasicItemList[3].install_value = e.detail.value
         },
         bindWorkDone(e) {

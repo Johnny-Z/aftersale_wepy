@@ -1,4 +1,23 @@
 <style lang="less">
+  .view_introduction_row {
+    display: flex;
+    flex-direction: row;
+    background: #ffffff;
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
+    padding-left: 30rpx;
+    padding-top: 15rpx;
+    padding-bottom: 15rpx;
+    .image_head {
+      width: 100rpx;
+      height: 100rpx;
+    }
+    .view_name_column {
+      display: flex;
+      flex-direction: column;
+      padding-left: 20rpx;
+    }
+  }
   .menu_row_view {
     display: flex;
     flex-direction: row;
@@ -37,6 +56,13 @@
   }
 </style>
 <template>
+  <view class="view_introduction_row" >
+    <image class="image_head" src="{{headImgUrl}}" mode="scaleToFill"/>
+    <view class="view_name_column">
+      <text class="tx_nickname">{{nickname}}</text>
+      <text class="tx_account">{{account}}</text>
+    </view>
+  </view>
   <view class="menu_row_view" @tap="bindChangePassword">
     <view class="menu_row_view_left">
       <image class="menu_icon" src="../images/icon_mine_password.png"></image>
@@ -71,20 +97,26 @@
     </view>
   </view></template>
 <script>
-  /* eslint-disable no-undef */
+  /* eslint-disable no-undef,eqeqeq */
 
   import wepy from 'wepy'
+  import api from '@/api/api'
+  import tip from '@/utils/tip'
+  import {
+      ACCOUNT
+  } from '@/utils/constant'
 
   export default class Personal extends wepy.page {
     config = {
       navigationBarTitleText: '个人中心'
     }
     data = {
-
+      headImgUrl: '',
+      account: '',
+      nickname: ''
     }
 
-    events = {
-    }
+    events = {}
 
     methods = {
       bindChangePassword() {
@@ -109,7 +141,19 @@
       }
     }
 
-    onLoad() {}
+    async onLoad() {
+      this.account = wepy.getStorageSync(ACCOUNT)
+      let personalInfo = await api.getPersonInfo({
+        query: {account: this.account}
+      })
+      console.log('ge人信息：', personalInfo)
+      if (personalInfo.data.code == 200) {
+        this.headImgUrl = personalInfo.data.data.headimgrul
+        this.nickname = personalInfo.data.data.nickname
+      } else {
+        tip.confirm('获取个人信息出错，请去公众号授权！')
+      }
+      this.$apply()
     }
-
+  }
 </script>

@@ -33,7 +33,8 @@
 
     export default class Repair extends wepy.page {
       config = {
-        navigationBarTitleText: '维修'
+        navigationBarTitleText: '维修',
+        enablePullDownRefresh: true
       }
       components = {
       }
@@ -62,6 +63,10 @@
 
       onLoad() {
         console.log('start repair onLoad')
+      }
+        // 下拉刷新
+      onPullDownRefresh() {
+        this.getRepairMachineList()
       }
       onShow() {
         this.getRepairMachineList()
@@ -92,7 +97,8 @@
           console.log(this.repairList)
         }
         this.$apply()
-      }
+        wepy.stopPullDownRefresh()
+  }
     }
 
 </script>

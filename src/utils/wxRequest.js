@@ -4,9 +4,7 @@ import util from './util'
 import md5 from './md5'
 import tip from './tip'
 import {
-    AUTHORIZATION,
-    JWT_ERROR_MESSAGE,
-    NO_JWT_ERROR_MESSAGE
+    AUTHORIZATION
 } from '@/utils/constant'
 
 const TIMESTAMP = util.getCurrentTime()
@@ -39,8 +37,8 @@ const wxRequest = async(params = {}, url) => {
       'Authorization': wepy.getStorageSync(AUTHORIZATION) }
   })
   tip.loaded()
-  if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', 'TOP')
+  if (res.data.status == 500) {
+    tip.confirm('登入状态已过期，请重新登入！', 'TOP')
   } else {
     return res
   }
@@ -58,8 +56,8 @@ const wxRequestRaw = async(params = {}, url) => {
       'Authorization': wepy.getStorageSync(AUTHORIZATION) }
   })
   tip.loaded()
-  if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', 'TOP')
+  if (res.data.status == 500) {
+    tip.confirm('登入状态已过期，请重新登入！', 'TOP')
   } else {
     return res
   }
@@ -78,8 +76,8 @@ const wxUploadFile = async(params = {}, url) => {
       'Authorization': wepy.getStorageSync(AUTHORIZATION) }
   })
   tip.loaded()
-  if (res.message == JWT_ERROR_MESSAGE || res.message == NO_JWT_ERROR_MESSAGE) {
-    tip.confirm('JWT错误', 'TOP')
+  if (res.data.status == 500) {
+    tip.confirm('登入状态已过期，请重新登入！', 'TOP')
   } else {
     return res
   }

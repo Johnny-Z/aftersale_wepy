@@ -380,7 +380,6 @@
           this.$apply()
         },
         bindIssueDescriptionInput(e) {
-          console.log(e.detail.value)
           this.repairActualInfo.issueDescription = e.detail.value
         },
         showMethodInput() {
@@ -392,7 +391,6 @@
           this.$apply()
         },
         bindRepairMethodInput(e) {
-          console.log(e.detail.value)
           this.repairActualInfo.repairMethod = e.detail.value
         },
         async bindPreviewImage() {
@@ -462,12 +460,10 @@
           this.$apply()
         },
         bindPartInput(e) {
-          console.log(e.detail.value)
           this.partsName = e.detail.value
         },
           // get partsStatus by radio
         radioChange(e) {
-          console.log('radio发生change事件，携带value值为：', e.detail.value)
           this.partsStatus = e.detail.value
           if (this.partsStatus == '2') {
             this.radioChecked = false

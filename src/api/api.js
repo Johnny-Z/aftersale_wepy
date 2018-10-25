@@ -24,6 +24,7 @@ const uploadMaintainFeedback = (params) => wxRequest(params, apiMall + '/maintai
 const getIssuePositionList = (params) => wxRequest(params, apiMall + '/issue/position/list/list')
 const getMobileByUser = (params) => wxRequest(params, apiMall + '/user/detail')
 const updatePassword = (params) => wxRequest(params, apiMall + '/user/updatePassword')
+const getPersonInfo = (params) => wxRequest(params, apiMall + '/wechat/user/info/getWechatUserInfoByAccount')
 
 const updateUserInfo = (params) => wxRequestRaw(params, apiMall + '/user/update')
 const uploadRepairFeedback = (params) => wxRequestRaw(params, apiMall + '/repair/actual/info/add')
@@ -55,5 +56,6 @@ export default {
   getMobileByUser,
   updateUserInfo,
   updatePassword,
+  getPersonInfo,
   getIssuePositionList
 }

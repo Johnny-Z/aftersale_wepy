@@ -58,7 +58,8 @@
 
   export default class Maintain extends wepy.page {
         config = {
-          navigationBarTitleText: '保养'
+          navigationBarTitleText: '保养',
+          enablePullDownRefresh: true
         }
         components = {
         }
@@ -88,6 +89,10 @@
           console.log('start maintain onLoad')
         }
 
+        // 下拉刷新
+        onPullDownRefresh() {
+          this.getMaintainMachineList()
+        }
         onShow() {
           this.getMaintainMachineList()
         }
@@ -119,6 +124,7 @@
             console.log(this.maintainList)
           }
           this.$apply()
+          wepy.stopPullDownRefresh()
         }
   }
 

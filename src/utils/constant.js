@@ -28,12 +28,6 @@ export const AUTHORIZATION = 'Authorization'
  */
 export const AUTHORIZATION_PATH = `${wx.env.USER_DATA_PATH}/Authorization.txt`
 /**
- * JWT error
- * @type {String}
- */
-export const JWT_ERROR_MESSAGE = 'JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.'
-export const NO_JWT_ERROR_MESSAGE = 'JWT String argument cannot be null or empty.'
-/**
  * 用户名
  * @type {String}
  */
