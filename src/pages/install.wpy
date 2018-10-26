@@ -6,10 +6,10 @@
     <view class="list_view_row" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
       <view class="view_column_left">
         <text class="nameplate_tx">{{item.machineNameplate}}</text>
-        <text class="type_tx">{{item.machineType}}</text>
+        <text class="type_tx">{{item.customerInInstallRecord}}</text>
       </view>
       <view class="view_column_right">
-        <text class="details_tx">{{item.needleNum}}/{{item.headNum}}/{{item.headDistance}}/{{item.xDistance}}/{{item.yDistance}}</text>
+        <text class="details_tx">{{item.customerAddressInInstallRecord}}</text>
         <button wx:if="{{item.installStatus == 1}}" class="status_btn_light">待接单</button>
         <button wx:elif="{{item.installStatus == 2}}" class="status_btn_color">待安装</button>
         <button wx:elif="{{item.installStatus == 3}}" class="status_btn_color">待评价</button>

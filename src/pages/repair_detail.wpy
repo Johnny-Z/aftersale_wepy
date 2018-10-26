@@ -95,7 +95,7 @@
                 <text class="label_tx">问题描述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
               </view>
-              <modal hidden="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" >
+              <modal wx:if="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" >
                 <textarea @input="bindIssueDescriptionInput" class="textarea_input" placeholder="输入问题原因"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
@@ -103,7 +103,7 @@
                 <text class="label_tx">处理方法：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
               </view>
-              <modal hidden="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" >
+              <modal wx:if="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" >
                 <textarea @input="bindRepairMethodInput" class="textarea_input" placeholder="输入维修方法"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
@@ -124,7 +124,7 @@
               <view class="view_row">
                 <button class="add_btn" @tap="showPartsInfo" >添加配件信息</button>
               </view>
-              <modal hidden="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" @confirm="listenerPartsInfo" >
+              <modal wx:if="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" @confirm="listenerPartsInfo" >
                 <view class="view_row">
                   <text class="label_tx">配件名称：</text>
                   <input class="part_input" type="text" value="{{partsName}}" @input="bindPartInput" placeholder="输入配件名"/>
@@ -271,10 +271,10 @@
           uploadFilesAmount: '',
           alreadyUploadedFilesNumber: '0'
         },
-        hiddenDescription: true,
-        hiddenMethod: true,
+        hiddenDescription: false,
+        hiddenMethod: false,
         hiddenPhoto: false,
-        hiddenPartsInfo: true,
+        hiddenPartsInfo: false,
         repairImageArr: [],
         touchStartTime: 0,
         touchEndTime: 0,
@@ -372,22 +372,22 @@
           this.repairActualInfo.issuePosition = e.detail.value.toString()
         },
         showDescriptionInput() {
-          this.hiddenDescription = false
+          this.hiddenDescription = true
           this.$apply()
         },
         listenerDescription() {
-          this.hiddenDescription = true
+          this.hiddenDescription = false
           this.$apply()
         },
         bindIssueDescriptionInput(e) {
           this.repairActualInfo.issueDescription = e.detail.value
         },
         showMethodInput() {
-          this.hiddenMethod = false
+          this.hiddenMethod = true
           this.$apply()
         },
         listenerMethod() {
-          this.hiddenMethod = true
+          this.hiddenMethod = false
           this.$apply()
         },
         bindRepairMethodInput(e) {
@@ -453,7 +453,7 @@
         },
           // show add parts modal
         showPartsInfo() {
-          this.hiddenPartsInfo = false
+          this.hiddenPartsInfo = true
           this.partsName = ''
           this.partsStatus = '1'
           this.radioChecked = true
@@ -472,9 +472,9 @@
         // 添加配件更换信息到列表
         listenerPartsInfo() {
           if (this.partsName == '') {
-            this.hiddenPartsInfo = true
+            this.hiddenPartsInfo = false
           } else {
-            this.hiddenPartsInfo = true
+            this.hiddenPartsInfo = false
             this.partsInfoList = this.partsInfoList.concat({
               partsName: this.partsName,
               partsStatus: this.partsStatus,
