@@ -146,7 +146,7 @@
 </template>
 <style lang="less">
     page {
-        margin-bottom: 120rpx;
+      padding-bottom: 120rpx;
     }
     .picker_view {
       width: 160rpx;

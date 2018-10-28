@@ -84,7 +84,7 @@
 </template>
 <style lang="less">
   page {
-    margin-bottom: 120rpx;
+    padding-bottom: 120rpx;
   }
   .list_item_row {
     border-bottom: 1px solid #F0F3F5;
