@@ -41,15 +41,15 @@
           iconPath: 'images/tab_btn_repair_normal.png',
           selectedIconPath: 'images/tab_btn_repair_selected.png'
         }, {
-          pagePath: 'pages/maintain',
-          text: '保养',
-          iconPath: 'images/tab_btn_maintain_normal.png',
-          selectedIconPath: 'images/tab_btn_maintain_selected.png'
-        }, {
           pagePath: 'pages/install',
           text: '安装调试',
           iconPath: 'images/tab_btn_install_normal.png',
           selectedIconPath: 'images/tab_btn_install_selected.png'
+        }, {
+          pagePath: 'pages/maintain',
+          text: '保养',
+          iconPath: 'images/tab_btn_maintain_normal.png',
+          selectedIconPath: 'images/tab_btn_maintain_selected.png'
         }, {
           pagePath: 'pages/discover',
           text: '知识库',

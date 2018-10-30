@@ -93,21 +93,21 @@
           </modal>
           <view class="view_row">
             <text class="info_tx" >接地情况：</text>
-            <radio-group bindchange="groundRadioChange">
+            <radio-group @change="groundRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
               <radio class="radio" value="不正常" >不正常</radio>
             </radio-group>
           </view>
           <view class="view_row">
             <text class="info_tx" >机器水平：</text>
-            <radio-group bindchange="levelRadioChange">
+            <radio-group @change="levelRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
               <radio class="radio" value="不正常" >不正常</radio>
             </radio-group>
           </view>
           <view class="view_row">
             <text class="info_tx" >台板支撑：</text>
-            <radio-group bindchange="supportRadioChange">
+            <radio-group @change="supportRadioChange">
               <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
               <radio class="radio" value="没有" >没有</radio>
             </radio-group>
@@ -125,7 +125,7 @@
               <text class="content_tx">{{item.install_content}}</text>
             </view>
             <view class="item_right">
-              <button wx:if="{{item.install_value == 1}}" class="status_btn_color">完成</button>
+              <button wx:if="{{item.install_value == '1'}}" class="status_btn_color" @tap="bindReWork({{index}})">完成</button>
               <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
             </view>
           </view>
@@ -290,6 +290,11 @@
         bindPhaseInput(e) {
           this.installBasicItemList[3].install_value = e.detail.value
         },
+        bindReWork(e) {
+          console.log('行号', e)
+          this.installInfoList[e].install_value = ''
+          this.$apply()
+        },
         bindWorkDone(e) {
           console.log('行号', e)
           this.installInfoList[e].install_value = '1'
@@ -302,7 +307,17 @@
             let allInstallInfoList = this.installInfoList.concat(this.installBasicItemList)
             for (var i = 0; i < allInstallInfoList.length; i++) {
               if (!allInstallInfoList[i].install_value) {
-                tip.alert('还有项目未完成')
+                wx.showModal({
+                  title: '提示',
+                  content: '还有项目未完成，请确认是否继续提交？',
+                  showCancel: true,
+                  confirmColor: '#007474',
+                  success: res => {
+                    if (res.confirm) {
+                      this.uploadInstallOK()
+                    }
+                  }
+                })
                 return
               }
             }
@@ -321,6 +336,22 @@
           }
         }
       };
+
+      async uploadInstallOK() {
+        let allInstallInfoList = this.installInfoList.concat(this.installBasicItemList)
+        this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
+        this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
+        this.installRecordDetail.installResult = this.installResult
+        let installFeedbackJson = await api.updateInstallRecord({
+          query: this.installRecordDetail
+        })
+        console.log('提交结果:', installFeedbackJson)
+        if (installFeedbackJson.data.code === 200) {
+          tip.confirm('成功！返回上一页', 'BACK')
+        } else {
+          tip.confirm('失败！网络错误，请检查网络！')
+        }
+      }
 
       events = {};
 

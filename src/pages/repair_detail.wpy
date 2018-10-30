@@ -489,22 +489,20 @@
           this.partsInfoList.splice(e, 1)
           this.$apply()
         },
-        async bindUploadFeedback() {
+        bindUploadFeedback() {
           if (this.resultIndex == 0) {
-                // 维修结果：没修完
-            this.repairRecordDetail.status = REPAIR_STATUS_REPAIR_NG
-            let repairNGJson = await api.updateRepairRecord({
-              query: {
-                id: this.repairRecordDetail.id,
-                status: REPAIR_STATUS_REPAIR_NG
+            // 维修结果：没修完
+            wx.showModal({
+              title: '提示',
+              content: '请确认本次维修结果：没解决！',
+              showCancel: true,
+              confirmColor: '#007474',
+              success: res => {
+                if (res.confirm) {
+                  this.uploadRepairNG()
+                }
               }
             })
-            console.log('没修完提交结果：', repairNGJson)
-            if (repairNGJson.data.code !== 200) {
-              tip.confirm('失败！网络错误，请检查网络！')
-            } else {
-              tip.confirm('成功！将启动重新派单！', 'BACK', '没修完')
-            }
           } else {
               // 维修结果：已修完
             if (this.repairActualInfo.issuePosition == '') {
@@ -516,26 +514,57 @@
             } else if (this.repairImageArr.length == 0) {
               tip.alert('请拍下故障照片')
             } else {
-              this.repairActualInfo.repairRecordId = this.machineDetail.id
-              const repairFeedbackJson = await api.uploadRepairFeedback({
-                query: {
-                  partsInfoList: this.partsInfoList,
-                  repairActualInfo: this.repairActualInfo
+                // 维修结果：已修完
+              wx.showModal({
+                title: '提示',
+                content: '请确认内容已填写完整，提交以后不得更改！',
+                showCancel: true,
+                confirmColor: '#007474',
+                success: res => {
+                  if (res.confirm) {
+                    this.uploadRepairOK()
+                  }
                 }
               })
-              console.log('add结果：', repairFeedbackJson)
-              if (repairFeedbackJson.data.code === 200) {
-                this.repairActualInfo.id = repairFeedbackJson.data.data
-                this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
-                let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
-                this.addRepairActualImageSrc(strRepairActualInfo, this.count)
-              } else {
-                tip.confirm('上传信息失败！网络错误，请检查网络！')
-              }
             }
           }
         }
       };
+
+      async uploadRepairNG() {
+        this.repairRecordDetail.status = REPAIR_STATUS_REPAIR_NG
+        let repairNGJson = await api.updateRepairRecord({
+          query: {
+            id: this.repairRecordDetail.id,
+            status: REPAIR_STATUS_REPAIR_NG
+          }
+        })
+        console.log('没修完提交结果：', repairNGJson)
+        if (repairNGJson.data.code !== 200) {
+          tip.confirm('失败！网络错误，请检查网络！')
+        } else {
+          tip.confirm('成功！将启动重新派单！', 'BACK', '没修完')
+        }
+      }
+
+      async uploadRepairOK() {
+        this.repairActualInfo.repairRecordId = this.machineDetail.id
+        let repairFeedbackJson = await api.uploadRepairFeedback({
+          query: {
+            partsInfoList: this.partsInfoList,
+            repairActualInfo: this.repairActualInfo
+          }
+        })
+        console.log('add结果：', repairFeedbackJson)
+        if (repairFeedbackJson.data.code === 200) {
+          this.repairActualInfo.id = repairFeedbackJson.data.data
+          this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
+          let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
+          this.addRepairActualImageSrc(strRepairActualInfo, this.count)
+        } else {
+          tip.confirm('上传信息失败！网络错误，请检查网络！')
+        }
+      }
 
       async addRepairActualImageSrc(strRepairActualInfo, count) {
         let updateImageSrcJson = await api.uploadRepairActualFiles({
