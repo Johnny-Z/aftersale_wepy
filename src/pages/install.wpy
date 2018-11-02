@@ -6,7 +6,7 @@
     <view class="list_view_row" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
       <view class="view_column_left">
         <text class="nameplate_tx">{{item.machineNameplate}}</text>
-        <text class="type_tx">{{item.customerInInstallRecord}}</text>
+        <text class="type_tx">{{item.machineCustomerName}}</text>
       </view>
       <view class="view_column_right">
         <text class="details_tx">{{item.customerAddressInInstallRecord}}</text>
@@ -23,10 +23,8 @@
 
   import wepy from 'wepy'
   import api from '@/api/api'
-  import tip from '@/utils/tip'
   import {
-    ACCOUNT,
-    INSTALL_STATUS_FINISHED
+    ACCOUNT
   } from '@/utils/constant'
 
   export default class Install extends wepy.page {
@@ -47,14 +45,10 @@
           listItemClick(e) {
             console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeee')
             console.log(e)
-            if (e.installStatus == INSTALL_STATUS_FINISHED) {
-              tip.confirm('等待客户确认！')
-            } else {
-              let machines = JSON.stringify(e)
-              wepy.navigateTo({
-                url: '/pages/install_detail?machineDetail=' + machines
-              })
-            }
+            let machines = JSON.stringify(e)
+            wepy.navigateTo({
+              url: '/pages/install_detail?machineDetail=' + machines
+            })
           }
         }
 

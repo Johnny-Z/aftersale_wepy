@@ -50,9 +50,9 @@
             <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
           <modal wx:if="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" @confirm="listenerResult" >
-            <textarea @input="bindInstallResultInput" class="textarea_input" placeholder="输入安装结果"></textarea>
+            <textarea @input="bindInstallResultInput" class="textarea_input" value="{{installRecordDetail.installResult}}" placeholder="输入安装结果"></textarea>
           </modal>
-          <text class="get_input_tx">{{installResult}}</text>
+          <text class="get_input_tx">{{installRecordDetail.installResult}}</text>
           <view class="view_row">
             <text class="label_tx">调试记录：</text>
           </view>
@@ -94,22 +94,22 @@
           <view class="view_row">
             <text class="info_tx" >接地情况：</text>
             <radio-group @change="groundRadioChange">
-              <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
-              <radio class="radio" value="不正常" >不正常</radio>
+              <radio class="radio" value="正常" checked="{{installBasicItemList[4].install_value=='正常'}}">正常</radio>
+              <radio class="radio" value="不正常" checked="{{installBasicItemList[4].install_value=='不正常'}}">不正常</radio>
             </radio-group>
           </view>
           <view class="view_row">
             <text class="info_tx" >机器水平：</text>
             <radio-group @change="levelRadioChange">
-              <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
-              <radio class="radio" value="不正常" >不正常</radio>
+              <radio class="radio" value="正常" checked="{{installBasicItemList[5].install_value=='正常'}}">正常</radio>
+              <radio class="radio" value="不正常" checked="{{installBasicItemList[5].install_value=='不正常'}}">不正常</radio>
             </radio-group>
           </view>
           <view class="view_row">
             <text class="info_tx" >台板支撑：</text>
             <radio-group @change="supportRadioChange">
-              <radio class="radio" value="正常" checked="{{radioChecked}}">正常</radio>
-              <radio class="radio" value="没有" >没有</radio>
+              <radio class="radio" value="正常" checked="{{installBasicItemList[6].install_value=='正常'}}">正常</radio>
+              <radio class="radio" value="没有" checked="{{installBasicItemList[6].install_value=='没有'}}">没有</radio>
             </radio-group>
           </view>
         </view>
@@ -131,7 +131,8 @@
           </view>
         </view>
       </view>
-      <button class="single_button" @tap="bindUploadFeedback">提交</button>
+      <button wx:if="{{isModify}}" class="single_button" @tap="bindUploadFeedback">修改</button>
+      <button wx:else class="single_button" @tap="bindUploadFeedback">提交</button>
     </view>
   </view>
 </template>
@@ -213,13 +214,13 @@
       data = {
         isShowCustomer: false,
         isReady: true,
+        isModify: false,
         hiddenResult: false,
         hiddenSource: false,
         hiddenPhase: false,
         machineDetail: {},
         installRecordDetail: {},
         isChargePerson: false,
-        installResult: '',
         installInfoList: [],
         installBasicItemList: []
       };
@@ -251,7 +252,7 @@
           this.$apply()
         },
         bindInstallResultInput(e) {
-          this.installResult = e.detail.value
+          this.installRecordDetail.installResult = e.detail.value
         },
         groundRadioChange(e) {
           this.installBasicItemList[4].install_value = e.detail.value
@@ -301,7 +302,7 @@
           this.$apply()
         },
         async bindUploadFeedback() {
-          if (this.installResult == '') {
+          if (!this.installRecordDetail.installResult) {
             tip.alert('请输入调试结果')
           } else {
             let allInstallInfoList = this.installInfoList.concat(this.installBasicItemList)
@@ -323,11 +324,10 @@
             }
             this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
             this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
-            this.installRecordDetail.installResult = this.installResult
             let installFeedbackJson = await api.updateInstallRecord({
               query: this.installRecordDetail
             })
-            console.log('提交结果:', installFeedbackJson)
+            console.log('提交结果: ', installFeedbackJson)
             if (installFeedbackJson.data.code === 200) {
               tip.confirm('成功！返回上一页', 'BACK')
             } else {
@@ -341,7 +341,6 @@
         let allInstallInfoList = this.installInfoList.concat(this.installBasicItemList)
         this.installRecordDetail.installInfo = JSON.stringify(allInstallInfoList)
         this.installRecordDetail.installStatus = INSTALL_STATUS_FINISHED
-        this.installRecordDetail.installResult = this.installResult
         let installFeedbackJson = await api.updateInstallRecord({
           query: this.installRecordDetail
         })
@@ -361,8 +360,14 @@
         console.log(this.machineDetail)
         if (this.machineDetail.installStatus == INSTALL_STATUS_ASSIGNED) {
           this.isReady = true
+          this.isModify = false
         } else {
           this.isReady = false
+          if (this.machineDetail.installStatus == INSTALL_STATUS_FINISHED) {
+            this.isModify = true
+          } else {
+            this.isModify = false
+          }
         }
         this.getInstallRecord(this.machineDetail.id)
         this.$apply()
