@@ -1,5 +1,6 @@
 <template>
   <view class="jf_rule">
+    <view class="title">待开发，sample如下：</view>
     <view class="title tc">大豪高速一体简易绳绣安装及应用说明</view>
     <view class="jf_content">
       <view class="sec_title">类型：安装指南 </view>

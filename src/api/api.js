@@ -5,7 +5,8 @@ import {
   wxUploadFile
 } from '@/utils/wxRequest'
 
-const apiMall = 'https://eservice-tech.cn/api'
+const apiMall = 'https://aftersalesinsim.cn/api'
+// const apiMall = 'https://eservice-tech.cn/api'
 // const apiMall = 'http://wxm.vaiwan.com:8081/'
 // const apiMall = 'http://192.168.43.223:8080'
 

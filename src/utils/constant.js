@@ -15,7 +15,8 @@ export const USER_INFO = 'userInfo'
  * 系统信息
  * @type {String}
  */
-export const APIMALL = 'https://eservice-tech.cn/'
+export const APIMALL = 'https://aftersalesinsim.cn/'
+// export const APIMALL = 'https://eservice-tech.cn/'
 
 /**
  * JWT

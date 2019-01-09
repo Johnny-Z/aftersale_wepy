@@ -81,15 +81,15 @@
       <image class="right_icon" src="../images/icon_arrow_right.png"></image>
     </view>
   </view>
-  <view class="menu_row_view" @tap="bindShowNews">
-    <view class="menu_row_view_left">
-      <image class="menu_icon" src="../images/icon_mine_news.png"></image>
-      <text class="menu_tx">我的消息</text>
-    </view>
-    <view class="menu_row_view_right">
-      <image class="right_icon" src="../images/icon_arrow_right.png"></image>
-    </view>
-  </view>
+  <!--<view class="menu_row_view" @tap="bindShowNews">-->
+    <!--<view class="menu_row_view_left">-->
+      <!--<image class="menu_icon" src="../images/icon_mine_news.png"></image>-->
+      <!--<text class="menu_tx">我的消息</text>-->
+    <!--</view>-->
+    <!--<view class="menu_row_view_right">-->
+      <!--<image class="right_icon" src="../images/icon_arrow_right.png"></image>-->
+    <!--</view>-->
+  <!--</view>-->
   <view class="menu_row_view" @tap="bindExit">
     <view class="menu_row_view_left">
       <image class="menu_icon" src="../images/icon_mine_exit.png"></image>
@@ -129,11 +129,11 @@
           url: '/pages/change_mobile'
         })
       },
-      bindShowNews() {
-        wx.navigateTo({
-          url: '/pages/news'
-        })
-      },
+      // bindShowNews() {
+      //   wx.navigateTo({
+      //     url: '/pages/news'
+      //   })
+      // },
       bindExit() {
         wx.redirectTo({
           url: '/pages/authorize?exit=1'
