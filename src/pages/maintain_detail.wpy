@@ -75,7 +75,7 @@
             <text class="title_tx">保养建议</text>
           </view>
           <view class="main_view">
-            <textarea @input="bindMaintainSuggestionInput" class="textarea_input" placeholder="输入保养建议"></textarea>
+            <textarea @input="bindMaintainSuggestionInput" class="textarea_input" fixed="true" placeholder="输入保养建议"></textarea>
           </view>
         </view>
         <button class="single_button" @tap="bindUploadFeedback">提交</button>
