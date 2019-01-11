@@ -95,7 +95,7 @@
                 <text class="label_tx">问题描述：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
               </view>
-              <modal wx:if="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" >
+              <modal wx:if="{{hiddenDescription}}" title="问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" catchtouchmove="true">
                 <textarea @input="bindIssueDescriptionInput" class="textarea_input" value="{{repairActualInfo.issueDescription}}" placeholder="输入问题原因"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
@@ -103,7 +103,7 @@
                 <text class="label_tx">处理方法：</text>
                 <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
               </view>
-              <modal wx:if="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" >
+              <modal wx:if="{{hiddenMethod}}" title="处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" catchtouchmove="true">
                 <textarea @input="bindRepairMethodInput" class="textarea_input" value="{{repairActualInfo.repairMethod}}" placeholder="输入维修方法"></textarea>
               </modal>
               <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
@@ -124,7 +124,7 @@
               <view class="view_row">
                 <button class="add_btn" @tap="showPartsInfo" >添加配件信息</button>
               </view>
-              <modal wx:if="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" @confirm="listenerPartsInfo" >
+              <modal wx:if="{{hiddenPartsInfo}}" title="配件" confirm-text="确定" no-cancel="true" @confirm="listenerPartsInfo" catchtouchmove="true">
                 <view class="view_row">
                   <text class="label_tx">配件名称：</text>
                   <input class="part_input" type="text" value="{{partsName}}" @input="bindPartInput" placeholder="输入配件名"/>

@@ -49,7 +49,7 @@
             <text class="label_tx">调试结果：</text>
             <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
-          <modal wx:if="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" @confirm="listenerResult" >
+          <modal wx:if="{{hiddenResult}}" title="安装结果" confirm-text="确定" no-cancel="true" @confirm="listenerResult" catchtouchmove="true">
             <textarea @input="bindInstallResultInput" class="textarea_input" value="{{installRecordDetail.installResult}}" placeholder="输入安装结果"></textarea>
           </modal>
           <text class="get_input_tx">{{installRecordDetail.installResult}}</text>
@@ -63,7 +63,7 @@
             <text class="info_tx" >C-{{installBasicItemList[2].install_value? installBasicItemList[2].install_value + 'V':'暂无'}}</text>
             <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
-          <modal wx:if="{{hiddenSource}}" title="电源电压" confirm-text="确定" no-cancel="true" @confirm="listenerSource" >
+          <modal wx:if="{{hiddenSource}}" title="电源电压" confirm-text="确定" no-cancel="true" @confirm="listenerSource" catchtouchmove="true">
             <view class="view_row">
               <text class="label_tx">A：</text>
               <input class="part_input" type="text" value="{{installBasicItemList[0].install_value}}" @input="bindASourceInput" placeholder="输入A电压"/>
@@ -85,7 +85,7 @@
             <text class="info_tx" >{{installBasicItemList[3].install_value? installBasicItemList[3].install_value + 'V':'暂无'}}</text>
             <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
           </view>
-          <modal wx:if="{{hiddenPhase}}" title="单相电压" confirm-text="确定" no-cancel="true" @confirm="listenerPhase" >
+          <modal wx:if="{{hiddenPhase}}" title="单相电压" confirm-text="确定" no-cancel="true" @confirm="listenerPhase" catchtouchmove="true">
             <view class="view_row">
               <input class="part_input" type="text" value="{{installBasicItemList[3].install_value}}" @input="bindPhaseInput" placeholder="输入单相电压"/>
               <text class="label_tx">V</text>
