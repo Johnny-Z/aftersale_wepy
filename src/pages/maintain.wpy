@@ -105,9 +105,9 @@
           console.log(maintainMachineListJson)
           console.log(maintainMachineListJson.data.data.list)
           let tempList = maintainMachineListJson.data.data.list
+          this.maintainList = []
           if (tempList.length > 0) {
             // 删除同recordId的重复记录
-            this.maintainList = []
             this.maintainList.push(tempList[0])
             for (var i = 1; i < tempList.length; i++) {
               var isRepeated = false

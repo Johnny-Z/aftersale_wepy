@@ -73,9 +73,9 @@
           console.log(installMachineListJson)
           console.log(installMachineListJson.data.data.list)
           let tempList = installMachineListJson.data.data.list
+          this.installList = []
           if (tempList.length > 0) {
             // 删除同recordId的重复记录
-            this.installList = []
             this.installList.push(tempList[0])
             for (var i = 1; i < tempList.length; i++) {
               var isRepeated = false

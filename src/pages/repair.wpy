@@ -78,9 +78,9 @@
         })
         console.log('获取列表:', repairMachineListJson)
         let tempList = repairMachineListJson.data.data.list
+        this.repairList = []
         if (tempList.length > 0) {
               // 删除同recordId的重复记录
-          this.repairList = []
           this.repairList.push(tempList[0])
           for (var i = 1; i < tempList.length; i++) {
             var isRepeated = false
