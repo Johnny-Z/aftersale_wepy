@@ -19,6 +19,7 @@
         'pages/change_mobile',
         'pages/change_password',
         'pages/news',
+        'pages/authorize_result',
         'pages/discover'
       ],
       window: {
