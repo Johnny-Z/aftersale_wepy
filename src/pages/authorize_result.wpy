@@ -11,7 +11,7 @@
 <template>
   <view class="page-body">
     <view class="page-section page-section-gap">
-      <web-view src="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx11b6f137b6a21e14&redirect_uri=https://aftersalesinsim.cn/api/wechat/user/info/wechatRedirect&response_type=code&scope=snsapi_userinfo&state=eservice&connect_redirect=1#wechat_redirect"></web-view>
+      <web-view src="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx11b6f137b6a21e14&redirect_uri=https://aftersalesinsim.cn/api/wechat/authorize/wechatRedirect&response_type=code&scope=snsapi_userinfo&state=eservice&connect_redirect=1#wechat_redirect"></web-view>
     </view>
   </view>
 </template>
