@@ -89,7 +89,7 @@
         <input class="login_input" type="text" password="true" @input="bindPasswordInput" placeholder="输入你的密码"/>
       </view>
       <button class="btn_login" lang="zh_CN" @tap="bindLogin">登录</button>
-      <button class="btn_authorize" lang="zh_CN" @tap="bindAuthorize">授权</button>
+      <button class="btn_authorize" lang="zh_CN" @tap="bindAuthorize">微信授权</button>
     </view>
   </view>
 </template>
