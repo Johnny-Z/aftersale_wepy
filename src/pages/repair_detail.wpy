@@ -1,4 +1,4 @@
-<template>
+<template xmlns:wx="http://www.w3.org/1999/xhtml">
   <machinedetails :machine.sync="machineDetail"></machinedetails>
   <view class="detail_view_column">
     <view class="title_view" @tap="bindIsShowCustomer">
@@ -138,6 +138,42 @@
                 </view>
               </modal>
             </view>
+            <view wx:else>
+              <view class="view_row">
+                <text class="label_tx">故障部位：</text>
+                <checkbox-group class="checkbox_label" @change="bindCheckboxChange">
+                  <label wx:for="{{partMark}}">
+                    <view class="checkbox_view">
+                      <checkbox value="{{item.id}}"/>{{item.name}}
+                    </view>
+                  </label>
+                </checkbox-group>
+              </view>
+              <view class="view_row" @tap="showDescriptionInput">
+                <text class="label_tx">未解决问题描述：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
+              </view>
+              <modal wx:if="{{hiddenDescription}}" title="未解决问题描述" confirm-text="确定" no-cancel="true" @confirm="listenerDescription" catchtouchmove="noMove">
+                <textarea @input="bindIssueDescriptionInput" class="textarea_input" value="{{repairActualInfo.issueDescription}}" fixed="true" placeholder="输入未解决的问题"></textarea>
+              </modal>
+              <text class="get_input_tx">{{repairActualInfo.issueDescription}}</text>
+              <view class="view_row" @tap="showMethodInput">
+                <text class="label_tx">尝试过处理方法：</text>
+                <image class="edit_icon" src="../images/icon_btn_edit.png"></image>
+              </view>
+              <modal wx:if="{{hiddenMethod}}" title="尝试过处理方法" confirm-text="确定" no-cancel="true" @confirm="listenerMethod" catchtouchmove="noMove">
+                <textarea @input="bindRepairMethodInput" class="textarea_input" value="{{repairActualInfo.repairMethod}}" fixed="true" placeholder="输入尝试过的维修方法"></textarea>
+              </modal>
+              <text class="get_input_tx">{{repairActualInfo.repairMethod}}</text>
+              <view class="view_row">
+                  <text class="label_tx">照片（3张）：（长按删除）</text>
+              </view>
+              <view class="view_row">
+                <image class="photo_image" mode="aspectFill" wx:for="{{repairImageArr}}" @tap="changeRepairImagePreview" @longtap="deleteImage" @touchstart="touchStart" @touchend="touchEnd" data-src="{{item}}" src="{{item}}"></image>
+                <image hidden="{{hiddenPhoto}}" class="photo_image" src="../images/icon_btn_add_photo.png" @tap="bindPreviewImage"></image>
+              </view>
+            </view>
+
           </view>
       </view>
       <button class="single_button" @tap="bindUploadFeedback">提交</button>
@@ -493,17 +529,24 @@
         bindUploadFeedback() {
           if (this.resultIndex == 0) {
             // 维修结果：没修完
-            wx.showModal({
-              title: '提示',
-              content: '请确认本次维修结果：没解决！',
-              showCancel: true,
-              confirmColor: '#007474',
-              success: res => {
-                if (res.confirm) {
-                  this.uploadRepairNG()
+            if (this.repairActualInfo.issuePosition == '') {
+              tip.alert('请选择故障部位')
+            } else if (this.repairImageArr.length == 0) {
+              tip.alert('请拍下故障照片')
+            } else {
+              wx.showModal({
+                title: '提示',
+                content: '请确认本次维修结果：没解决！',
+                showCancel: true,
+                confirmColor: '#007474',
+                success: res => {
+                  if (res.confirm) {
+                    // this.uploadRepairNG()
+                    this.uploadRepairInfo(REPAIR_STATUS_REPAIR_NG)
+                  }
                 }
-              }
-            })
+              })
+            }
           } else {
               // 维修结果：已修完
             if (this.repairActualInfo.issuePosition == '') {
@@ -523,7 +566,7 @@
                 confirmColor: '#007474',
                 success: res => {
                   if (res.confirm) {
-                    this.uploadRepairOK()
+                    this.uploadRepairInfo(REPAIR_STATUS_REPAIR_OK)
                   }
                 }
               })
@@ -548,7 +591,7 @@
         }
       }
 
-      async uploadRepairOK() {
+      async uploadRepairInfo(repairResult) {
         this.repairActualInfo.repairRecordId = this.machineDetail.id
         let repairFeedbackJson = await api.uploadRepairFeedback({
           query: {
@@ -561,20 +604,20 @@
           this.repairActualInfo.id = repairFeedbackJson.data.data
           this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
           let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
-          this.addRepairActualImageSrc(strRepairActualInfo, this.count)
+          this.addRepairActualImageSrc(strRepairActualInfo, this.count, repairResult)
         } else {
           tip.confirm('上传信息失败！网络错误，请检查网络！')
         }
       }
 
-      async addRepairActualImageSrc(strRepairActualInfo, count) {
+      async addRepairActualImageSrc(strRepairActualInfo, count, repairResult) {
         let updateImageSrcJson = await api.uploadRepairActualFiles({
           query: {
             filePath: this.repairImageArr[count],
             name: 'file',
             data: {
               repairActualInfo: strRepairActualInfo,
-              repairResult: REPAIR_STATUS_REPAIR_OK,
+              repairResult: repairResult,
               fileNumber: count + 1
             }
           }
@@ -589,7 +632,7 @@
             count++
             strRepairActualInfo = JSON.stringify(returnImageSrcData.data)
             console.log('return结果： ', strRepairActualInfo)
-            this.addRepairActualImageSrc(strRepairActualInfo, count)
+            this.addRepairActualImageSrc(strRepairActualInfo, count, repairResult)
           }
         } else {
           tip.confirm('失败！网络错误，请检查网络！')
@@ -607,7 +650,6 @@
         }
         this.getRepairRecord(this.machineDetail.id)
         this.getPositionList()
-        this.$apply()
       };
 
       // get repair record detail by recordID
@@ -649,6 +691,7 @@
         let positionListJson = await api.getIssuePositionList()
         console.log('get position list: ', positionListJson)
         this.partMark = positionListJson.data.data.list
+        this.$apply()
       }
 
         // Other properties
