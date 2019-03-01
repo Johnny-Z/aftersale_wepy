@@ -46,7 +46,7 @@
                 <text class="content_tx">{{item.content}}</text>
               </view>
               <view class="item_right">
-                <button wx:if="{{item.checkValue == 1}}" class="status_btn_color" @tap="bindReWork0({{index}})">完成</button>
+                <button wx:if="{{item.checkValue == '完成'}}" class="status_btn_color" @tap="bindReWork0({{index}})">完成</button>
                 <button wx:else class="status_btn_light" @tap="bindWorkDone0({{index}})">待完成</button>
               </view>
             </view>
@@ -55,7 +55,7 @@
                 <text class="content_tx">{{item.content}}</text>
               </view>
               <view class="item_right">
-                <button wx:if="{{item.checkValue == 1}}" class="status_btn_color" @tap="bindReWork1({{index}})">完成</button>
+                <button wx:if="{{item.checkValue == '完成'}}" class="status_btn_color" @tap="bindReWork1({{index}})">完成</button>
                 <button wx:else class="status_btn_light" @tap="bindWorkDone1({{index}})">待完成</button>
               </view>
             </view>
@@ -64,7 +64,7 @@
                 <text class="content_tx">{{item.content}}</text>
               </view>
               <view class="item_right">
-                <button wx:if="{{item.checkValue == 1}}" class="status_btn_color" @tap="bindReWork2({{index}})">完成</button>
+                <button wx:if="{{item.checkValue == '完成'}}" class="status_btn_color" @tap="bindReWork2({{index}})">完成</button>
                 <button wx:else class="status_btn_light" @tap="bindWorkDone2({{index}})">待完成</button>
               </view>
             </view>
@@ -164,7 +164,7 @@
         },
         bindWorkDone0(e) {
           console.log('行号', e)
-          this.maintainInfoList[0].contentList[e].checkValue = '1'
+          this.maintainInfoList[0].contentList[e].checkValue = '完成'
           this.$apply()
         },
         bindReWork1(e) {
@@ -174,7 +174,7 @@
         },
         bindWorkDone1(e) {
           console.log('行号', e)
-          this.maintainInfoList[1].contentList[e].checkValue = '1'
+          this.maintainInfoList[1].contentList[e].checkValue = '完成'
           this.$apply()
         },
         bindReWork2(e) {
@@ -184,7 +184,7 @@
         },
         bindWorkDone2(e) {
           console.log('行号', e)
-          this.maintainInfoList[2].contentList[e].checkValue = '1'
+          this.maintainInfoList[2].contentList[e].checkValue = '完成'
           this.$apply()
         },
         bindMaintainSuggestionInput(e) {

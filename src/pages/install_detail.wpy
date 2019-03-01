@@ -1,4 +1,4 @@
-<template>
+<template xmlns:wx="http://www.w3.org/1999/xhtml">
   <machinedetails :machine.sync="machineDetail"></machinedetails>
   <view class="detail_view_column">
     <view class="title_view" @tap="bindIsShowCustomer">
@@ -54,92 +54,18 @@
           </modal>
           <text class="get_input_tx">{{installRecordDetail.installResult}}</text>
           <view class="view_row">
-            <text class="label_tx">调试记录：</text>
+            <text class="label_tx">基础项：</text>
           </view>
-          <!--<view class="view_row" @tap="showSourceInput">-->
-          <!--<view class="view_row">-->
-            <!--<text class="info_tx" >电源电压：</text>-->
-            <!--<text class="info_tx" >A-{{installBasicItemList[0].install_value? installBasicItemList[0].install_value + 'V':'暂无'}}</text>-->
-            <!--<text class="info_tx" >B-{{installBasicItemList[1].install_value? installBasicItemList[1].install_value + 'V':'暂无'}}</text>-->
-            <!--<text class="info_tx" >C-{{installBasicItemList[2].install_value? installBasicItemList[2].install_value + 'V':'暂无'}}</text>-->
-            <!--<image class="edit_icon" src="../images/icon_btn_edit.png"></image>-->
-          <!--</view>-->
-          <view class="view_row">
-            <text class="info_tx" >A电源电压：</text>
-            <radio-group @change="aRadioChange">
-              <radio class="radio" value="220V" checked="{{installBasicItemList[0].install_value=='220V'}}">220V</radio>
-              <radio class="radio" value="380V" checked="{{installBasicItemList[0].install_value=='380V'}}" >380V</radio>
-            </radio-group>
-          </view>
-          <view class="view_row">
-            <text class="info_tx" >B电源电压：</text>
-            <radio-group @change="bRadioChange">
-              <radio class="radio" value="220V" checked="{{installBasicItemList[1].install_value=='220V'}}">220V</radio>
-              <radio class="radio" value="380V" checked="{{installBasicItemList[1].install_value=='380V'}}" >380V</radio>
-            </radio-group>
-          </view>
-          <view class="view_row">
-            <text class="info_tx" >C电源电压：</text>
-            <radio-group @change="cRadioChange">
-              <radio class="radio" value="220V" checked="{{installBasicItemList[2].install_value=='220V'}}">220V</radio>
-              <radio class="radio" value="380V" checked="{{installBasicItemList[2].install_value=='380V'}}" >380V</radio>
-            </radio-group>
-          </view>
-          <view class="view_row">
-            <text class="info_tx" >单相电压：</text>
-            <radio-group @change="phaseRadioChange">
-              <radio class="radio" value="220V" checked="{{installBasicItemList[3].install_value=='220V'}}">220V</radio>
-              <radio class="radio" value="380V" checked="{{installBasicItemList[3].install_value=='380V'}}" >380V</radio>
-            </radio-group>
-          </view>
-          <!--<modal wx:if="{{hiddenSource}}" title="电源电压" confirm-text="确定" no-cancel="true" @confirm="listenerSource" catchtouchmove="noMove">-->
-            <!--<view class="view_row">-->
-              <!--<text class="label_tx">A：</text>-->
-              <!--<input class="part_input" type="text" value="{{installBasicItemList[0].install_value}}" @input="bindASourceInput" placeholder="输入A电压"/>-->
-              <!--<text class="label_tx">V</text>-->
-            <!--</view>-->
-            <!--<view class="view_row">-->
-              <!--<text class="label_tx">B：</text>-->
-              <!--<input class="part_input" type="text" value="{{installBasicItemList[1].install_value}}" @input="bindBSourceInput" placeholder="输入B电压"/>-->
-              <!--<text class="label_tx">V</text>-->
-            <!--</view>-->
-            <!--<view class="view_row">-->
-              <!--<text class="label_tx">C：</text>-->
-              <!--<input class="part_input" type="text" value="{{installBasicItemList[2].install_value}}" @input="bindCSourceInput" placeholder="输入C电压"/>-->
-              <!--<text class="label_tx">V</text>-->
-            <!--</view>-->
-          <!--</modal>-->
-          <!--<view class="view_row" @tap="showPhaseInput">-->
-            <!--<text class="info_tx" >单相电压：</text>-->
-            <!--<text class="info_tx" >{{installBasicItemList[3].install_value? installBasicItemList[3].install_value + 'V':'暂无'}}</text>-->
-            <!--<image class="edit_icon" src="../images/icon_btn_edit.png"></image>-->
-          <!--</view>-->
-          <!--<modal wx:if="{{hiddenPhase}}" title="单相电压" confirm-text="确定" no-cancel="true" @confirm="listenerPhase" catchtouchmove="noMove">-->
-            <!--<view class="view_row">-->
-              <!--<input class="part_input" type="text" value="{{installBasicItemList[3].install_value}}" @input="bindPhaseInput" placeholder="输入单相电压"/>-->
-              <!--<text class="label_tx">V</text>-->
-            <!--</view>-->
-          <!--</modal>-->
-          <view class="view_row">
-            <text class="info_tx" >接地情况：</text>
-            <radio-group @change="groundRadioChange">
-              <radio class="radio" value="正常" checked="{{installBasicItemList[4].install_value=='正常'}}">正常</radio>
-              <radio class="radio" value="不正常" checked="{{installBasicItemList[4].install_value=='不正常'}}">不正常</radio>
-            </radio-group>
-          </view>
-          <view class="view_row">
-            <text class="info_tx" >机器水平：</text>
-            <radio-group @change="levelRadioChange">
-              <radio class="radio" value="正常" checked="{{installBasicItemList[5].install_value=='正常'}}">正常</radio>
-              <radio class="radio" value="不正常" checked="{{installBasicItemList[5].install_value=='不正常'}}">不正常</radio>
-            </radio-group>
-          </view>
-          <view class="view_row">
-            <text class="info_tx" >台板支撑：</text>
-            <radio-group @change="supportRadioChange">
-              <radio class="radio" value="正常" checked="{{installBasicItemList[6].install_value=='正常'}}">正常</radio>
-              <radio class="radio" value="没有" checked="{{installBasicItemList[6].install_value=='没有'}}">没有</radio>
-            </radio-group>
+          <view class="list_item_row" wx:for="{{installBasicItemList}}" wx:key="item" >
+            <view class="item_left_60" >
+              <text class="content_tx">{{item.install_content}}</text>
+            </view>
+            <view class="item_right_40">
+              <radio-group @change="installRadioChange" data-index="{{index}}">
+                <radio class="radio" value="安装" checked="{{item.install_value=='安装'}}">安装</radio>
+                <radio class="radio" value="不安装" checked="{{item.install_value=='不安装'}}">不安装</radio>
+              </radio-group>
+            </view>
           </view>
         </view>
       </view>
@@ -150,12 +76,77 @@
         </view>
         <view class="main_view">
           <view class="list_item_row" wx:for="{{installInfoList}}" wx:key="item" >
-            <view class="item_left" >
-              <text class="content_tx">{{item.install_content}}</text>
+            <view wx:if="{{item.install_content == '电源电压A'}}" >
+              <view class="view_row">
+                <text class="info_tx" >电源电压A：</text>
+                <radio-group @change="aRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="220V" checked="{{item.install_value=='220V'}}">220V</radio>
+                  <radio class="radio" value="380V" checked="{{item.install_value=='380V'}}" >380V</radio>
+                </radio-group>
+              </view>
             </view>
-            <view class="item_right">
-              <button wx:if="{{item.install_value == '1'}}" class="status_btn_color" @tap="bindReWork({{index}})">完成</button>
-              <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
+            <view wx:elif="{{item.install_content == '电源电压B'}}">
+              <view class="view_row">
+                <text class="info_tx" >电源电压B：</text>
+                <radio-group @change="bRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="220V" checked="{{item.install_value=='220V'}}">220V</radio>
+                  <radio class="radio" value="380V" checked="{{item.install_value=='380V'}}" >380V</radio>
+                </radio-group>
+              </view>
+            </view>
+            <view wx:elif="{{item.install_content == '电源电压C'}}">
+              <view class="view_row">
+                <text class="info_tx" >电源电压C：</text>
+                <radio-group @change="cRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="220V" checked="{{item.install_value=='220V'}}">220V</radio>
+                  <radio class="radio" value="380V" checked="{{item.install_value=='380V'}}" >380V</radio>
+                </radio-group>
+              </view>
+            </view>
+            <view wx:elif="{{item.install_content == '单相电压'}}">
+              <view class="view_row">
+                <text class="info_tx" >单相电压：</text>
+                <radio-group @change="phaseRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="220V" checked="{{item.install_value=='220V'}}">220V</radio>
+                  <radio class="radio" value="380V" checked="{{item.install_value=='380V'}}" >380V</radio>
+                </radio-group>
+              </view>
+            </view>
+            <view wx:elif="{{item.install_content == '接地情况'}}">
+              <view class="view_row">
+                <text class="info_tx" >接地情况：</text>
+                <radio-group @change="groundRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="正常" checked="{{item.install_value=='正常'}}">正常</radio>
+                  <radio class="radio" value="不正常" checked="{{item.install_value=='不正常'}}">不正常</radio>
+                </radio-group>
+              </view>
+            </view>
+            <view wx:elif="{{item.install_content == '机器水平'}}">
+              <view class="view_row">
+                <text class="info_tx" >机器水平：</text>
+                <radio-group @change="levelRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="正常" checked="{{item.install_value=='正常'}}">正常</radio>
+                  <radio class="radio" value="不正常" checked="{{item.install_value=='不正常'}}">不正常</radio>
+                </radio-group>
+              </view>
+            </view>
+            <view wx:elif="{{item.install_content == '台板支撑'}}">
+              <view class="view_row">
+                <text class="info_tx" >台板支撑：</text>
+                <radio-group @change="supportRadioChange" data-index="{{index}}">
+                  <radio class="radio" value="正常" checked="{{item.install_value=='正常'}}">正常</radio>
+                  <radio class="radio" value="没有" checked="{{item.install_value=='没有'}}">没有</radio>
+                </radio-group>
+              </view>
+            </view>
+            <view class="flex_list" wx:else>
+              <view class="item_left" >
+                <text class="content_tx">{{item.install_content}}</text>
+              </view>
+              <view class="item_right">
+                <button wx:if="{{item.install_value == '完成'}}" class="status_btn_color" @tap="bindReWork({{index}})">完成</button>
+                <button wx:else class="status_btn_light" @tap="bindWorkDone({{index}})">待完成</button>
+              </view>
             </view>
           </view>
         </view>
@@ -211,12 +202,23 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    .item_left {
-      width: 70%;
-    }
-    .item_right {
-      width: 30%;
-    }
+  }
+  .flex_list {
+    width: 100%;
+    align-items: center;
+    display: flex;
+  }
+  .item_left {
+       width: 70%;
+     }
+  .item_right {
+    width: 30%;
+  }
+  .item_left_60 {
+       width: 60%;
+     }
+  .item_right_40 {
+    width: 40%;
   }
 </style>
 <script>
@@ -284,55 +286,30 @@
         bindInstallResultInput(e) {
           this.installRecordDetail.installResult = e.detail.value
         },
+        installRadioChange(e) {
+          this.installBasicItemList[e.currentTarget.dataset.index].install_value = e.detail.value
+        },
         aRadioChange(e) {
-          this.installBasicItemList[0].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
         bRadioChange(e) {
-          this.installBasicItemList[1].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
         cRadioChange(e) {
-          this.installBasicItemList[2].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
         phaseRadioChange(e) {
-          this.installBasicItemList[3].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
         groundRadioChange(e) {
-          this.installBasicItemList[4].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
         levelRadioChange(e) {
-          this.installBasicItemList[5].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
         supportRadioChange(e) {
-          this.installBasicItemList[6].install_value = e.detail.value
+          this.installInfoList[e.currentTarget.dataset.index].install_value = e.detail.value
         },
-        // showSourceInput() {
-        //   this.hiddenSource = true
-        //   this.$apply()
-        // },
-        // listenerSource() {
-        //   this.hiddenSource = false
-        //   this.$apply()
-        // },
-        // bindASourceInput(e) {
-        //   this.installBasicItemList[0].install_value = e.detail.value
-        // },
-        // bindBSourceInput(e) {
-        //   this.installBasicItemList[1].install_value = e.detail.value
-        // },
-        // bindCSourceInput(e) {
-        //   this.installBasicItemList[2].install_value = e.detail.value
-        // },
-        // showPhaseInput() {
-        //   this.hiddenPhase = true
-        //   this.$apply()
-        // },
-        // listenerPhase() {
-        //   this.hiddenPhase = false
-        //   this.$apply()
-        // },
-        // bindPhaseInput(e) {
-        //   this.installBasicItemList[3].install_value = e.detail.value
-        // },
         bindReWork(e) {
           console.log('行号', e)
           this.installInfoList[e].install_value = ''
@@ -340,7 +317,7 @@
         },
         bindWorkDone(e) {
           console.log('行号', e)
-          this.installInfoList[e].install_value = '1'
+          this.installInfoList[e].install_value = '完成'
           this.$apply()
         },
         async bindUploadFeedback() {
