@@ -1,8 +1,20 @@
-<style lang="less">
+<style lang="less" xmlns:wx="http://www.w3.org/1999/xhtml" xmlns:wx="http://www.w3.org/1999/xhtml">
 
 </style>
 <template>
-  <view class="list_column">
+  <view wx:if="{{roleId == 3||roleId == 2}}" class="list_column">
+    <view class="list_view_row" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.machineCustomerName}}</text>
+        <button class="status_btn_light">待派单</button>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="list_column">
     <view class="list_view_row" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
       <view class="view_column_left">
         <text class="nameplate_tx">{{item.machineNameplate}}</text>
@@ -26,6 +38,7 @@
     import api from '@/api/api'
     import tip from '@/utils/tip'
     import {
+      ROLE_ID,
       ACCOUNT,
       REPAIR_STATUS_REPAIR_NG,
       REPAIR_STATUS_REPAIR_OK
@@ -36,14 +49,13 @@
         navigationBarTitleText: '维修',
         enablePullDownRefresh: true
       }
-      components = {
-      }
+      components = {}
       data = {
-        repairList: []
+        repairList: [],
+        roleId: ''
       }
 
-      events = {
-      }
+      events = {}
 
       methods = {
         listItemClick(e) {
@@ -62,43 +74,76 @@
       }
 
       onLoad() {
-        console.log('start repair onLoad')
+        this.roleId = wepy.getStorageSync(ROLE_ID)
+        console.log('start repair onLoad:', this.roleId)
       }
-        // 下拉刷新
+
+      // 下拉刷新
       onPullDownRefresh() {
         this.getRepairMachineList()
       }
+
       onShow() {
+        console.log('start repair onShow')
         this.getRepairMachineList()
       }
+
       async getRepairMachineList() {
-        let userAccount = wepy.getStorageSync(ACCOUNT)
-        const repairMachineListJson = await api.getRepairList({
-          query: {userName: userAccount}
-        })
-        console.log('获取列表:', repairMachineListJson)
-        let tempList = repairMachineListJson.data.data.list
-        this.repairList = []
-        if (tempList.length > 0) {
-              // 删除同recordId的重复记录
-          this.repairList.push(tempList[0])
-          for (var i = 1; i < tempList.length; i++) {
-            var isRepeated = false
-            for (var j = 0; j < i; j++) {
-              if (tempList[i].id === tempList[j].id) {
-                isRepeated = true
-                break
+        if (this.roleId == 2 || this.roleId == 3) {
+          const repairMachineListJson = await api.getRepairRecordList({
+            query: {repairStatus: 0}
+          })
+          console.log('获取派单列表:', repairMachineListJson)
+          let tempList = repairMachineListJson.data.data.list
+          this.repairList = []
+          if (tempList.length > 0) {
+            // 删除同recordId的重复记录
+            this.repairList.push(tempList[0])
+            for (let i = 1; i < tempList.length; i++) {
+              let isRepeated = false
+              for (let j = 0; j < i; j++) {
+                if (tempList[i].id === tempList[j].id) {
+                  isRepeated = true
+                  break
+                }
+              }
+              if (!isRepeated) {
+                this.repairList.push(tempList[i])
               }
             }
-            if (!isRepeated) {
-              this.repairList.push(tempList[i])
-            }
+            console.log(this.repairList)
           }
-          console.log(this.repairList)
+          this.$apply()
+          wepy.stopPullDownRefresh()
+        } else {
+          let userAccount = wepy.getStorageSync(ACCOUNT)
+          const repairMachineListJson = await api.getRepairList({
+            query: {userName: userAccount}
+          })
+          console.log('获取列表:', repairMachineListJson)
+          let tempList = repairMachineListJson.data.data.list
+          this.repairList = []
+          if (tempList.length > 0) {
+            // 删除同recordId的重复记录
+            this.repairList.push(tempList[0])
+            for (let i = 1; i < tempList.length; i++) {
+              let isRepeated = false
+              for (let j = 0; j < i; j++) {
+                if (tempList[i].id === tempList[j].id) {
+                  isRepeated = true
+                  break
+                }
+              }
+              if (!isRepeated) {
+                this.repairList.push(tempList[i])
+              }
+            }
+            console.log(this.repairList)
+          }
+          this.$apply()
+          wepy.stopPullDownRefresh()
         }
-        this.$apply()
-        wepy.stopPullDownRefresh()
-  }
+      }
     }
 
 </script>

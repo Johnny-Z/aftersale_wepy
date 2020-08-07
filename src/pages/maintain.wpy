@@ -29,7 +29,19 @@
   }
 </style>
 <template>
-  <view class="list_column">
+  <view wx:if="{{roleId == 3||roleId == 2}}" class="list_column">
+    <view class="list_view_row" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
+      <view class="view_column_left">
+        <text class="nameplate_tx">{{item.machineNameplate}}</text>
+        <text class="type_tx">{{item.machineType}}</text>
+      </view>
+      <view class="view_column_right">
+        <text class="details_tx">{{item.machineCustomerName}}</text>
+        <button class="status_btn_light">待派单</button>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="list_column">
     <view class="list_view_row" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
       <view class="view_column_left">
         <text class="nameplate_tx">{{item.machineNameplate}}</text>
@@ -52,6 +64,7 @@
   import api from '@/api/api'
   import tip from '@/utils/tip'
   import {
+    ROLE_ID,
     ACCOUNT,
     MAINTAIN_STATUS_FINISHED
   } from '@/utils/constant'
@@ -64,7 +77,8 @@
         components = {
         }
         data = {
-          maintainList: []
+          maintainList: [],
+          roleId: ''
         }
 
         events = {
@@ -86,6 +100,7 @@
         }
 
         onLoad() {
+          this.roleId = wepy.getStorageSync(ROLE_ID)
           console.log('start maintain onLoad')
         }
 
@@ -97,34 +112,62 @@
           this.getMaintainMachineList()
         }
         async getMaintainMachineList() {
-          let userAccount = wepy.getStorageSync(ACCOUNT)
-          const maintainMachineListJson = await api.getMaintainList({
-            query: {userName: userAccount}
-          })
-          console.log('maintainMachineListJson:')
-          console.log(maintainMachineListJson)
-          console.log(maintainMachineListJson.data.data.list)
-          let tempList = maintainMachineListJson.data.data.list
-          this.maintainList = []
-          if (tempList.length > 0) {
-            // 删除同recordId的重复记录
-            this.maintainList.push(tempList[0])
-            for (var i = 1; i < tempList.length; i++) {
-              var isRepeated = false
-              for (var j = 0; j < i; j++) {
-                if (tempList[i].id === tempList[j].id) {
-                  isRepeated = true
-                  break
+          if (this.roleId == 2 || this.roleId == 3) {
+            const maintainMachineListJson = await api.getMaintainRecordList({
+              query: {repairStatus: 0}
+            })
+            console.log('获取派单列表:', maintainMachineListJson)
+            let tempList = maintainMachineListJson.data.data.list
+            this.maintainList = []
+            if (tempList.length > 0) {
+              // 删除同recordId的重复记录
+              this.maintainList.push(tempList[0])
+              for (let i = 1; i < tempList.length; i++) {
+                let isRepeated = false
+                for (let j = 0; j < i; j++) {
+                  if (tempList[i].id === tempList[j].id) {
+                    isRepeated = true
+                    break
+                  }
+                }
+                if (!isRepeated) {
+                  this.maintainList.push(tempList[i])
                 }
               }
-              if (!isRepeated) {
-                this.maintainList.push(tempList[i])
-              }
+              console.log(this.maintainList)
             }
-            console.log(this.maintainList)
+            this.$apply()
+            wepy.stopPullDownRefresh()
+          } else {
+            let userAccount = wepy.getStorageSync(ACCOUNT)
+            const maintainMachineListJson = await api.getMaintainList({
+              query: {userName: userAccount}
+            })
+            console.log('maintainMachineListJson:')
+            console.log(maintainMachineListJson)
+            console.log(maintainMachineListJson.data.data.list)
+            let tempList = maintainMachineListJson.data.data.list
+            this.maintainList = []
+            if (tempList.length > 0) {
+              // 删除同recordId的重复记录
+              this.maintainList.push(tempList[0])
+              for (var i = 1; i < tempList.length; i++) {
+                var isRepeated = false
+                for (var j = 0; j < i; j++) {
+                  if (tempList[i].id === tempList[j].id) {
+                    isRepeated = true
+                    break
+                  }
+                }
+                if (!isRepeated) {
+                  this.maintainList.push(tempList[i])
+                }
+              }
+              console.log(this.maintainList)
+            }
+            this.$apply()
+            wepy.stopPullDownRefresh()
           }
-          this.$apply()
-          wepy.stopPullDownRefresh()
         }
   }
 

@@ -103,6 +103,7 @@
     AUTHORIZATION,
     AUTHORIZATION_PATH,
     ACCOUNT,
+    ROLE_ID,
     USER_ID
   } from '@/utils/constant'
   export default class Authorize extends wepy.page {
@@ -144,6 +145,7 @@
             } else if (loginJson.data.code == 200) {
               wx.setStorageSync(ACCOUNT, loginJson.data.data.account)
               wx.setStorageSync(USER_ID, loginJson.data.data.id)
+              wx.setStorageSync(ROLE_ID, loginJson.data.data.roleId)
               wx.switchTab({
                 url: '/pages/repair'
               })
@@ -192,6 +194,7 @@
               wx.setStorageSync(AUTHORIZATION, loginJson.header.Authorization)
               wx.setStorageSync(ACCOUNT, loginJson.data.account)
               wx.setStorageSync(USER_ID, loginJson.data.id)
+              wx.setStorageSync(ROLE_ID, loginJson.data.roleId)
               let fs = wx.getFileSystemManager()
               fs.writeFileSync(AUTHORIZATION_PATH, loginJson.header.Authorization, 'utf8')
               wepy.switchTab({
