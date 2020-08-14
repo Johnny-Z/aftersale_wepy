@@ -30,11 +30,11 @@
       </view>
     </view>
   </view>
-  <view class="detail_view_column">
+  <view wx:if="{{roleId == 3||roleId == 2}}" class="detail_view_column">
     <view class="title_view" @tap="bindIsShowRepair">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_request.png"></image>
-        <text class="title_tx">报修信息</text>
+        <text class="title_tx">派单信息</text>
       </view>
       <view class="title_view_sec_part">
         <image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
@@ -43,25 +43,34 @@
     </view>
     <view wx:if="{{isShowRepair}}" class="main_view">
       <view class="view_row">
-          <text class="label_tx">标题：</text>
-          <text class="info_tx">{{repairRecordDetail.repairRequestTitle}}</text>
+        <text class="label_tx">上门日期：</text>
+        <picker mode="date" value="{{date}}" start="2020-08-01"  bindchange="bindDateChange">
+          <view class="picker">
+            {{date}}
+          </view>
+        </picker>
       </view>
       <view class="view_row">
-          <text class="label_tx">描述：</text>
-          <text class="info_tx">{{repairRecordDetail.repairRequestContent}}</text>
+        <text class="label_tx">调试员(包括负责人)：</text>
       </view>
       <view class="view_row">
-        <text class="label_tx">语音：</text>
-        <button wx:if='{{isSpeaking}}' class="playing_btn" size="mini" loading="true">播放中...</button>
-        <button wx:else class="player_btn" size="mini" @tap="voicePlay">点击播放</button>
+        <checkbox-group @change="bindWorkersChange">
+          <label class="checkbox" wx:for="{{workersInfoList}}">
+            <checkbox value="{{item.name}}" />{{item.name}}
+          </label>
+        </checkbox-group>
       </view>
+
       <view class="view_row">
-        <text class="label_tx">照片：</text>
-      </view>
-      <view class="view_row">
-        <image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>
+        <text class="label_tx">负责人：</text>
+        <picker @change="bindPickerChange" value="{{workerIndex}}" range="{{workerList}}">
+          <view class="picker">
+            {{workerList[workerIndex]}}
+          </view>
+        </picker>
       </view>
     </view>
+    <button class="button" @tap="bindUploadAssignTask">提交派单信息</button>
   </view>
   <view wx:if="{{isChargePerson}}">
     <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
@@ -272,6 +281,7 @@
     import tip from '@/utils/tip'
     import {
         APIMALL,
+        ROLE_ID,
         USER_ID,
         REPAIR_STATUS_SIGNED_TO_REPAIRER,
         REPAIR_STATUS_REPAIRER_ACCEPTED,
@@ -287,10 +297,14 @@
       };
 
       data = {
+        roleId: '',
         machineDetail: {},
+        workerIndex: 0,
+        workerList: ['请选择'],
+        date: '2020-08-01',
         repairRecordDetail: {},
         isShowCustomer: false,
-        isShowRepair: false,
+        isShowRepair: true,
         isSpeaking: false,
         isChargePerson: false,
         preRepairImageArr: [],
@@ -327,7 +341,8 @@
         partsName: '',
         partsStatus: '1',
         radioChecked: true,
-        partsInfoList: []
+        partsInfoList: [],
+        workersInfoList: []
       };
       methods = {
         noMove() {},
@@ -338,6 +353,10 @@
         bindIsShowRepair() {
           let isShow = this.isShowRepair
           this.isShowRepair = !isShow
+        },
+        bindWorkersChange(e) {
+          this.workerList = e.detail.value
+          this.$apply()
         },
         voicePlay() {
           console.log('播放...')
@@ -388,6 +407,24 @@
           console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
             tip.confirm('接单失败！网络错误，请检查网络！')
+          } else {
+            tip.confirm('成功！返回上一页', 'BACK')
+          }
+        },
+          // 提交派单
+        async bindUploadAssignTask() {
+          let assignTaskJson = await api.uploadAssignTask({
+            query: {
+              repairChargePerson: this.repairRecordDetail.id,
+              customer: this.repairRecordDetail.id,
+              repairPlanDate: this.repairRecordDetail.id,
+              id: this.repairRecordDetail.id,
+              repairMembers: REPAIR_STATUS_REPAIRER_ACCEPTED
+            }
+          })
+          console.log('派单结果：', assignTaskJson)
+          if (assignTaskJson.data.code !== 200) {
+            tip.confirm('派单失败！网络错误，请检查网络！')
           } else {
             tip.confirm('成功！返回上一页', 'BACK')
           }
@@ -641,6 +678,7 @@
       events = {};
 
       onLoad(options) {
+        this.roleId = wepy.getStorageSync(ROLE_ID)
         console.log('from last page:', options)
         this.machineDetail = JSON.parse(options.machineDetail)
         if (this.machineDetail.status == REPAIR_STATUS_SIGNED_TO_REPAIRER) {
@@ -650,6 +688,7 @@
         }
         this.getRepairRecord(this.machineDetail.id)
         this.getPositionList()
+        this.getWorkers()
       };
 
       // get repair record detail by recordID
@@ -691,6 +730,18 @@
         let positionListJson = await api.getIssuePositionList()
         console.log('get position list: ', positionListJson)
         this.partMark = positionListJson.data.data.list
+        this.$apply()
+      };
+
+      // get workers list
+      async getWorkers() {
+        let worksJson = await api.getWorkers({
+          query: {
+            agentId: 0
+          }
+        })
+        console.log('get workers: ', worksJson)
+        this.workersInfoList = worksJson.data.data.list
         this.$apply()
       }
 
