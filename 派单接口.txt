@@ -1,0 +1,14 @@
+
+维修派单接口：
+repair/record/AssignTask
+参数内容举例：
+repairRecord: {"repairChargePerson":62,"customer":106,"repairPlanDate":"2020-08-15T05:25:59.000Z","inWarrantyPeriod":1,"id":53}
+repairMembers: [{"userId":62,"repairRecordId":53},{"userId":91,"repairRecordId":53},{"userId":67,"repairRecordId":53}]
+
+
+安装派单（暂时不用）
+install/record/AssignTask， 
+参数举例：installRecord: 
+{"id":642,"installChargePerson":244,"customer":57,"installPlanDate":"2020-08-02T08:20:09.000Z"}
+installMembers: 
+[{"userId":244,"installRecordId":642}]
