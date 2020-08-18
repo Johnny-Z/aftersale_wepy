@@ -44,7 +44,7 @@
     <view wx:if="{{isShowRepair}}" class="main_view">
       <view class="view_row">
         <text class="label_tx">上门日期：</text>
-        <picker mode="date" value="{{date}}" start="2020-08-01"  bindchange="bindDateChange">
+        <picker mode="date" value="{{date}}" start="2020-08-01"  @change="bindDateChange">
           <view class="picker">
             {{date}}
           </view>
@@ -298,6 +298,8 @@
 
       data = {
         roleId: '',
+        repairChargePersonName: '',
+        repairMembers: [],
         machineDetail: {},
         workerIndex: 0,
         workerList: ['请选择'],
@@ -354,9 +356,37 @@
           let isShow = this.isShowRepair
           this.isShowRepair = !isShow
         },
+        bindDateChange(e) {
+          this.repairRecordDetail.repairPlanDate = e.detail.value
+        },
         bindWorkersChange(e) {
           this.workerList = e.detail.value
+          // TODO:this.repairMembers赋值
           this.$apply()
+        },
+        bindPickerChange(e) {
+          this.repairChargePersonName = e.detail.value
+          for (let i = 0; i < this.workerList.length; i++) {
+            if (this.workerList[i].name == this.repairChargePersonName) {
+              this.repairRecordDetail.repairChargePerson = this.workerList[i].id
+              return
+            }
+          }
+        },
+        // TODO:提交派单
+        async bindUploadAssignTask() {
+          let assignTaskJson = await api.uploadRepairAssignTask({
+            query: {
+              repairRecord: this.repairRecordDetail, // 缺少质保信息
+              repairMembers: this.repairMembers // 没赋值，从workerList里面转换
+            }
+          })
+          console.log('派单结果：', assignTaskJson)
+          if (assignTaskJson.data.code !== 200) {
+            tip.confirm('派单失败！网络错误，请检查网络！')
+          } else {
+            tip.confirm('成功！返回上一页', 'BACK')
+          }
         },
         voicePlay() {
           console.log('播放...')
@@ -407,24 +437,6 @@
           console.log('接单结果：', acceptOrderJson)
           if (acceptOrderJson.data.code !== 200) {
             tip.confirm('接单失败！网络错误，请检查网络！')
-          } else {
-            tip.confirm('成功！返回上一页', 'BACK')
-          }
-        },
-          // 提交派单
-        async bindUploadAssignTask() {
-          let assignTaskJson = await api.uploadAssignTask({
-            query: {
-              repairChargePerson: this.repairRecordDetail.id,
-              customer: this.repairRecordDetail.id,
-              repairPlanDate: this.repairRecordDetail.id,
-              id: this.repairRecordDetail.id,
-              repairMembers: REPAIR_STATUS_REPAIRER_ACCEPTED
-            }
-          })
-          console.log('派单结果：', assignTaskJson)
-          if (assignTaskJson.data.code !== 200) {
-            tip.confirm('派单失败！网络错误，请检查网络！')
           } else {
             tip.confirm('成功！返回上一页', 'BACK')
           }
