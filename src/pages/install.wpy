@@ -2,17 +2,19 @@
 
 </style>
 <template>
-  <view wx:if="{{roleId == 3||roleId == 2}}" class="list_column">
-    <view class="list_view_row" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
-      <view class="view_column_left">
-        <text class="nameplate_tx">{{item.machineNameplate}}</text>
-        <text class="type_tx">{{item.machineType}}</text>
-      </view>
-      <view class="view_column_right">
-        <text class="details_tx">{{item.machineCustomerName}}</text>
-        <button class="status_btn_light">待派单</button>
-      </view>
-    </view>
+  <view wx:if="{{roleId == 1||roleId == 2}}" class="list_column">
+    <!-- 不支持 安装的派单-->
+  <!---->
+    <!--<view class="list_view_row" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">-->
+      <!--<view class="view_column_left">-->
+        <!--<text class="nameplate_tx">{{item.machineNameplate}}</text>-->
+        <!--<text class="type_tx">{{item.machineType}}</text>-->
+      <!--</view>-->
+      <!--<view class="view_column_right">-->
+        <!--<text class="details_tx">{{item.machineCustomerName}}</text>-->
+        <!--<button class="status_btn_light">待派单</button>-->
+      <!--</view>-->
+    <!--</view>-->
   </view>
   <view wx:else class="list_column">
     <view class="list_view_row" wx:for="{{installList}}" wx:key="item" @tap="listItemClick({{item}})">
@@ -79,11 +81,11 @@
           this.getInstallMachineList()
         }
         async getInstallMachineList() {
-          if (this.roleId == 2 || this.roleId == 3) {
+          if (this.roleId == 1 || this.roleId == 2) {
             const installMachineListJson = await api.getInstallRecordList({
               query: {installStatus: 0}
             })
-            console.log('获取派单列表:', installMachineListJson)
+            console.log('获取 安装 派单列表:', installMachineListJson)
             let tempList = installMachineListJson.data.data.list
             this.installList = []
             if (tempList.length > 0) {
@@ -106,6 +108,7 @@
             this.$apply()
             wepy.stopPullDownRefresh()
           } else {
+            console.log('非派单')
             let userAccount = wepy.getStorageSync(ACCOUNT)
 
             const installMachineListJson = await api.getInstallList({

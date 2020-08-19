@@ -2,7 +2,7 @@
 
 </style>
 <template>
-  <view wx:if="{{roleId == 3||roleId == 2}}" class="list_column">
+  <view wx:if="{{roleId == 1||roleId == 2}}" class="list_column">
     <view class="list_view_row" wx:for="{{repairList}}" wx:key="item" @tap="listItemClick({{item}})">
       <view class="view_column_left">
         <text class="nameplate_tx">{{item.machineNameplate}}</text>
@@ -75,7 +75,7 @@
 
       onLoad() {
         this.roleId = wepy.getStorageSync(ROLE_ID)
-        console.log('start repair onLoad:', this.roleId)
+        console.log('start repair onLoad， roleId is:', this.roleId)
       }
 
       // 下拉刷新
@@ -89,11 +89,24 @@
       }
 
       async getRepairMachineList() {
-        if (this.roleId == 2 || this.roleId == 3) {
+
+        if (this.roleId == 1 || this.roleId == 2) {
           const repairMachineListJson = await api.getRepairRecordList({
-            query: {repairStatus: 0}
+            /**
+             * 维修状态
+             * 0: 报修进行中（报修过程中，文件上传没完成等情况）
+             * 1：未派单，
+             * 2：已派单（但未接单）,
+             * 3：已接受（进行中，可以再派），
+             * 4：失败，(可以 再派，代理商可以 转派)
+             * 5：已再派，
+             * 6：已转派，
+             * 7：已完成(客户未确认)，
+             * 8. 客户确认（维修成功）。转派后，前面的维修记录要保留，但是客户只需要看到成功的最后那次记录。
+             */
+            query: {repairStatus: 1}
           })
-          console.log('获取派单列表:', repairMachineListJson)
+          console.log('获取 维修 派单列表:', repairMachineListJson)
           let tempList = repairMachineListJson.data.data.list
           this.repairList = []
           if (tempList.length > 0) {
@@ -116,6 +129,7 @@
           this.$apply()
           wepy.stopPullDownRefresh()
         } else {
+          console.log('非派单')
           let userAccount = wepy.getStorageSync(ACCOUNT)
           const repairMachineListJson = await api.getRepairList({
             query: {userName: userAccount}

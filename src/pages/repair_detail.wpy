@@ -30,48 +30,39 @@
       </view>
     </view>
   </view>
-  <view wx:if="{{roleId == 3||roleId == 2}}" class="detail_view_column">
-    <view class="title_view" @tap="bindIsShowRepair">
-      <view class="title_view_fir_part">
-        <image class="detail_icon" src="../images/icon_detail_request.png"></image>
-        <text class="title_tx">派单信息</text>
-      </view>
-      <view class="title_view_sec_part">
-        <image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
-        <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
-      </view>
-    </view>
-    <view wx:if="{{isShowRepair}}" class="main_view">
-      <view class="view_row">
-        <text class="label_tx">上门日期：</text>
-        <picker mode="date" value="{{date}}" start="2020-08-01"  @change="bindDateChange">
-          <view class="picker">
-            {{date}}
-          </view>
-        </picker>
-      </view>
-      <view class="view_row">
-        <text class="label_tx">调试员(包括负责人)：</text>
-      </view>
-      <view class="view_row">
-        <checkbox-group @change="bindWorkersChange">
-          <label class="checkbox" wx:for="{{workersInfoList}}">
-            <checkbox value="{{item.name}}" />{{item.name}}
-          </label>
-        </checkbox-group>
-      </view>
-
-      <view class="view_row">
-        <text class="label_tx">负责人：</text>
-        <picker @change="bindPickerChange" value="{{workerIndex}}" range="{{workerList}}">
-          <view class="picker">
-            {{workerList[workerIndex]}}
-          </view>
-        </picker>
-      </view>
-    </view>
-    <button class="button" @tap="bindUploadAssignTask">提交派单信息</button>
-  </view>
+  <!--<view class="detail_view_column">-->
+    <!--<view class="title_view" @tap="bindIsShowRepair">-->
+      <!--<view class="title_view_fir_part">-->
+        <!--<image class="detail_icon" src="../images/icon_detail_request.png"></image>-->
+        <!--<text class="title_tx">报修信息</text>-->
+      <!--</view>-->
+      <!--<view class="title_view_sec_part">-->
+        <!--<image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>-->
+        <!--<image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>-->
+      <!--</view>-->
+    <!--</view>-->
+    <!--<view wx:if="{{isShowRepair}}" class="main_view">-->
+      <!--<view class="view_row">-->
+          <!--<text class="label_tx">标题：</text>-->
+          <!--<text class="info_tx">{{repairRecordDetail.repairRequestTitle}}</text>-->
+      <!--</view>-->
+      <!--<view class="view_row">-->
+          <!--<text class="label_tx">描述：</text>-->
+          <!--<text class="info_tx">{{repairRecordDetail.repairRequestContent}}</text>-->
+      <!--</view>-->
+      <!--<view class="view_row">-->
+        <!--<text class="label_tx">语音：</text>-->
+        <!--<button wx:if='{{isSpeaking}}' class="playing_btn" size="mini" loading="true">播放中...</button>-->
+        <!--<button wx:else class="player_btn" size="mini" @tap="voicePlay">点击播放</button>-->
+      <!--</view>-->
+      <!--<view class="view_row">-->
+        <!--<text class="label_tx">照片：</text>-->
+      <!--</view>-->
+      <!--<view class="view_row">-->
+        <!--<image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>-->
+      <!--</view>-->
+    <!--</view>-->
+  <!--</view>-->
   <view wx:if="{{isChargePerson}}">
     <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
     <view wx:else >
@@ -655,7 +646,7 @@
           let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
           this.addRepairActualImageSrc(strRepairActualInfo, this.count, repairResult)
         } else {
-          tip.confirm('上传信息失败！网络错误，请检查网络！')
+          tip.confirm('上传信息失败！网络错误，请检查网络！' + repairFeedbackJson.data.message)
         }
       }
 

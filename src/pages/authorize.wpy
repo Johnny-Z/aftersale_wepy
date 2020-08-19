@@ -214,8 +214,61 @@
         wepy.navigateTo({
           url: '/pages/authorize_result'
         })
-      }
+      },
+
+
     }
+
+  onLoad() {
+    console.log(' login onShow')
+//    Threed.sleep(10000)
+    this.autoBindLogin()
+  }
+  async autoBindLogin() { //尝试自动登录（未成功），方便调试 
+
+    let res = await wepy.login()
+    if (res.code) {
+      this.jcCode = res.code
+      console.log('jcCOde: ', this.jcCode)
+      let rlt = await api.wxJsCode2Session({
+        query: {
+          account: "admin",
+          password: "sinsim",
+          jsCode: this.jcCode,
+          roleOfCaller: '0'
+        }
+      })
+      console.log('get session resoult: ', rlt)
+      if (rlt.data.code == 400) {
+        tip.confirm(rlt.data.message)
+      } else if (rlt.data.code == 200) {
+        let loginJson = await api.login({
+          query: {
+            account: this.account,
+            password: this.password
+          }
+        })
+        console.log('登入返回：', loginJson)
+        if (loginJson.statusCode == 200) {
+          wx.setStorageSync(AUTHORIZATION, loginJson.header.Authorization)
+          wx.setStorageSync(ACCOUNT, loginJson.data.account)
+          wx.setStorageSync(USER_ID, loginJson.data.id)
+          wx.setStorageSync(ROLE_ID, loginJson.data.roleId)
+          let fs = wx.getFileSystemManager()
+          fs.writeFileSync(AUTHORIZATION_PATH, loginJson.header.Authorization, 'utf8')
+          wepy.switchTab({
+            url: '/pages/repair'
+          })
+        } else {
+          tip.confirm('网络错误，登陆失败')
+        }
+      } else {
+        tip.confirm('网络错误，登陆失败')
+      }
+    } else {
+      tip.confirm('登陆失败')
+    }
+  }
   }
 
 </script>

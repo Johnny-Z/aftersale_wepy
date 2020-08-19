@@ -29,17 +29,18 @@
   }
 </style>
 <template>
-  <view wx:if="{{roleId == 3||roleId == 2}}" class="list_column">
-    <view class="list_view_row" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
-      <view class="view_column_left">
-        <text class="nameplate_tx">{{item.machineNameplate}}</text>
-        <text class="type_tx">{{item.machineType}}</text>
-      </view>
-      <view class="view_column_right">
-        <text class="details_tx">{{item.machineCustomerName}}</text>
-        <button class="status_btn_light">待派单</button>
-      </view>
-    </view>
+  <view wx:if="{{roleId == 1||roleId == 2}}" class="list_column">
+    <!-- 不支持 保养的派单-->
+    <!--<view class="list_view_row" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">-->
+      <!--<view class="view_column_left">-->
+        <!--<text class="nameplate_tx">{{item.machineNameplate}}</text>-->
+        <!--<text class="type_tx">{{item.machineType}}</text>-->
+      <!--</view>-->
+      <!--<view class="view_column_right">-->
+        <!--<text class="details_tx">{{item.machineCustomerName}}</text>-->
+        <!--<button class="status_btn_light">待派单</button>-->
+      <!--</view>-->
+    <!--</view>-->
   </view>
   <view wx:else class="list_column">
     <view class="list_view_row" wx:for="{{maintainList}}" wx:key="item" @tap="listItemClick({{item}})">
@@ -112,7 +113,7 @@
           this.getMaintainMachineList()
         }
         async getMaintainMachineList() {
-          if (this.roleId == 2 || this.roleId == 3) {
+          if (this.roleId == 1 || this.roleId == 2) {
             const maintainMachineListJson = await api.getMaintainRecordList({
               query: {repairStatus: 0}
             })
