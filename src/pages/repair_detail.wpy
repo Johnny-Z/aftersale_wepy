@@ -184,37 +184,48 @@
     <view class="title_view" @tap="bindIsShowCustomer">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
-        <text class="title_tx">派单信息 (维修中:安装中:保养中)</text>
+        <text class="title_tx">派单信息  </text>
       </view>
     </view>
-    <!-- 横向， 均匀分布-->
+    <view class="modal-dialog"
+          style="display:flex; justify-content:space-between ">
+      <text class="title_tx">人员 （维修中:安装中:保养中）      是否负责人</text>
+    </view>
+     <!--横向， 均匀分布-->
       <view class="modal-dialog"
-            style="display:flex; justify-content:space-between ">
+            style="display:flex; justify-content:space-evenly ">
 
         <view class="modal-content">
-          <checkbox-group  bindchange="checkboxChange">
-            <label style="display:flex;" wx:for="{{workersInfoList}}">
+          <checkbox-group  bindchange="paidanCheckboxChange">
+            <label  wx:for="{{workersInfoList}}">
               <checkbox value="{{item.name}}" checked="{{item.checked}}">
-                {{item.account}} ( {{item.repairTaskCount}} : {{item.installTaskCount}} : {{item.maintainTaskCount}}) </checkbox>
+               {{item.account}} ( {{item.repairTaskCount}} : {{item.installTaskCount}} : {{item.maintainTaskCount}}) </checkbox>
             </label>
             </checkbox-group>
         </view>
-        <view class="modal-content">
-          <checkbox-group  bindchange="checkboxChange">
-            <label style="display:flex;" wx:for="{{workersInfoList}}">
-              <checkbox value="{{item.name}}" checked="{{item.checked}}">
-                   负责人</checkbox>
-            </label>
-          </checkbox-group>
+        <view class="modal-content"
+              style=" justify-content: space-around;">
+          <radio-group class="radio-group"
+                       style=" justify-content:space-evenly"
+                       bindchange="ownerRadioChange">
+            <view style=" justify-content:space-evenly">
+
+              <label style=" justify-content:space-evenly "
+                     wx:for="{{workersInfoListinOwner}}">
+                <radio value="{{item.name}}" checked="{{item.checked}}">{{item.value}}</radio>
+              </label>
+            </view>
+          </radio-group>
         </view>
       </view>
 
+
     <!-- 操作按钮 -->
     <view class="modal-footer">
-      <button class="btn btn-cancel" bindtap="onCancel" data-status="cancel">取消</button>
-      <button class="btn btn-confirm" bindtap="onConfirm" data-status="confirm">确定</button>
+      <button class="btn btn-confirm" bindtap="bindUploadAssignTask" data-status="confirm">确定</button>
     </view>
   </view>
+
 </template>
 <script>
   /* eslint-disable no-undef,eqeqeq */
@@ -289,12 +300,23 @@
         partsStatus: '1',
         radioChecked: true,
         partsInfoList: [],
-        workersInfoList: []
+        workersInfoList: [],  //派单的所有 可选成员
+        workersCheckedList: [],  //派单的所有 选中成员
+        workersInfoListinOwner: [],  //派单的所有 可选成员(负责人那列)
+        ownerAccount: ''     //派单的负责人
       };
       methods = {
-        checkboxChange: function (e) {
-          console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+        paidanCheckboxChange: function (e) {
+          console.log('派单 checkbox发生change事件，携带value值为：', e.detail.value)
+          this.workersCheckedList = e.detail.value; //
+
         },
+
+        ownerRadioChange(e) {
+          console.log('负责人：', e.detail.value);
+          this.ownerAccount = e.detail.value;
+        },
+
 
         noMove() {},
         bindIsShowCustomer() {
@@ -305,38 +327,63 @@
           let isShow = this.isShowRepair
           this.isShowRepair = !isShow
         },
-        bindDateChange(e) {
-          this.repairRecordDetail.repairPlanDate = e.detail.value
-        },
-        bindWorkersChange(e) {
-          this.workerList = e.detail.value
-          // TODO:this.repairMembers赋值
-          this.$apply()
-        },
-        bindPickerChange(e) {
-          this.repairChargePersonName = e.detail.value
-          for (let i = 0; i < this.workerList.length; i++) {
-            if (this.workerList[i].name == this.repairChargePersonName) {
-              this.repairRecordDetail.repairChargePerson = this.workerList[i].id
-              return
-            }
-          }
-        },
+//        bindDateChange(e) {
+//          this.repairRecordDetail.repairPlanDate = e.detail.value
+//        },
+//        bindWorkersChange(e) {
+//          this.workerList = e.detail.value
+//          // TODO:this.repairMembers赋值
+//          this.$apply()
+//        },
+//        bindPickerChange(e) {
+//          this.repairChargePersonName = e.detail.value
+//          for (let i = 0; i < this.workerList.length; i++) {
+//            if (this.workerList[i].name == this.repairChargePersonName) {
+//              this.repairRecordDetail.repairChargePerson = this.workerList[i].id
+//              return
+//            }
+//          }
+//        },
         // TODO:提交派单
+
+
         async bindUploadAssignTask() {
-          let assignTaskJson = await api.uploadRepairAssignTask({
-            query: {
-              repairRecord: this.repairRecordDetail, // 缺少质保信息
-              repairMembers: this.repairMembers // 没赋值，从workerList里面转换
-            }
-          })
-          console.log('派单结果：', assignTaskJson)
-          if (assignTaskJson.data.code !== 200) {
-            tip.confirm('派单失败！网络错误，请检查网络！')
-          } else {
-            tip.confirm('成功！返回上一页', 'BACK')
-          }
-        },
+      if( this.ownerAccount == '') {
+      console.log('未选中负责人 ')
+          tip.confirm('未选中负责人')
+      }else if (this.workersCheckedList.length == 0) {
+        console.log('未选人员 ')
+        tip.confirm('未选人员')
+      } else {
+
+    console.log('-----------负责人： ' + this.ownerAccount)
+    console.log('-----------成员： ' + this.workersCheckedList)
+    this.repairRecordDetail.repairChargePerson = this.ownerAccount
+    this.repairRecordDetail.repairMembers = this.workersCheckedList
+
+
+//            let assignTaskJson = await api.uploadRepairAssignTask({
+//          query: {
+//            repairRecord: "aaaa",//this.repairRecordDetail, // 缺少质保信息
+//            repairMembers: "bbb" this.workersCheckedList// 没赋值，从workerList里面转换
+//          }
+//        })
+
+    let repairRecordJson = await api.uploadRepairAssignTask({
+      query: {
+//        repairRecordId: 111
+        repairRecord: "aaaa",//
+        repairMembers: "bbb"
+      }
+    })
+        console.log('aaaa：', repairRecordJson)
+        if (assignTaskJson.data.code !== 200) {
+          tip.confirm('派单失败！网络错误，请检查网络！')
+        } else {
+          tip.confirm('成功！返回上一页', 'BACK')
+        }
+      }
+      },
         voicePlay() {
           console.log('播放...')
           this.isSpeaking = true
@@ -702,7 +749,8 @@
           }
         })
         console.log('get workers: ', worksJson)
-        this.workersInfoList = worksJson.data.data.list
+        this.workersInfoListinOwner = worksJson.data.data.list
+    	this.workersInfoList = worksJson.data.data.list
         this.$apply()
       }
 
