@@ -253,9 +253,7 @@
 
       data = {
 
-        roleId: '',
-        repairChargePersonName: '',
-        repairMembers: [],
+        roleId: '', 
         machineDetail: {},
         workerIndex: 0,
         workerList: ['请选择'],
@@ -300,10 +298,10 @@
         partsStatus: '1',
         radioChecked: true,
         partsInfoList: [],
-        workersInfoList: [],  //派单的所有 可选成员
-        workersCheckedList: [],  //派单的所有 选中成员
+        workersInfoList: [],      //派单的所有 可选成员
+        workersCheckedList: [],   //派单的所有 选中成员
         workersInfoListinOwner: [],  //派单的所有 可选成员(负责人那列)
-        ownerAccount: ''     //派单的负责人
+        ownerAccount: ''     //该次维修的 负责人
       };
       methods = {
         paidanCheckboxChange: function (e) {
@@ -327,63 +325,49 @@
           let isShow = this.isShowRepair
           this.isShowRepair = !isShow
         },
-//        bindDateChange(e) {
-//          this.repairRecordDetail.repairPlanDate = e.detail.value
-//        },
-//        bindWorkersChange(e) {
-//          this.workerList = e.detail.value
-//          // TODO:this.repairMembers赋值
-//          this.$apply()
-//        },
-//        bindPickerChange(e) {
-//          this.repairChargePersonName = e.detail.value
-//          for (let i = 0; i < this.workerList.length; i++) {
-//            if (this.workerList[i].name == this.repairChargePersonName) {
-//              this.repairRecordDetail.repairChargePerson = this.workerList[i].id
-//              return
-//            }
-//          }
-//        },
-        // TODO:提交派单
 
-
-        async bindUploadAssignTask() {
+     async bindUploadAssignTask() {
       if( this.ownerAccount == '') {
-      console.log('未选中负责人 ')
-          tip.confirm('未选中负责人')
-      }else if (this.workersCheckedList.length == 0) {
-        console.log('未选人员 ')
+        tip.confirm('未选中负责人')
+      }else if (this.workersCheckedList.length == 0)
         tip.confirm('未选人员')
       } else {
+        console.log('-----------负责人： ' + this.ownerAccount)
+        console.log('-----------成员： ' + this.workersCheckedList)
+        // 准备 负责人的数据
+        this.workersInfoList.forEach(item=>  {
+          if(item.account == this.ownerAccount){
+            this.repairRecordDetail.repairChargePerson = item.id;
+            this.repairRecordDetail.customerFeedback = null;
+            this.repairRecordDetail.forwardInfo = null;
+          }
+        });
 
-    console.log('-----------负责人： ' + this.ownerAccount)
-    console.log('-----------成员： ' + this.workersCheckedList)
-    this.repairRecordDetail.repairChargePerson = this.ownerAccount
-    this.repairRecordDetail.repairMembers = this.workersCheckedList
+        // 准备成员数据
+        let memberList = [];
+        this.workersCheckedList.forEach(item=> {
+          this.workersInfoList.forEach(item2=> {
+          if(item == item2.account)
+            memberList.push({
+              userId: item2.id,
+              repairRecordId: this.machineDetail.id,
+            })
+          })
+        });
 
-
-//            let assignTaskJson = await api.uploadRepairAssignTask({
-//          query: {
-//            repairRecord: "aaaa",//this.repairRecordDetail, // 缺少质保信息
-//            repairMembers: "bbb" this.workersCheckedList// 没赋值，从workerList里面转换
-//          }
-//        })
-
-    let repairRecordJson = await api.uploadRepairAssignTask({
+      let assignTaskJson = await api.uploadRepairAssignTask({
       query: {
-//        repairRecordId: 111
-        repairRecord: "aaaa",//
-        repairMembers: "bbb"
+        repairRecord: JSON.stringify( this.repairRecordDetail ),
+        repairMembers: JSON.stringify(memberList)
       }
     })
-        console.log('aaaa：', repairRecordJson)
-        if (assignTaskJson.data.code !== 200) {
-          tip.confirm('派单失败！网络错误，请检查网络！')
-        } else {
-          tip.confirm('成功！返回上一页', 'BACK')
-        }
-      }
-      },
+    if (assignTaskJson.data.code !== 200) {
+      tip.confirm('派单失败！网络错误，请检查网络！')
+    } else {
+      tip.confirm('成功！返回上一页', 'BACK')
+    }
+  }
+  },
         voicePlay() {
           console.log('播放...')
           this.isSpeaking = true
@@ -500,6 +484,7 @@
             }
           }
         },
+
         changeRepairImagePreview(e) {
             // 控制点击事件在450ms内触发，加这层判断是为了防止长按时会触发点击事件
           if (this.touchEndTime - this.touchStartTime < 450) {
