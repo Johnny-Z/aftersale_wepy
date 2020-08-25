@@ -30,39 +30,6 @@
       </view>
     </view>
   </view>
-  <!--<view class="detail_view_column">-->
-    <!--<view class="title_view" @tap="bindIsShowRepair">-->
-      <!--<view class="title_view_fir_part">-->
-        <!--<image class="detail_icon" src="../images/icon_detail_request.png"></image>-->
-        <!--<text class="title_tx">报修信息</text>-->
-      <!--</view>-->
-      <!--<view class="title_view_sec_part">-->
-        <!--<image wx:if="{{isShowRepair}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>-->
-        <!--<image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>-->
-      <!--</view>-->
-    <!--</view>-->
-    <!--<view wx:if="{{isShowRepair}}" class="main_view">-->
-      <!--<view class="view_row">-->
-          <!--<text class="label_tx">标题：</text>-->
-          <!--<text class="info_tx">{{repairRecordDetail.repairRequestTitle}}</text>-->
-      <!--</view>-->
-      <!--<view class="view_row">-->
-          <!--<text class="label_tx">描述：</text>-->
-          <!--<text class="info_tx">{{repairRecordDetail.repairRequestContent}}</text>-->
-      <!--</view>-->
-      <!--<view class="view_row">-->
-        <!--<text class="label_tx">语音：</text>-->
-        <!--<button wx:if='{{isSpeaking}}' class="playing_btn" size="mini" loading="true">播放中...</button>-->
-        <!--<button wx:else class="player_btn" size="mini" @tap="voicePlay">点击播放</button>-->
-      <!--</view>-->
-      <!--<view class="view_row">-->
-        <!--<text class="label_tx">照片：</text>-->
-      <!--</view>-->
-      <!--<view class="view_row">-->
-        <!--<image class="photo_image" mode="aspectFill" wx:for="{{preRepairImageArr}}" @tap="changePreRepairImagePreview" data-src="{{item}}" src="{{item}}"></image>-->
-      <!--</view>-->
-    <!--</view>-->
-  <!--</view>-->
   <view wx:if="{{isChargePerson}}">
     <button wx:if="{{isReady}}" class="single_button" @tap="bindAcceptOrder" >确认接单</button>
     <view wx:else >
@@ -181,12 +148,34 @@
   </view>
 
   <view class="detail_view_column">
-    <view class="title_view" @tap="bindIsShowCustomer">
+    <view class="title_view" @tap="bindIsShowAssign">
       <view class="title_view_fir_part">
         <image class="detail_icon" src="../images/icon_detail_customer.png"></image>
         <text class="title_tx">派单信息  </text>
       </view>
+      <view class="title_view_sec_part">
+        <image wx:if="{{isShowAssign}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+        <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
+      </view>
     </view>
+    <view wx:if="{{isShowAssign}}" class="main_view">
+    <view class="view_row"  style="display:flex; justify-content:space-between ">
+      <!--<text class="title_tx"> {{repairRecordDetail.facoryDate}} </text>-->
+      <!--<view class="line_fir_tx">{{repairRecordDetail.facoryDate? repairRecordDetail.facoryDate: '暂无'}}</view>-->
+      <view class="view_row">
+        <text class="label_tx">发货日期：</text>
+        <text class="info_tx"> {{repairRecordDetail.facoryDate}}</text>
+      </view>
+      </view>
+    <view class="view_row" >
+      <text class="label_tx" >过保：</text>
+      <radio-group @change="WarrantyRadioChange">
+        <radio class="radio" value="1" checked="{{radioChecked}}">否</radio>
+        <radio class="radio" value="2" >是</radio>
+      </radio-group>
+    </view>
+      <view class="view_row" >
+      </view>
     <view class="modal-dialog"
           style="display:flex; justify-content:space-between ">
       <text class="title_tx">人员 （维修中:安装中:保养中）      是否负责人</text>
@@ -212,17 +201,19 @@
 
               <label style=" justify-content:space-evenly "
                      wx:for="{{workersInfoListinOwner}}">
-                <radio value="{{item.name}}" checked="{{item.checked}}">{{item.value}}</radio>
+                <!--<radio value="{{item.name}}" checked="{{item.checked}}"> {{item.value}} &nbsp; </radio>-->
+                <!-- 注意： 这里的空格 &#12288; 不能去掉，否则radio-group会和checkBox不对齐-->
+                <radio value="{{item.name}}" checked="{{item.checked}}"> {{item.value}} &#12288; </radio>
               </label>
             </view>
           </radio-group>
         </view>
       </view>
 
-
     <!-- 操作按钮 -->
     <view class="modal-footer">
       <button class="btn btn-confirm" bindtap="bindUploadAssignTask" data-status="confirm">确定</button>
+    </view>
     </view>
   </view>
 
@@ -261,6 +252,7 @@
         repairRecordDetail: {},
         isShowCustomer: false,
         isShowRepair: true,
+        isShowAssign: true,
         isSpeaking: false,
         isChargePerson: false,
         preRepairImageArr: [],
@@ -326,10 +318,16 @@
           this.isShowRepair = !isShow
         },
 
+        //派单折叠
+        bindIsShowAssign() {
+          let isShow = this.isShowAssign
+          this.isShowAssign = !isShow
+        },
+
      async bindUploadAssignTask() {
       if( this.ownerAccount == '') {
         tip.confirm('未选中负责人')
-      }else if (this.workersCheckedList.length == 0)
+      }else if (this.workersCheckedList.length == 0){
         tip.confirm('未选人员')
       } else {
         console.log('-----------负责人： ' + this.ownerAccount)
@@ -712,6 +710,11 @@
           } else {
             this.isChargePerson = false
           }
+
+          //时间在这里转换，因为filter 无效
+            var time = new Date(parseInt(this.repairRecordDetail.facoryDate))
+            this.repairRecordDetail.facoryDate = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate()
+
         } else {
           tip.confirm('获取信息出错！网络错误，请检查网络', 'BACK')
         }
@@ -737,8 +740,21 @@
         this.workersInfoListinOwner = worksJson.data.data.list
     	this.workersInfoList = worksJson.data.data.list
         this.$apply()
-      }
+      };
 
+      // filter 没法用
+//  filters: {
+//
+//    filterDateString(strDate)
+//    {
+//      if (isUndefined(strDate) || isNull(strDate) || strDate.length == 0) {
+//        return '';
+//      }
+//      let resDate = new Date(strDate);
+//      return "ffff"
+//      //return resDate.format("yyyy-MM-dd");
+//    }
+//  }
         // Other properties
     }
 </script>
