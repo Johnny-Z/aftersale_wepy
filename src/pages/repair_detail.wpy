@@ -147,6 +147,7 @@
     </view>
   </view>
 
+  <view wx:if="{{roleId == 1||roleId == 2}}" class="list_column">
   <view class="detail_view_column">
     <view class="title_view" @tap="bindIsShowAssign">
       <view class="title_view_fir_part">
@@ -215,7 +216,14 @@
       <button class="btn btn-confirm" bindtap="bindUploadAssignTask" data-status="confirm">确定</button>
     </view>
     </view>
+    </view>
+
   </view>
+
+  <!-- 非管理员，且非负责人时，不可接单-->
+  <!--<view wx:else if="{{!isChargePerson}}"  class="list_column" >-->
+    <!--<text class="title_tx"  style="display:flex; justify-content:space-evenly ">由负责人接单</text>-->
+  <!--</view>-->
 
 </template>
 <script>
