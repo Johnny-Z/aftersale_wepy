@@ -168,10 +168,10 @@
       </view>
       </view>
     <view class="view_row" >
-      <text class="label_tx" >过保：</text>
-      <radio-group @change="WarrantyRadioChange">
-        <radio class="radio" value="1" checked="{{radioChecked}}">否</radio>
-        <radio class="radio" value="2" >是</radio>
+      <text class="label_tx" >保修期内：</text>
+      <radio-group @change="warrantyRadioChange">
+        <radio class="radio" value="已过保" checked="{{radioChecked}}">已过保</radio>
+        <radio class="radio" value="未过保" >未过保</radio>
       </radio-group>
     </view>
       <view class="view_row" >
@@ -249,7 +249,9 @@
         workerIndex: 0,
         workerList: ['请选择'],
         date: '2020-08-01',
-        repairRecordDetail: {},
+        repairRecordDetail: {
+          inWarrantyPeriod: '已过保'  //默认已过保
+        },
         isShowCustomer: false,
         isShowRepair: true,
         isShowAssign: true,
@@ -306,7 +308,14 @@
           console.log('负责人：', e.detail.value);
           this.ownerAccount = e.detail.value;
         },
-
+        warrantyRadioChange(e){
+          console.log('过保：', e.detail.value);
+          if(e.detail.value == "未过保") {
+            this.repairRecordDetail.inWarrantyPeriod = 1
+          } else {
+            this.repairRecordDetail.inWarrantyPeriod = 0
+          }
+        },
 
         noMove() {},
         bindIsShowCustomer() {

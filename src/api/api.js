@@ -36,7 +36,10 @@ const updateMaintainAbnormalRecord = (params) => wxRequestRaw(params, apiMall + 
 const updateRepairRecord = (params) => wxRequestRaw(params, apiMall + '/repair/record/update')
 
 const uploadRepairActualFiles = (params) => wxUploadFile(params, apiMall + '/repair/actual/info/update')
-const uploadRepairAssignTask = (params) => wxUploadFile(params, apiMall + '/repair/record/AssignTask')
+const uploadRepairAssignTask = (params) => wxRequest(params, apiMall + '/repair/record/AssignTask')
+
+const selectUsers = (params) => wxRequestRaw(params, apiMall + '/user/selectUsers')
+
 
 export default {
   login,
@@ -62,5 +65,6 @@ export default {
   updatePassword,
   getPersonInfo,
   getIssuePositionList,
-  uploadRepairAssignTask
+  uploadRepairAssignTask,
+  selectUsers
 }
