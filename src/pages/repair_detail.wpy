@@ -303,7 +303,7 @@
         workersInfoList: [],      //派单的所有 可选成员
         workersCheckedList: [],   //派单的所有 选中成员
         workersInfoListinOwner: [],  //派单的所有 可选成员(负责人那列)
-        ownerAccount: ''     //该次维修的 负责人
+        ownerName: ''     //该次维修的 负责人
       };
       methods = {
         paidanCheckboxChange: function (e) {
@@ -314,7 +314,7 @@
 
         ownerRadioChange(e) {
           console.log('负责人：', e.detail.value);
-          this.ownerAccount = e.detail.value;
+          this.ownerName = e.detail.value;
         },
         warrantyRadioChange(e){
           console.log('过保：', e.detail.value);
@@ -342,16 +342,16 @@
         },
 
      async bindUploadAssignTask() {
-      if( this.ownerAccount == '') {
+      if( this.ownerName == '') {
         tip.confirm('未选中负责人')
       }else if (this.workersCheckedList.length == 0){
         tip.confirm('未选人员')
       } else {
-        console.log('-----------负责人： ' + this.ownerAccount)
+        console.log('-----------负责人： ' + this.ownerName)
         console.log('-----------成员： ' + this.workersCheckedList)
         // 准备 负责人的数据
         this.workersInfoList.forEach(item=>  {
-          if(item.account == this.ownerAccount){
+          if(item.name == this.ownerName){
             this.repairRecordDetail.repairChargePerson = item.id;
             this.repairRecordDetail.customerFeedback = null;
             this.repairRecordDetail.forwardInfo = null;
@@ -362,7 +362,7 @@
         let memberList = [];
         this.workersCheckedList.forEach(item=> {
           this.workersInfoList.forEach(item2=> {
-          if(item == item2.account)
+          if(item == item2.name)
             memberList.push({
               userId: item2.id,
               repairRecordId: this.machineDetail.id,
