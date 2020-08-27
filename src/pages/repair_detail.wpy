@@ -189,7 +189,7 @@
           <checkbox-group  bindchange="paidanCheckboxChange">
             <label  wx:for="{{workersInfoList}}">
               <checkbox value="{{item.name}}" checked="{{item.checked}}">
-               {{item.account}} ( {{item.repairTaskCount}} : {{item.installTaskCount}} : {{item.maintainTaskCount}}) </checkbox>
+               {{item.name }} ( {{item.repairTaskCount}} : {{item.installTaskCount}} : {{item.maintainTaskCount}})  &#12288;  &#12288;   </checkbox>
             </label>
             </checkbox-group>
         </view>
