@@ -729,9 +729,12 @@
           }
 
           //时间在这里转换，因为filter 无效
+          if( this.repairRecordDetail.facoryDate==''||this.repairRecordDetail.facoryDate==null){
+            this.repairRecordDetail.facoryDate = '旧机器'
+          } else {
             var time = new Date(parseInt(this.repairRecordDetail.facoryDate))
             this.repairRecordDetail.facoryDate = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate()
-
+          }
         } else {
           tip.confirm('获取信息出错！网络错误，请检查网络', 'BACK')
         }
