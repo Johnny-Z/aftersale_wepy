@@ -1,0 +1,276 @@
+<style type="less">
+</style>
+<template>
+  <view class="detail_view_column">
+    <view class="title_view" @tap="bindIsShow">
+      <view class="title_view_fir_part">
+        <image class="detail_icon" src="../images/icon_detail_machine.png"></image>
+        <text class="title_tx">机器详情</text>
+      </view>
+      <view class="title_view_sec_part">
+        <image wx:if="{{isShowMachine}}" class="arrow_icon" src="../images/icon_arrow_down.png"></image>
+        <image wx:else class="arrow_icon" src="../images/icon_arrow_up.png"></image>
+      </view>
+    </view>
+    <view wx:if="{{isShowMachine}}" class="main_view">
+      <view class="view_row">
+        <text class="label_tx">机器编号：</text>
+        <text class="info_tx">{{machine.machineNameplate? machine.machineNameplate:'暂无'}}</text>
+      </view>
+      <view class="view_row" >
+        <view class="view_row_half">
+          <text class="label_tx">机型：</text>
+          <text class="info_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>
+        </view>
+
+        <view class="view_row_half"
+              @tap="showNeedleNumInput">
+          <text class="label_tx">针数：</text>
+          <text class="info_tx">{{machine.needleNum? machine.needleNum:'暂无'}}</text>
+        </view>
+        <modal wx:if="{{hiddenNeedleNum}}"
+               title="输入针数"
+               confirm-text="确定"
+               no-cancel="true"
+               @confirm="listenerNeedleNum"
+               catchtouchmove="noMove">
+          <textarea @input="bindNeedleNumInput"
+                    class="textarea_input"
+                    value="{{machine.needleNum}}"
+                    fixed="true"
+                    placeholder="输入针数，在提交维修结果时会一起提交">
+          </textarea>
+        </modal>
+      </view>
+
+      <view class="view_row">
+        <view class="view_row_half"
+              @tap="showHeadNumInput">
+          <text class="label_tx">头数：</text>
+          <text class="info_tx">{{machine.headNum? machine.headNum:'暂无'}}</text>
+        </view>
+        <modal wx:if="{{hiddenHeadNum}}"
+                      title="输入头数"
+                      confirm-text="确定"
+                      no-cancel="true"
+                      @confirm="listenerHeadNum"
+                      catchtouchmove="noMove">
+          <textarea @input="bindHeadNumInput"
+                    class="textarea_input"
+                    value="{{machine.headNum}}"
+                    fixed="true"
+                    placeholder="输入头数，在提交维修结果时会一起提交">
+          </textarea>
+      </modal>
+
+        <view class="view_row_half"
+              @tap="showHeadDistanceInput">
+          <text class="label_tx">头距：</text>
+          <text class="info_tx">{{machine.headDistance? machine.headDistance:'暂无'}}</text>
+        </view>
+        <modal wx:if="{{hiddenHeadDistance}}"
+               title="输入头距"
+               confirm-text="确定"
+               no-cancel="true"
+               @confirm="listenerHeadDistance"
+               catchtouchmove="noMove">
+          <textarea @input="bindHeadDistanceInput"
+                    class="textarea_input"
+                    value="{{machine.headDistance}}"
+                    fixed="true"
+                    placeholder="输入头距，在提交维修结果时会一起提交">
+          </textarea>
+        </modal>
+      </view>
+
+      <view class="view_row" >
+        <view class="view_row_half"
+              @tap="showxDistanceInput">
+          <text class="label_tx">x行距：</text>
+          <text class="info_tx">{{machine.xDistance? machine.xDistance:'暂无'}}</text>
+        </view>
+        <modal wx:if="{{hiddenxDistance}}"
+               title="输入X行距"
+               confirm-text="确定"
+               no-cancel="true"
+               @confirm="listenerxDistance"
+               catchtouchmove="noMove">
+          <textarea @input="bindxDistanceInput"
+                    class="textarea_input"
+                    value="{{machine.xDistance}}"
+                    fixed="true"
+                    placeholder="输入X行数，在提交维修结果时会一起提交">
+          </textarea>
+        </modal>
+        <view class="view_row_half"
+              @tap="showyDistanceInput">
+          <text class="label_tx">y行距：</text>
+          <text class="info_tx">{{machine.yDistance? machine.yDistance:'暂无'}}</text>
+        </view>
+        <modal wx:if="{{hiddenyDistance}}"
+               title="输入Y行距"
+               confirm-text="确定"
+               no-cancel="true"
+               @confirm="listeneryDistance"
+               catchtouchmove="noMove">
+          <textarea @input="bindyDistanceInput"
+                    class="textarea_input"
+                    value="{{machine.yDistance}}"
+                    fixed="true"
+                    placeholder="输入Y行距，在提交维修结果时会一起提交">
+          </textarea>
+        </modal>
+      </view>
+      <!--<button  class="add_btn" @tap="updateMachine" >上传机器信息</button>-->
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import {
+          ROLE_ID,
+          USER_ID
+  } from '@/utils/constant'
+  import api from '@/api/api'
+
+  export default class MachineDetailsModifiable extends wepy.component {
+    props = {
+      machine: {}
+    }
+    data = {
+      isShowMachine: false,
+      hiddenNeedleNum: false,
+      hiddenHeadNum: false,
+      hiddenHeadDistance: false,
+      hiddenxDistance: false,
+      hiddenyDistance: false,
+      hiddenMachineType: false,
+      roleId: '',
+
+
+      machineDetail: {},
+    }
+    methods = {
+      bindIsShow() {
+        let isShow = this.isShowMachine
+        this.isShowMachine = !isShow
+      },
+
+      /* 针数 */
+      showNeedleNumInput() {
+        //普通员工，且老机器？，才允弹出输入框
+        if(this.roleId == 3) {
+          this.hiddenNeedleNum = true
+          this.$apply()
+        }
+      },
+      listenerNeedleNum() {
+        this.hiddenNeedleNum = false
+        this.$apply()
+      },
+      bindNeedleNumInput(e) {
+        this.machine.needleNum = e.detail.value
+      },
+
+      /* 头数 */
+      showHeadNumInput() {
+        if(this.roleId == 3) {
+          this.hiddenHeadNum = true
+          this.$apply()
+        }
+      },
+      listenerHeadNum() {
+        this.hiddenHeadNum = false
+        this.$apply()
+      },
+      bindHeadNumInput(e) {
+        this.machine.headNum = e.detail.value
+      },
+
+      /* 头距 */
+      showHeadDistanceInput() {
+        if(this.roleId == 3) {
+          this.hiddenHeadDistance = true
+          this.$apply()
+        }
+      },
+      listenerHeadDistance() {
+        this.hiddenHeadDistance = false
+        this.$apply()
+      },
+      bindHeadDistanceInput(e) {
+        this.machine.headDistance = e.detail.value
+      },
+
+      /*X行程*/
+      showxDistanceInput() {
+        if(this.roleId == 3) {
+          this.hiddenxDistance = true
+          this.$apply()
+        }
+      },
+      listenerxDistance() {
+        this.hiddenxDistance = false
+        this.$apply()
+      },
+      bindxDistanceInput(e) {
+        this.machine.xDistance = e.detail.value
+      },
+
+      /*Y行程*/
+      showyDistanceInput() {
+        if(this.roleId == 3) {
+          this.hiddenyDistance = true
+          this.$apply()
+        }
+      },
+      listeneryDistance() {
+        this.hiddenyDistance = false
+        this.$apply()
+      },
+      bindyDistanceInput(e) {
+        this.machine.yDistance = e.detail.value
+      },
+
+      /* 机器类型*/
+      showMachineTypeInput() {
+        if(this.roleId == 3) {
+          this.hiddenMachineType = true
+          this.$apply()
+        }
+      },
+      listenerMachineType() {
+        this.hiddenMachineType = false
+        this.$apply()
+      },
+      bindMachineTypeInput(e) {
+        this.machine.machineType = e.detail.value
+      },
+
+
+  },
+
+
+    };
+
+    onLoad(options) {
+      this.roleId = wepy.getStorageSync(ROLE_ID)
+    }
+  }
+</script>
+<style lang="less">
+  page {
+    padding-bottom: 120rpx;
+  }
+  .add_btn {
+    width: 100%;
+    border: 1rpx solid #007474;
+    box-shadow: 0 6rpx 14rpx 0 rgba(0,116,116,0.20);
+    border-radius: 10rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 30rpx;
+    color: #007474;
+    letter-spacing: 0;
+    text-align: center;
+  }
+</style>

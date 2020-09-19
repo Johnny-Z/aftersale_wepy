@@ -22,24 +22,11 @@
           <text class="label_tx">机型：</text>
           <text class="info_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>
         </view>
-        <view class="view_row_half"
-              @tap="showNeedleNumInput">
+        <view class="view_row_half">
           <text class="label_tx">针数：</text>
           <text class="info_tx">{{machine.needleNum? machine.needleNum:'暂无'}}</text>
         </view>
-        <modal wx:if="{{hiddenNeedleNum}}"
-               title="输入针数"
-               confirm-text="确定"
-               no-cancel="true"
-               @confirm="listenerNeedleNum"
-               catchtouchmove="noMove">
-          <textarea @input="bindNeedleNumInput"
-                    class="textarea_input"
-                    value="{{machine.needleNum}}"
-                    fixed="true"
-                    placeholder="输入针数">
-          </textarea>
-        </modal>
+
       </view>
       <view class="view_row">
         <view class="view_row_half">
@@ -73,27 +60,13 @@
     }
     data = {
       isShowMachine: false,
-      hiddenNeedleNum: false,
     }
     methods = {
       bindIsShow() {
         let isShow = this.isShowMachine
         this.isShowMachine = !isShow
-      },
-
-      showNeedleNumInput() {
-
-        this.hiddenNeedleNum = true
-        this.$apply()
-      },
-      listenerNeedleNum() {
-        this.hiddenNeedleNum = false
-        this.$apply()
-      },
-      bindNeedleNumInput(e) {
-        this.machine.needleNum = e.detail.value
       }
+    };
 
-    }
   }
 </script>
