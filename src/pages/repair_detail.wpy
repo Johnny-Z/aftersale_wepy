@@ -653,9 +653,30 @@
         } else {
           tip.confirm('上传信息失败！网络错误，请检查网络！' + repairFeedbackJson.data.message)
         }
-      }
 
-      async addRepairActualImageSrc(strRepairActualInfo, count, repairResult) {
+        /**
+         *  允许维修员更新机器信息，因为维修员到现场最清除，尤其是老机器。
+         */
+        this.updateMachine();
+
+  }
+
+      async updateMachine() {
+        console.log('id：', this.userId)
+        let updateMachineJson = await api.updateMachineInfo({
+          query: {
+            id: this.machineDetail.machineId,
+            needleNum: this.machineDetail.needleNum
+          }
+        })
+        console.log('更新：', updateMachineJson)
+        if (updateMachineJson.data.code == 200) {
+          tip.confirm('更新机器成功！', 'BACK')
+        } else {
+          tip.confirm('更新机器失败，请检查网络！')
+        }
+      }
+  async addRepairActualImageSrc(strRepairActualInfo, count, repairResult) {
         let updateImageSrcJson = await api.uploadRepairActualFiles({
           query: {
             filePath: this.repairImageArr[count],

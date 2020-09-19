@@ -222,7 +222,7 @@
   onLoad() {
     console.log(' login onShow')
 //    Threed.sleep(10000)
-    this.autoBindLogin()
+//    this.autoBindLogin()
   }
   async autoBindLogin() { //尝试自动登录（未成功），方便调试 
 
@@ -232,8 +232,8 @@
       console.log('jcCOde: ', this.jcCode)
       let rlt = await api.wxJsCode2Session({
         query: {
-          account: "admin",
-          password: "sinsim",
+          account: "a",
+          password: "a",
           jsCode: this.jcCode,
           roleOfCaller: '0'
         }

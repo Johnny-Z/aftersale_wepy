@@ -67,6 +67,7 @@
           } else {
             let machines = JSON.stringify(e)
             wepy.navigateTo({
+//              把machine信息传给下个页面
               url: '/pages/repair_detail?machineDetail=' + machines
             })
           }

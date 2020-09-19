@@ -40,6 +40,8 @@ const uploadRepairAssignTask = (params) => wxRequest(params, apiMall + '/repair/
 
 const selectUsers = (params) => wxRequestRaw(params, apiMall + '/user/selectUsers')
 
+//上传更新机器信息
+const updateMachineInfo = (params) => wxRequestRaw(params, apiMall + '/machine/updateInfo')
 
 export default {
   login,
@@ -66,5 +68,7 @@ export default {
   getPersonInfo,
   getIssuePositionList,
   uploadRepairAssignTask,
-  selectUsers
+  selectUsers,
+  updateMachineInfo
+
 }
