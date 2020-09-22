@@ -20,7 +20,22 @@
       <view class="view_row" >
         <view class="view_row_half">
           <text class="label_tx">机型：</text>
-          <text class="info_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>
+          <!--<text class="info_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>-->
+
+          <!--<view class='top-selected'-->
+                <!--@tap='bindShowMsg'>-->
+            <!--<text>{{grade_name}}</text>-->
+          <!--</view>-->
+
+          <picker class="picker_view" @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+          <text class="picker_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>
+          </picker>
+
+          <!--<view class="select_box" wx:if="{{select}}">-->
+            <!--<view wx:for="{{grades}}" wx:key="unique">-->
+              <!--<view class="select_one" bindtap="mySelect" data-name="{{item}}">{{item}}</view>-->
+            <!--</view>-->
+          <!--</view>-->
         </view>
 
         <view class="view_row_half"
@@ -147,18 +162,28 @@
       hiddenMachineType: false,
       roleId: '',
 
-
-      machineDetail: {},
+      resultMark: [], // 'aaa', 'bbb','ccc','ddd'
+      resultIndex: 0,
     }
     methods = {
+
       bindIsShow() {
         let isShow = this.isShowMachine
         this.isShowMachine = !isShow
       },
 
+     
+      bindResultPickerChange(e) {
+        console.log('结果picker发送选择改变，携带值为', e.detail.value)
+        this.resultIndex = e.detail.value
+
+        this.machine.machineType = this.resultMark[this.resultIndex]
+        console.log('选择了', this.machine.machineType)
+        this.$apply()
+      },
+
       /* 针数 */
       showNeedleNumInput() {
-        //普通员工，且老机器？，才允弹出输入框
         if(this.roleId == 3) {
           this.hiddenNeedleNum = true
           this.$apply()
@@ -232,29 +257,36 @@
         this.machine.yDistance = e.detail.value
       },
 
-      /* 机器类型*/
-      showMachineTypeInput() {
-        if(this.roleId == 3) {
-          this.hiddenMachineType = true
-          this.$apply()
-        }
-      },
-      listenerMachineType() {
-        this.hiddenMachineType = false
-        this.$apply()
-      },
-      bindMachineTypeInput(e) {
-        this.machine.machineType = e.detail.value
-      },
-
-
-  },
-
-
     };
 
     onLoad(options) {
       this.roleId = wepy.getStorageSync(ROLE_ID)
+      this.fetchMachineTypeList();
+
+//      this.$apply()
+    }
+
+    /* */
+    async fetchMachineTypeList() {
+      let getMachineTypeListJson = await api.getMachineTypeList({
+        query: {        }
+      })
+      if (getMachineTypeListJson.data.code == 200) {
+
+        let tempList = getMachineTypeListJson.data.data.list;
+        if (tempList.length > 0) {
+          this.resultMark.push(tempList[0].name)
+          for (let i = 1; i < tempList.length; i++) {
+              this.resultMark.push(tempList[i].name)
+          }
+          console.log(this.resultMark)
+        }
+        console.log('获取机型列表：' + this.resultMark)
+      } else {
+        tip.confirm('获取机型信息出错，请检查网络！', 'BACK')
+      }
+
+      this.$apply()
     }
   }
 </script>
@@ -272,5 +304,68 @@
     color: #007474;
     letter-spacing: 0;
     text-align: center;
+  }
+  /* 顶部 */
+  .top{
+    width: 100vw;
+    height: 80rpx;
+    padding: 0 20rpx;
+    line-height: 80rpx;
+    font-size: 34rpx;
+    border-bottom: 1px solid #000;
+  }
+  .top-text{
+    float: left
+  }
+  /* 下拉框 */
+  .top-selected{
+    width: 50%;
+    display: flex;
+    float: right;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    padding: 0 10rpx;
+    font-size: 30rpx;
+  }
+  /* 下拉内容 */
+  .select_box {
+    background-color: #fff;
+    padding: 0 20rpx;
+    width: 50%;
+    float: right;
+    position: relative;
+    right: 0;
+    z-index: 1;
+    overflow: hidden;
+    text-align: left;
+    animation: myfirst 0.5s;
+    font-size: 30rpx;
+  }
+  .select_one {
+    padding-left: 20rpx;
+    width: 100%;
+    height: 60rpx;
+    position: relative;
+    line-height: 60rpx;
+    border-bottom: 1px solid #ccc;
+  }
+  /* 下拉过度效果 */
+  @keyframes myfirst {
+    from {
+      height: 0rpx;
+    }
+
+    to {
+      height: 210rpx;
+    }
+  }
+  /* 下拉图标 */
+  .top-selected image{
+    height:50rpx;
+    width:50rpx;
+    position: absolute;
+    right: 0rpx;
+    top: 20rpx;
   }
 </style>

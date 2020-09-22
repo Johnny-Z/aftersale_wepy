@@ -668,17 +668,28 @@
 
       async updateMachine() {
 
+        console.log('开始更新机器 machineId：', this.machineDetail.machineId)
+        console.log('开始更新机器 machineType：', this.machineDetail.machineType)
+        console.log('开始更新机器 machineNameplate：', this.machineDetail.machineNameplate)
+        console.log('开始更新机器 needleNum：', this.machineDetail.needleNum)
+        console.log('开始更新机器 headNum：', this.machineDetail.headNum)
+        console.log('开始更新机器 headDistance：', this.machineDetail.headDistance)
+        console.log('开始更新机器 xDistance：', this.machineDetail.xDistance)
+        console.log('开始更新机器 yDistance：', this.machineDetail.yDistance)
+
         let updateMachineJson = await api.updateMachineInfo({
-          query: {
+          query: { // 这个machineDetail来自 父组件 machine_details_modifiable.machine
             id: this.machineDetail.machineId,
             needleNum: this.machineDetail.needleNum,
             headNum: this.machineDetail.headNum,
             headDistance: this.machineDetail.headDistance,
             xDistance: this.machineDetail.xDistance,
-            yDistance: this.machineDetail.yDistance
+            yDistance: this.machineDetail.yDistance,
+
+            machineType:this.machineDetail.machineType
           }
         })
-        console.log('更新：', updateMachineJson)
+        console.log('更新机器结果：', updateMachineJson)
 
 //        if (updateMachineJson.data.code == 200) {
 //          tip.confirm('更新机器成功！', 'BACK')

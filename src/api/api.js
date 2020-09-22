@@ -40,8 +40,11 @@ const uploadRepairAssignTask = (params) => wxRequest(params, apiMall + '/repair/
 
 const selectUsers = (params) => wxRequestRaw(params, apiMall + '/user/selectUsers')
 
-//上传更新机器信息
+// 上传更新机器信息
 const updateMachineInfo = (params) => wxRequestRaw(params, apiMall + '/machine/updateInfo')
+
+// 获取机型列表
+const getMachineTypeList = (params) => wxRequestRaw(params, apiMall + '/SinsimProcessDB/getMachineTypeList')
 
 export default {
   login,
@@ -69,6 +72,6 @@ export default {
   getIssuePositionList,
   uploadRepairAssignTask,
   selectUsers,
-  updateMachineInfo
-
+  updateMachineInfo,
+  getMachineTypeList
 }

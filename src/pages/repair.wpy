@@ -66,6 +66,15 @@
             tip.confirm('等待客户确认！')
           } else {
             let machines = JSON.stringify(e)
+
+            console.log('把machine信息传给下个页面， machineId is:', e.machineId)
+            console.log('把machine信息传给下个页面， machineType is:', e.machineType)
+            console.log('把machine信息传给下个页面， machineNameplate is:', e.machineNameplate)
+            console.log('把machine信息传给下个页面， needleNum is:', e.needleNum)
+            console.log('把machine信息传给下个页面， headNum is:', e.headNum)
+            console.log('把machine信息传给下个页面， headDistance is:', e.headDistance)
+            console.log('把machine信息传给下个页面， xDistance is:', e.xDistance)
+            console.log('把machine信息传给下个页面， yDistance is:', e.yDistance)
             wepy.navigateTo({
 //              把machine信息传给下个页面
               url: '/pages/repair_detail?machineDetail=' + machines
