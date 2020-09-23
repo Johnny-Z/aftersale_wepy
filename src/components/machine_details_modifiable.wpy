@@ -27,8 +27,8 @@
             <!--<text>{{grade_name}}</text>-->
           <!--</view>-->
 
-          <picker class="picker_view" @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
-          <text class="picker_tx">{{machine.machineType? machine.machineType:'暂无'}}</text>
+          <picker class="picker_view2" @change="bindResultPickerChange" value="{{resultIndex}}" range="{{resultMark}}">
+          <text class="picker_tx2">{{machine.machineType? machine.machineType:'暂无'}}</text>
           </picker>
 
           <!--<view class="select_box" wx:if="{{select}}">-->

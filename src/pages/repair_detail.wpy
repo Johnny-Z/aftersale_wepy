@@ -655,29 +655,25 @@
           this.repairActualInfo.uploadFilesAmount = this.repairImageArr.length.toString()
           let strRepairActualInfo = JSON.stringify(this.repairActualInfo)
           this.addRepairActualImageSrc(strRepairActualInfo, this.count, repairResult)
+
+          /****** 等前面的数据更新请求返回完成之后，再去更新最新的机器信息 */
+          this.updateMachine();
         } else {
           tip.confirm('上传信息失败！网络错误，请检查网络！' + repairFeedbackJson.data.message)
         }
 
         /**
          *  允许维修员更新机器信息，因为维修员到现场最清除，尤其是老机器。
+         *  因为 后端会自动更新machine状态为 待维修或正常工作状态，使用的是旧的数据，所以要等前面的数据更新请求返回完成之后，再去更新最新的机器信息
+         *  否则会因为时间差造成更新数据问题。
          */
-        this.updateMachine();
+//        this.updateMachine();
 
   }
 
       async updateMachine() {
 
-        console.log('开始更新机器 machineId：', this.machineDetail.machineId)
-        console.log('开始更新机器 machineType：', this.machineDetail.machineType)
-        console.log('开始更新机器 machineNameplate：', this.machineDetail.machineNameplate)
-        console.log('开始更新机器 needleNum：', this.machineDetail.needleNum)
-        console.log('开始更新机器 headNum：', this.machineDetail.headNum)
-        console.log('开始更新机器 headDistance：', this.machineDetail.headDistance)
-        console.log('开始更新机器 xDistance：', this.machineDetail.xDistance)
-        console.log('开始更新机器 yDistance：', this.machineDetail.yDistance)
-
-        let updateMachineJson = await api.updateMachineInfo({
+         let updateMachineJson = await api.updateMachineInfo({
           query: { // 这个machineDetail来自 父组件 machine_details_modifiable.machine
             id: this.machineDetail.machineId,
             needleNum: this.machineDetail.needleNum,
@@ -833,6 +829,20 @@
     text-align: center;
     margin-left: 30rpx;
   .picker_tx {
+    font-family: PingFangSC-Regular;
+    color: #007474;
+    letter-spacing: 0;
+  }
+  }
+  .picker_view2 {
+    width: 200rpx;
+    background: rgba(0,116,116,0.10);
+    border: 1rpx solid #007474;
+    border-radius: 10rpx;
+    text-align: center;
+    margin-left: 2rpx;
+
+  .picker_tx2 {
     font-family: PingFangSC-Regular;
     color: #007474;
     letter-spacing: 0;
