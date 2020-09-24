@@ -174,12 +174,15 @@
 
      
       bindResultPickerChange(e) {
-        console.log('结果picker发送选择改变，携带值为', e.detail.value)
-        this.resultIndex = e.detail.value
 
-        this.machine.machineType = this.resultMark[this.resultIndex]
-        console.log('选择了', this.machine.machineType)
-        this.$apply()
+        if(this.roleId == 3) {
+          console.log('结果picker发送选择改变，携带值为', e.detail.value)
+          this.resultIndex = e.detail.value
+
+          this.machine.machineType = this.resultMark[this.resultIndex]
+          console.log('选择了', this.machine.machineType)
+          this.$apply()
+        }
       },
 
       /* 针数 */
